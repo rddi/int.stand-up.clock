@@ -45,6 +45,8 @@ header {
     .container.collapser.closed {
       max-height: 0vh;
       padding: 0 20px; }
+  .container.pad {
+    margin-top: 100px; }
 
 h1 {
   text-align: center;
@@ -74,31 +76,109 @@ h1 {
   #end-screen.orange {
     color: #d9643e; }
 
-#speaker {
+#name-wheel {
+  width: 660px;
   position: absolute;
+  top: 50%;
   left: 50%;
-  top: 600px;
-  transform: translateX(-100vw);
-  color: #0F6B05;
-  font-size: 100px;
-  font-weight: bold; }
-  #speaker.play {
-    animation: zoomInOut 2000ms;
-    animation-timing-function: linear; }
+  transform: translate(-50%, -50%);
+  height: 660px;
+  transition-property: transform;
+  transition-timing-function: linear; }
+  #name-wheel .letter {
+    height: 100%;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    font-size: 60px;
+    color: #0F6B05; }
+    #name-wheel .letter#even-8 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 120deg); }
+    #name-wheel .letter#odd-8 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 116deg); }
+    #name-wheel .letter#even-7 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 128deg); }
+    #name-wheel .letter#odd-7 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 124deg); }
+    #name-wheel .letter#even-6 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 136deg); }
+    #name-wheel .letter#odd-6 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 132deg); }
+    #name-wheel .letter#even-5 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 144deg); }
+    #name-wheel .letter#odd-5 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 140deg); }
+    #name-wheel .letter#even-4 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 152deg); }
+    #name-wheel .letter#odd-4 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 148deg); }
+    #name-wheel .letter#even-3 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 160deg); }
+    #name-wheel .letter#odd-3 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 156deg); }
+    #name-wheel .letter#even-2 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 168deg); }
+    #name-wheel .letter#odd-2 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 164deg); }
+    #name-wheel .letter#even-1 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 176deg); }
+    #name-wheel .letter#odd-1 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 172deg); }
+    #name-wheel .letter#even0 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 184deg); }
+    #name-wheel .letter#odd0 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 180deg); }
+    #name-wheel .letter#even1 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 192deg); }
+    #name-wheel .letter#odd1 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 188deg); }
+    #name-wheel .letter#even2 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 200deg); }
+    #name-wheel .letter#odd2 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 196deg); }
+    #name-wheel .letter#even3 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 208deg); }
+    #name-wheel .letter#odd3 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 204deg); }
+    #name-wheel .letter#even4 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 216deg); }
+    #name-wheel .letter#odd4 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 212deg); }
+    #name-wheel .letter#even5 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 224deg); }
+    #name-wheel .letter#odd5 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 220deg); }
+    #name-wheel .letter#even6 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 232deg); }
+    #name-wheel .letter#odd6 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 228deg); }
+    #name-wheel .letter#even7 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 240deg); }
+    #name-wheel .letter#odd7 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 236deg); }
+    #name-wheel .letter#even8 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 248deg); }
+    #name-wheel .letter#odd8 {
+      transform: translateX(-50%) rotate3d(0, 0, 1, 244deg); }
+  #name-wheel.stage-0, #name-wheel.stage-1 {
+    transition-duration: 500ms !important; }
+  #name-wheel.stage-0 {
+    transform: translate(-50%, -50%) rotate3d(0, 0, 1, 360deg); }
+  #name-wheel.stage-1 {
+    transform: translate(-50%, -50%) rotate3d(0, 0, 1, 120deg); }
+  #name-wheel.stage-2 {
+    transform: translate(-50%, -50%) rotate3d(0, 0, 1, 240deg); }
 
-@keyframes zoomInOut {
-  0% {
-    transform: translate(-100vw);
-    opacity: 0; }
-  15% {
-    transform: translate(calc(-50% - 100px));
-    opacity: 1; }
-  85% {
-    transform: translate(calc(-50% + 100px));
-    opacity: 1; }
-  100% {
-    transform: translate(200vw);
-    opacity: 0; } }
+#name-obscurer {
+  position: absolute;
+  height: 660px;
+  width: 660px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 330px solid transparent;
+  border-bottom-color: #fff; }
 
 .header-button {
   height: 60px;
