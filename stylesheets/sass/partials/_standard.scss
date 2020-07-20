@@ -167,17 +167,17 @@ h1 {
 
   &.stage-0,
   &.stage-1 {
-    transition-duration: 500ms !important;
+    transition-duration: 250ms !important;
   }
 
   &.stage-0 {
-    transform:translate(-50%, -50%) rotate3d(0,0,1, 360deg);
+    // transform:translate(-50%, -50%) rotate3d(0,0,1, 360deg);
   }
   &.stage-1 {
-    transform:translate(-50%, -50%) rotate3d(0,0,1, 120deg);
+    // transform:translate(-50%, -50%) rotate3d(0,0,1, 120deg);
   }
   &.stage-2 {
-    transform:translate(-50%, -50%) rotate3d(0,0,1, 240deg);
+    // transform:translate(-50%, -50%) rotate3d(0,0,1, 240deg); 
   }
 
   

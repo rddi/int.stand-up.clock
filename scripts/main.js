@@ -118,6 +118,8 @@ let timer,
   setButton,
   settings,
   nameWheel,
+  // nameWheelStyle,
+  nameWheelFinished = false,
   form,
   time = 0,
   team = 0,
@@ -161,6 +163,7 @@ function setEndScreen() {
 
 function setSpeaker() {
   nameWheel = document.getElementById('name-wheel');
+  nameWheelStyle = document.getElementById('name-wheel-style');
   // speaker = document.getElementById('speaker');
 }
 
@@ -559,16 +562,29 @@ function manageSelectionButtons() {
     selectAll.classList.remove("hidden");
   }
 }
+function setStage(stage, finish = false) {
+  nameWheel.classList.remove('stage-0', 'stage-1', 'stage-2');
+  nameWheel.classList.add(`stage-${stage}`);
+  nameWheel.style.transform = `translate(-50%, -50%) rotate3d(0, 0, 1, ${getNextRotation()}deg)`;
+  if (finish) {
+    nameWheelFinished = true;
+  }
+}
 
 function getNextRotation() {
-  this.wheelRot += 120;
-  return this.wheelRot - 120;
+  wheelRot += 120;
+  return wheelRot -120;
 }
 
 function checkNameWheel() {
-  if(timer.start == null) {
+  if (timer.start == null || nameWheelFinished) {
     return;
   }
+
+  if (timer.isFinished()) {
+    setStage(0, true);
+  }
+
   const letters = document.getElementsByClassName('letter');
   const currentName = document.getElementsByClassName('active')[0].innerHTML;
   let name = '';
@@ -579,21 +595,15 @@ function checkNameWheel() {
   }
 
   if (!nameWheel.classList.contains('stage-0') && name != currentName) {
-    nameWheel.classList.remove('stage-1', 'stage-2');
-    nameWheel.classList.add('stage-0');
-    // nameWheel.style.transform = `translate(-50%, -50%), rotate3d(0, 0, 1, ${getNextRotation()}deg)`;
+    setStage(0);
     setTimeout(function() {
-      nameWheel.classList.remove('stage-0');
-      nameWheel.classList.add('stage-1');
-      // nameWheel.style.transform = `translate(-50%, -50%), rotate3d(0, 0, 1, ${getNextRotation()}deg)`;
+      setStage(1);
       newSpeaker();
       setTimeout(function() {
-        nameWheel.classList.remove('stage-1');
-        nameWheel.classList.add('stage-2');
         nameWheel.style.transitionDuration = `${(Math.floor(subtimer.full / 1000))}s`;
-        // nameWheel.style.transform = `translate(-50%, -50%), rotate3d(0, 0, 1, ${getNextRotation()}deg)`;
-      }, 500);
-    }, 500);
+        setStage(2);
+      }, 250);
+    }, 250);
   }
 }
 

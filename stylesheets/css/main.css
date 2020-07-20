@@ -162,13 +162,7 @@ h1 {
     #name-wheel .letter#odd8 {
       transform: translateX(-50%) rotate3d(0, 0, 1, 244deg); }
   #name-wheel.stage-0, #name-wheel.stage-1 {
-    transition-duration: 500ms !important; }
-  #name-wheel.stage-0 {
-    transform: translate(-50%, -50%) rotate3d(0, 0, 1, 360deg); }
-  #name-wheel.stage-1 {
-    transform: translate(-50%, -50%) rotate3d(0, 0, 1, 120deg); }
-  #name-wheel.stage-2 {
-    transform: translate(-50%, -50%) rotate3d(0, 0, 1, 240deg); }
+    transition-duration: 250ms !important; }
 
 #name-obscurer {
   position: absolute;
