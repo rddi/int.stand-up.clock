@@ -3,6 +3,7 @@
     <title>EDF RDDI Stand Up</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/css/main.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style id="name-wheel-style"></style>
   </head>
   <body>
     <header>
@@ -59,13 +60,15 @@
         </form>
       </div>
     </header>
-    <div class="container">
+    <div class="container pad">
       <div class="active-team-list" id="left-list">
 
       </div>
       <div class="active-team-list" id="right-list">
 
       </div>
+      <div id="name-wheel"></div>
+      <div id="name-obscurer"></div>
       <div id="timer" class="timer">
         <div class="hand-holder">
           <div class="hand"></div>
@@ -93,8 +96,6 @@
       </div>
 
       <div id="team-remaining">0/0</div>
-
-      <div id="speaker">Lance</div>
 
       <div id="end-screen" class="hidden">
         <div>You achieved a <span id="end-time"></span> stand up, with an average of <span id="avg-time"></span> per person</div>

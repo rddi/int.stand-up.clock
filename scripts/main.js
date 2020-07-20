@@ -117,7 +117,9 @@ let timer,
   endScreen,
   setButton,
   settings,
-  speaker,
+  nameWheel,
+  // nameWheelStyle,
+  nameWheelFinished = false,
   form,
   time = 0,
   team = 0,
@@ -126,7 +128,8 @@ let timer,
   end,
   reset,
   updateSpeed = 100,
-  teamRemaining = 0;
+  teamRemaining = 0,
+  wheelRot = 0;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -159,7 +162,9 @@ function setEndScreen() {
 }
 
 function setSpeaker() {
-  speaker = document.getElementById('speaker');
+  nameWheel = document.getElementById('name-wheel');
+  nameWheelStyle = document.getElementById('name-wheel-style');
+  // speaker = document.getElementById('speaker');
 }
 
 function mintosentence(time) {
@@ -304,7 +309,7 @@ function setupTimers() {
   start.addEventListener("click", function(e) {
     timer.startTimer();
     subtimer.startTimer();
-    newSpeaker();
+    // newSpeaker();
   });
 
   end.addEventListener("click", function(e) {
@@ -323,18 +328,43 @@ function subtimerRebuild() {
     teamRemaining--;
     subtimer.setTimer(mstodec((timer.full - timer.current) / teamRemaining));
     subtimer.startTimer();
-    newSpeaker();
+    // newSpeaker();
   }
 }
 
 function newSpeaker() {
-  const currentSpeaker = document.querySelector('.team-button.active')
+  const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
 
-  speaker.innerHTML = currentSpeaker.innerHTML;
-  speaker.classList.add("play");
-  setTimeout(function() {
-    speaker.classList.remove("play")
-  }, 2000);
+  // speaker.innerHTML = currentSpeaker.innerHTML;
+  // speaker.classList.add("play");
+  // setTimeout(function() {
+  //   speaker.classList.remove("play")
+  // }, 2000);
+
+  nameWheel.innerHTML = '';
+
+  const name = currentSpeaker.split('');
+  let i = 0;
+
+  let nameElement = '';
+  let type = 'even';
+
+  let offset = name.length / 2; //3.5
+
+  if (name.length % 2 != 0) { //true
+    type = 'odd';
+    offset -= 0.5; //3  
+  }
+
+  offset = 0 - offset; //-3
+
+
+  for(i = 0;i < name.length;i += 1) {
+    nameElement += `<div class="letter" id="${type}${offset}">${name[i]}</div>`;
+    offset += 1;
+  }
+
+  nameWheel.innerHTML = nameElement;
 }
 
 function randomSelectMember() {
@@ -452,7 +482,6 @@ function setUpTeamButtons() {
 
       if (timer.start != null) {
 
-        console.log("REBUILD!");
         subtimerRebuild();
       }
     });
@@ -533,6 +562,50 @@ function manageSelectionButtons() {
     selectAll.classList.remove("hidden");
   }
 }
+function setStage(stage, finish = false) {
+  nameWheel.classList.remove('stage-0', 'stage-1', 'stage-2');
+  nameWheel.classList.add(`stage-${stage}`);
+  nameWheel.style.transform = `translate(-50%, -50%) rotate3d(0, 0, 1, ${getNextRotation()}deg)`;
+  if (finish) {
+    nameWheelFinished = true;
+  }
+}
+
+function getNextRotation() {
+  wheelRot += 120;
+  return wheelRot -120;
+}
+
+function checkNameWheel() {
+  if (timer.start == null || nameWheelFinished) {
+    return;
+  }
+
+  if (timer.isFinished()) {
+    setStage(0, true);
+  }
+
+  const letters = document.getElementsByClassName('letter');
+  const currentName = document.getElementsByClassName('active')[0].innerHTML;
+  let name = '';
+  let i = 0;
+  
+  for(i = 0;i < letters.length;i += 1) {
+    name += letters[i].innerHTML;
+  }
+
+  if (!nameWheel.classList.contains('stage-0') && name != currentName) {
+    setStage(0);
+    setTimeout(function() {
+      setStage(1);
+      newSpeaker();
+      setTimeout(function() {
+        nameWheel.style.transitionDuration = `${(Math.floor(subtimer.full / 1000))}s`;
+        setStage(2);
+      }, 250);
+    }, 250);
+  }
+}
 
 function update() {
   timer.update();
@@ -570,6 +643,8 @@ function update() {
     settings.classList.remove("lock");
     end.classList.add("hidden");
   }
+
+  checkNameWheel();
 
   if (timer.isFinished()) {
     setFinish();
