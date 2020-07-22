@@ -143,13 +143,29 @@
     color:$white;
     cursor:pointer;
     transition: color $transTime, background-color $transTime, text-decoration $transTime;
+    position:relative;
+    &::before {
+      content:'';
+      width:0;
+      height:3px;
+      background-color:$white;
+      display:block;
+      position:absolute;
+      top:50%;
+      left:15px;
+      transition:background-color $transTime, width $transTime;
+    }
     &.active {
       background-color:$orange;
       color:$white;
     }
     &.done {
-      text-decoration:line-through;
-      color:$orange;
+      // text-decoration:line-through;
+      color:$orange; 
+      &::before {
+        width:calc(100% - 30px);
+        background-color:$orange;
+      }
       &::after {
         content:attr(data-time);
         left: calc(100% + 5px);
@@ -159,6 +175,9 @@
         background-color:$red;
         color:$white;
         text-decoration:none;
+        &::before {
+          background-color:$white;
+        }
         &::after {
           color:$red;
         }
@@ -167,6 +186,9 @@
         background-color:$green !important;
         color:$white;
         text-decoration:none;
+        &::before {
+          background-color:$white;
+        }
         &::after {
           color:$green !important;
         }

@@ -456,13 +456,26 @@ label {
     font-size: 30px;
     color: #fff;
     cursor: pointer;
-    transition: color 300ms, background-color 300ms, text-decoration 300ms; }
+    transition: color 300ms, background-color 300ms, text-decoration 300ms;
+    position: relative; }
+    .active-team-list .team-button::before {
+      content: '';
+      width: 0;
+      height: 3px;
+      background-color: #fff;
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transition: background-color 300ms, width 300ms; }
     .active-team-list .team-button.active {
       background-color: #d9643e;
       color: #fff; }
     .active-team-list .team-button.done {
-      text-decoration: line-through;
       color: #d9643e; }
+      .active-team-list .team-button.done::before {
+        width: calc(100% - 30px);
+        background-color: #d9643e; }
       .active-team-list .team-button.done::after {
         content: attr(data-time);
         left: calc(100% + 5px);
@@ -471,12 +484,16 @@ label {
         background-color: #650D1B;
         color: #fff;
         text-decoration: none; }
+        .active-team-list .team-button.done.time-red::before {
+          background-color: #fff; }
         .active-team-list .team-button.done.time-red::after {
           color: #650D1B; }
       .active-team-list .team-button.done.time-green {
         background-color: #0F6B05 !important;
         color: #fff;
         text-decoration: none; }
+        .active-team-list .team-button.done.time-green::before {
+          background-color: #fff; }
         .active-team-list .team-button.done.time-green::after {
           color: #0F6B05 !important; }
   .active-team-list#left-list {
