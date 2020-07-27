@@ -104,8 +104,13 @@ label {
   margin:20px auto;
   display:block;
   cursor:pointer;
+  transition: opacity $transTime;
   &.hidden {
     display:none;
+  }
+  &.disabled { 
+    opacity:0;
+    cursor:default;
   }
 }
 
@@ -140,6 +145,7 @@ label {
       line-height:16px;
       height:30px;
       margin:5px;
+      transition: opacity $transTime;
     }
     &:checked+label {
       opacity:1;
