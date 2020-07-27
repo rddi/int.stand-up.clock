@@ -31,6 +31,16 @@ class Timer {
     this.current = 0;
     this.state = 0;
     this.start = null;
+
+    this.notices = {
+      '10000':false,
+      '5000':false,
+      '4000':false,
+      '3000':false,
+      '2000':false,
+      '1000':false,
+      '0':false 
+    }
   }
 
   stopTimer() {
@@ -52,6 +62,7 @@ class Timer {
 
     this.current = new Date().getTime() - this.start;
 
+
     if (this.current >= this.full) {
       this.state = 2;
       this.display.innerHTML = "00:00";
@@ -71,12 +82,16 @@ class Timer {
       this.left.style.transform = `rotate(0deg)`;
     }
 
-    // let value  = this.milliseconds();
-    // if(time != null) {
-    //   value = time;
-    // }
-
     this.display.innerHTML = this.getTimer();
+
+    const timeLeft = this.full - this.current;
+
+    for (let key in this.notices) {
+      if (!this.notices[key] && (timeLeft < (parseInt(key, 10) + 1000))) {
+        this.notices[key] = true;
+        playSound('beep');
+      }
+    }
   }
 
   isReady() {
@@ -109,6 +124,26 @@ class Timer {
   }
 }
 
+class Sound {
+  constructor(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute('preload', 'auto');
+    this.sound.setAttribute('controls', 'none');
+    this.sound.style.display = 'none';
+    document.body.appendChild(this.sound);
+  }
+ 
+  play() {
+    this.sound.currentTime = 0
+    this.sound.play();
+  }
+
+  stop() {
+    this.sound.stop();
+  }
+}
+
 let timer,
   subtimer,
   collapser,
@@ -118,7 +153,6 @@ let timer,
   setButton,
   settings,
   nameWheel,
-  // nameWheelStyle,
   nameWheelFinished = false,
   form,
   time = 0,
@@ -129,7 +163,8 @@ let timer,
   reset,
   updateSpeed = 100,
   teamRemaining = 0,
-  wheelRot = 0;
+  wheelRot = 0,
+  sounds = [];
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -174,12 +209,6 @@ function mintosentence(time) {
     time = time.split(':')[1];
     quantifier = 'second';
   }
-
-  // let timeArray = time.split();
-
-  // if (timeArray[0] === "0"){
-  //   timeArray.shift();
-  // }
 
   time = time.replace(/^0/, '');
 
@@ -297,6 +326,23 @@ function mstodec(ms) {
   return (ms / 1000) / 60;
 }
 
+function playSound(name) {
+  if (sounds.hasOwnProperty(name)) {
+    sounds[name].play();
+  }
+}
+
+function stopSound(name) {
+  if (sounds.hasOwnProperty(name)) {
+    sounds[name].stop();
+  }
+}
+
+function setupSounds() {
+  sounds['beep'] = new Sound('sounds/beep.mp3');
+  sounds['end'] = new Sound('sounds/end.mp3');
+}
+
 function setupTimers() {
   timer = new Timer('timer');
   subtimer = new Timer('sub-timer');
@@ -309,7 +355,6 @@ function setupTimers() {
   start.addEventListener("click", function(e) {
     timer.startTimer();
     subtimer.startTimer();
-    // newSpeaker();
   });
 
   end.addEventListener("click", function(e) {
@@ -325,6 +370,7 @@ function setupTimers() {
 
 function subtimerRebuild() {
   if (teamRemaining > 1) {
+    sounds['end'].play();
     teamRemaining--;
     subtimer.setTimer(mstodec((timer.full - timer.current) / teamRemaining));
     subtimer.startTimer();
@@ -334,12 +380,6 @@ function subtimerRebuild() {
 
 function newSpeaker() {
   const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
-
-  // speaker.innerHTML = currentSpeaker.innerHTML;
-  // speaker.classList.add("play");
-  // setTimeout(function() {
-  //   speaker.classList.remove("play")
-  // }, 2000);
 
   nameWheel.innerHTML = '';
 
@@ -454,8 +494,8 @@ function recordTime(element) {
 
 function setUpTeamButtons() {
   let teamButtons = document.getElementsByClassName('team-button');
-  let i=0;
-  let j=0;
+  let i = 0;
+  let j = 0;
 
     for(i=0;i<teamButtons.length;i+=1) {
       
@@ -664,6 +704,8 @@ document.addEventListener("DOMContentLoaded", function () {
   setCollapseButton();
   setForm();
   setSelectionButtons();
+
+  setupSounds();
 
   setupTimers();
 
