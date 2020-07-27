@@ -256,9 +256,13 @@ label {
   text-align: center;
   margin: 20px auto;
   display: block;
-  cursor: pointer; }
+  cursor: pointer;
+  transition: opacity 300ms; }
   .button.hidden {
     display: none; }
+  .button.disabled {
+    opacity: 0;
+    cursor: default; }
 
 .select-strip {
   margin: 0 auto;
@@ -294,7 +298,8 @@ label {
       border-radius: 5px;
       line-height: 16px;
       height: 30px;
-      margin: 5px; }
+      margin: 5px;
+      transition: opacity 300ms; }
     .select-strip input[type="checkbox"]:checked + label {
       opacity: 1; }
 

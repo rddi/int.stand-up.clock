@@ -16,6 +16,12 @@ class Timer {
     this.full = mintoms(time);
     this.current = mintoms(time);
     this.display.innerHTML = mstomin(this.full);
+
+    for(let key in this.notices) {
+      if (this.full <= parseInt(key, 10)) {
+        this.notices[key] = true;
+      }
+    }
   }
 
   startTimer() {
@@ -172,6 +178,40 @@ function setCollapser() {
 
 function setSetButton() {
   setButton = document.getElementById("set-button");
+
+  let formInputs = document.getElementsByClassName('set-check');
+
+  for(i = 0;i < formInputs.length;i += 1){
+    formInputs[i].addEventListener('click', function(e) {
+      checkSetButton();
+    });
+  }
+}
+
+function checkSetButton() {
+  const checked = document.querySelectorAll('input:checked');
+  let i = 0;
+  let durSet = false;
+  let memSet = false;
+
+
+  for(i = 0;i < checked.length;i += 1) {
+    if (checked[i].id.match(/dur-/g)) {
+      durSet = true;
+    }
+    if (checked[i].id.match(/member-/g)) {
+      memSet = true;
+    }
+  }
+
+  console.log(durSet, memSet);
+  
+  if (durSet && memSet) {
+    setButton.classList.remove('disabled');
+    return;
+  }
+
+  setButton.classList.add('disabled');
 }
 
 function toggleTray(close = false) {
@@ -199,7 +239,6 @@ function setEndScreen() {
 function setSpeaker() {
   nameWheel = document.getElementById('name-wheel');
   nameWheelStyle = document.getElementById('name-wheel-style');
-  // speaker = document.getElementById('speaker');
 }
 
 function mintosentence(time) {
@@ -251,6 +290,9 @@ function setForm() {
 
   form.addEventListener("submit", function(e) {
     e.preventDefault();
+    if (setButton.classList.contains('disabled')) {
+      return;
+    }
     const results = document.querySelectorAll('input:checked');
     let formData = {};
 
@@ -259,7 +301,6 @@ function setForm() {
     }
 
     team = 0;
-    let teamList = [];
     let flipflop = false;
     const activeList = document.getElementsByClassName('active-team-list');
 
@@ -374,7 +415,6 @@ function subtimerRebuild() {
     teamRemaining--;
     subtimer.setTimer(mstodec((timer.full - timer.current) / teamRemaining));
     subtimer.startTimer();
-    // newSpeaker();
   }
 }
 
@@ -476,12 +516,12 @@ function setUpTeamMembers() {
   let memberList = [];
   let i = 0;
   for (i = 0;i < randomOrder.length;i += 1){
-    memberList.push(`<input id="member-${i}" type="checkbox" class="team-member" name="team-${randomOrder[i]}" />
+    memberList.push(`<input id="member-${i}" type="checkbox" class="team-member set-check" name="team-${randomOrder[i]}" />
     <label for="member-${i}">${randomOrder[i]}</label>`)
   }
 
-  memberList.push(`<div id="select-all" class="selection-button">Select All</div>
-  <div id="deselect-all" class="selection-button hidden">Deselect All</div>`);
+  memberList.push(`<div id="select-all" class="selection-button set-check">Select All</div>
+  <div id="deselect-all" class="selection-button set-check hidden">Deselect All</div>`);
 
   let listElement = document.getElementById('team-members');
 
@@ -703,6 +743,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setCollapser();
   setCollapseButton();
   setForm();
+  
   setSelectionButtons();
 
   setupSounds();
@@ -711,6 +752,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setEndScreen();
   setSpeaker();
+
+  setSetButton();
 
   startUpdates();
 });
