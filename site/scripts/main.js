@@ -494,23 +494,6 @@ function randomiseArray(input) {
 }
 
 function setUpTeamMembers() {
-  const members = [
-    'Nidhal',
-    'Nick',
-    'Frank',
-    'Matt',
-    'Jordan',
-    'Luke',
-    'Conran',
-    'Karim',
-    'Joe',
-    'Julien',
-    'Leo',
-    'Jacques',
-    'Slimane',
-    'Xuan'
-  ];
-
   let randomOrder = randomiseArray(members);
 
   let memberList = [];
