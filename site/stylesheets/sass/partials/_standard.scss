@@ -99,6 +99,25 @@ h1 {
   }
 }
 
+#pep-display {
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+  color:$orange;
+  background-color:$white;
+  font-size:100px;
+  font-weight:bold;
+  width:100%;
+  text-align:center;
+  &:empty {
+    display:none;
+  }
+  &.green {
+    color:$green;
+  }
+}
+
 // #speaker {
 //   position:absolute;
 //   left:50%;

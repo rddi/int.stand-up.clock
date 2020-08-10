@@ -127,6 +127,14 @@ label {
     @include transition(font-size $transTime, font-weight $transTime, transform $transTime);
     text-align:center;
     line-height:70px;
+    &.extra {
+      width:140px;
+    }
+  }
+  &#team-members {
+    label {
+      width:auto;
+    }
   }
   input[type="radio"] {
     display:none;

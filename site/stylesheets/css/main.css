@@ -76,6 +76,22 @@ h1 {
   #end-screen.orange {
     color: #d9643e; }
 
+#pep-display {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #d9643e;
+  background-color: #fff;
+  font-size: 100px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center; }
+  #pep-display:empty {
+    display: none; }
+  #pep-display.green {
+    color: #0F6B05; }
+
 #name-wheel {
   width: 660px;
   position: absolute;
@@ -280,6 +296,10 @@ label {
     transition: font-size 300ms, font-weight 300ms, transform 300ms;
     text-align: center;
     line-height: 70px; }
+    .select-strip label.extra {
+      width: 140px; }
+  .select-strip#team-members label {
+    width: auto; }
   .select-strip input[type="radio"] {
     display: none; }
     .select-strip input[type="radio"]:checked + label {
@@ -363,7 +383,11 @@ label {
       color: #d9643e !important; }
     .timer .timer-display.green {
       color: #0F6B05 !important; }
-  .timer #start-button {
+  .timer #start-button,
+  .timer #end-button,
+  .timer #next-button,
+  .timer #pep-button,
+  .timer #reset-button {
     color: #d9643e;
     position: absolute;
     left: 50%;
@@ -374,26 +398,15 @@ label {
     -o-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%); }
   .timer #end-button {
-    color: #335fa3;
-    position: absolute;
-    left: 50%;
-    top: 75%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%); }
+    color: #335fa3; }
   .timer #reset-button {
     color: grey;
-    background-color: #650D1B;
-    position: absolute;
-    left: 50%;
-    top: 75%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%); }
+    background-color: #650D1B; }
+  .timer #pep-button {
+    background-color: #d9643e;
+    color: #fff; }
+    .timer #pep-button.spinning {
+      display: none; }
   .timer .backing {
     height: 370px;
     width: 370px;

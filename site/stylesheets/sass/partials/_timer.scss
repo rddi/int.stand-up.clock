@@ -57,7 +57,11 @@
     }
   }
 
-  #start-button {
+  #start-button,
+  #end-button,
+  #next-button,
+  #pep-button,
+  #reset-button {
     color:$orange;
     position:absolute;
     left:50%;
@@ -67,19 +71,19 @@
 
   #end-button {
     color:$blue;
-    position:absolute;
-    left:50%;
-    top:75%;
-    @include transform(translate(-50%,-50%));
   }
 
   #reset-button {
     color:grey;
     background-color:$red;
-    position:absolute;
-    left:50%;
-    top:75%;
-    @include transform(translate(-50%,-50%));
+  }
+
+  #pep-button {
+    background-color:$orange;
+    color:$white;
+    &.spinning {
+      display:none;
+    }
   }
 
   .backing {
