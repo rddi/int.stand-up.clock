@@ -197,6 +197,13 @@
           color:$green !important;
         }
       }
+      &.highlight {
+        background-color:$yellow !important;
+        color:$black !important;
+        &::before {
+          opacity:0;
+        }
+      }
     }
   }
 

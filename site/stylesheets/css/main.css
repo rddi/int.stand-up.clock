@@ -335,6 +335,15 @@ label {
   .selection-button.hidden {
     display: none; }
 
+#mute-input {
+  display: none; }
+  #mute-input:checked + .icon {
+    -webkit-transform: translate(-50%, -75%);
+    -moz-transform: translate(-50%, -75%);
+    -ms-transform: translate(-50%, -75%);
+    -o-transform: translate(-50%, -75%);
+    transform: translate(-50%, -75%); }
+
 .timer {
   border-radius: 50%;
   width: 500px;
@@ -514,6 +523,11 @@ label {
           background-color: #fff; }
         .active-team-list .team-button.done.time-green::after {
           color: #0F6B05 !important; }
+      .active-team-list .team-button.done.highlight {
+        background-color: #e9a351 !important;
+        color: #000 !important; }
+        .active-team-list .team-button.done.highlight::before {
+          opacity: 0; }
   .active-team-list#left-list {
     left: 0; }
   .active-team-list#right-list {

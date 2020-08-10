@@ -174,3 +174,10 @@ label {
     display:none;
   }
 }
+
+#mute-input {
+  display:none;
+  &:checked+.icon {
+    @include transform(translate(-50%, -75%));
+  }
+}
