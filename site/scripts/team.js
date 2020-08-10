@@ -1,7 +1,6 @@
 const members = [
   'Nidhal',
   'Nick',
-  'Frank',
   'Matt',
   'Jordan',
   'Luke',

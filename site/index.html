@@ -9,6 +9,15 @@
     <header>
       <div class="container">
         <h1>Digital Innovation - Stand Up</h1>
+        <div class="left">
+          <div id="mute-button" class="header-button">
+            <input id="mute-input" type="checkbox" name="mute"/>
+            <label class="icon" for="mute-input">
+              <span class="fa fa-volume-up"></span>
+              <span class="fa fa-volume-off"></span>
+            </label>
+          </div>
+        </div>
         <div class="right">
           <a class="header-button" id="settings-button">
             <div class="icon">
@@ -27,7 +36,7 @@
           <label>Duration</label>
           <div class="select-strip">
             <input id="dur-1" type="radio" name="duration" value="1" class="set-check"/>
-            <label for="dur-1">1</label>
+            <label for="dur-1" class="extra">1 each</label>
             <input id="dur-5" type="radio" name="duration" value="5" class="set-check"/>
             <label for="dur-5">5</label>
             <input id="dur-10" type="radio" name="duration" value="10" class="set-check"/>
@@ -93,12 +102,15 @@
         <a id="start-button" class="button hidden">START</a>
         <a id="end-button" class="button hidden">END</a>
         <a id="reset-button" class="button hidden">RESET</a>
+        <a id="next-button" class="button hidden">NEXT</a>
+        <a id="pep-button" class="button hidden">PEP TALK</a>
       </div>
 
       <div id="team-remaining">0/0</div>
 
       <div id="end-screen" class="hidden">
         <div>You achieved a <span id="end-time"></span> stand up, with an average of <span id="avg-time"></span> per person</div>
+        <div id="pep-display"></div>
       </div>
     </div>
     <script type="text/javascript" src="scripts/team.js"></script>

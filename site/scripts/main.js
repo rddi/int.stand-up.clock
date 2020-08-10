@@ -150,7 +150,9 @@ class Sound {
   }
 }
 
-let timer,
+let Storage = window.localStorage,
+  muted,
+  timer,
   subtimer,
   collapser,
   selectAll,
@@ -167,6 +169,10 @@ let timer,
   start,
   end,
   reset,
+  next,
+  pep,
+  pepDisplay,
+  muteInput,
   updateSpeed = 100,
   teamRemaining = 0,
   wheelRot = 0,
@@ -203,8 +209,6 @@ function checkSetButton() {
       memSet = true;
     }
   }
-
-  console.log(durSet, memSet);
   
   if (durSet && memSet) {
     setButton.classList.remove('disabled');
@@ -287,6 +291,7 @@ function setSelectionButtons() {
 
 function setForm() {
   form = document.getElementById("input-form");
+  muteInput = document.getElementById("mute-input");
 
   form.addEventListener("submit", function(e) {
     e.preventDefault();
@@ -327,7 +332,9 @@ function setForm() {
           first = false;
         }
 
-        const teamButton = `<div class="team-button ${extraClass}">${breakdown[1]}</div>`;
+        breakdown.shift();
+
+        const teamButton = `<div class="team-button ${extraClass}">${breakdown.join("-")}</div>`;
 
         activeList[target].innerHTML = activeList[target].innerHTML + teamButton;
       }
@@ -336,9 +343,23 @@ function setForm() {
     setUpTeamButtons();
 
     teamRemaining = team;
-    timer.setTimer(formData['duration']);
-    subtimer.setTimer(formData['duration'] / team);
+
+    let duration = formData['duration'];
+
+    if (formData['duration'] == 1) {
+      duration = team;
+    }
+
+    timer.setTimer(duration);
+    subtimer.setTimer(duration / team);
     toggleTray(true);
+  });
+  console.log(muteInput);
+
+  muteInput.addEventListener("click", function(e) {
+    console.log(muteInput.checked);
+    muted = muteInput.checked;
+    Storage.setItem("standup_mute", muted);
   });
 }
 
@@ -368,6 +389,10 @@ function mstodec(ms) {
 }
 
 function playSound(name) {
+  console.log(muted);
+  if (muted) {
+    return;
+  }
   if (sounds.hasOwnProperty(name)) {
     sounds[name].play();
   }
@@ -380,8 +405,20 @@ function stopSound(name) {
 }
 
 function setupSounds() {
+  const memory = Storage.getItem('standup_mute');
+  console.log(typeof memory);
+  if(memory != null) {
+    muted = (memory == "true");
+  } else {
+    muted = false;
+  }
+
+  muteInput.checked = muted;
+
   sounds['beep'] = new Sound('sounds/beep.mp3');
   sounds['end'] = new Sound('sounds/end.mp3');
+  sounds['spin'] = new Sound('sounds/spin.mp3');
+  sounds['found'] = new Sound('sounds/found.mp3');
 }
 
 function setupTimers() {
@@ -391,6 +428,9 @@ function setupTimers() {
   start = document.getElementById("start-button");
   end = document.getElementById("end-button");
   reset = document.getElementById("reset-button");
+  next = document.getElementById("next-button");
+  pep = document.getElementById("pep-button");
+  pepDisplay = document.getElementById("pep-display");
   teamCount = document.getElementById("team-remaining");
 
   start.addEventListener("click", function(e) {
@@ -403,15 +443,26 @@ function setupTimers() {
     subtimer.stopTimer();
   });
 
+  next.addEventListener("click", function(e) {
+    randomSelectMember();
+    subtimerRebuild();
+  });
+
   reset.addEventListener("click", function(e) {
     timer.resetTimer();
     subtimer.resetTimer();
   });
+
+  pep.addEventListener("click", function (e) {
+    pep.classList.add("spinning");
+    pepDisplay.classList.remove("green");
+    spinPep(100);
+  })
 }
 
 function subtimerRebuild() {
   if (teamRemaining > 1) {
-    sounds['end'].play();
+    playSound('end');
     teamRemaining--;
     subtimer.setTimer(mstodec((timer.full - timer.current) / teamRemaining));
     subtimer.startTimer();
@@ -476,6 +527,22 @@ function randomSelectMember() {
   remaining[selection].classList.add('active');
 }
 
+function randomSelectPep() {
+  const members = document.getElementsByClassName('team-button');
+
+  const selection = Math.ceil(Math.random() * members.length) - 1;
+
+  const highlighted = document.getElementsByClassName('highlight');
+
+  if (highlighted.length > 0) {
+    highlighted[0].classList.remove('highlight');
+  }
+
+  pepDisplay.innerHTML = members[selection].innerHTML;
+
+  members[selection].classList.add("highlight")
+}
+
 function randomiseArray(input) {
   let output = input;
 
@@ -493,6 +560,20 @@ function randomiseArray(input) {
   return output;
 }
 
+function spinPep(time, stop = false) {
+  randomSelectPep();
+
+  if (stop) {
+    pepDisplay.classList.add('green');
+    pep.classList.remove('spinning');
+    playSound('found');
+  } else {
+    playSound('spin');
+    setTimeout(function(e) {
+      spinPep(time + (time * 0.1), time > 500);
+    }, time);
+  }
+}
 function setUpTeamMembers() {
   let randomOrder = randomiseArray(members);
 
@@ -649,7 +730,14 @@ function checkNameWheel() {
   }
 
   const letters = document.getElementsByClassName('letter');
-  const currentName = document.getElementsByClassName('active')[0].innerHTML;
+  const members = document.getElementsByClassName('active');
+
+  let currentName = '';
+
+  if (members.length > 0) {
+    currentName= members[0].innerHTML;
+  }
+
   let name = '';
   let i = 0;
   
@@ -697,14 +785,21 @@ function update() {
 
   if (timer.start != null) {
     settings.classList.add("lock");
-    if(teamRemaining > 1 || timer.isFinished()) {
+    if(timer.isFinished()) {
       end.classList.add("hidden");
+      next.classList.add("hidden");
+      pep.classList.remove("hidden");
+    } else if (teamRemaining > 1) {
+      end.classList.add("hidden");
+      next.classList.remove("hidden");
     } else {
       end.classList.remove("hidden");
+      next.classList.add("hidden");
     }
   } else {
     settings.classList.remove("lock");
     end.classList.add("hidden");
+    next.classList.add("hidden");
   }
 
   checkNameWheel();
