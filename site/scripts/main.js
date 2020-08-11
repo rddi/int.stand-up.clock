@@ -37,6 +37,7 @@ class Timer {
     this.current = 0;
     this.state = 0;
     this.start = null;
+    this.pause = false;
 
     this.notices = {
       '10000':false,
@@ -47,6 +48,10 @@ class Timer {
       '1000':false,
       '0':false 
     }
+  }
+
+  pauseTimer() {
+    this.pause = true;
   }
 
   stopTimer() {
@@ -108,6 +113,10 @@ class Timer {
     return this.state == 2;
   }
 
+  isPaused() {
+    return this.pause;
+  }
+
   getMilliseconds() {
     return this.full - this.current;
   }
@@ -167,6 +176,7 @@ let Storage = window.localStorage,
   team = 0,
   ready = false,
   start,
+  pause,
   end,
   reset,
   next,
@@ -426,6 +436,7 @@ function setupTimers() {
   subtimer = new Timer('sub-timer');
 
   start = document.getElementById("start-button");
+  pause = document.getElementById("pause-button");
   end = document.getElementById("end-button");
   reset = document.getElementById("reset-button");
   next = document.getElementById("next-button");
@@ -434,6 +445,18 @@ function setupTimers() {
   teamCount = document.getElementById("team-remaining");
 
   start.addEventListener("click", function(e) {
+    timer.startTimer();
+    subtimer.startTimer();
+  });
+
+  pause.addEventListener("click", function(e) {
+    if (timer.isPaused()) {
+      timer.resume();
+      subtimer.resume();
+    } else {
+      timer.pause();
+      subtimer.pause();
+    }
     timer.startTimer();
     subtimer.startTimer();
   });
