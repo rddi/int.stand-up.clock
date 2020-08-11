@@ -38,7 +38,7 @@ header {
     font-size:40px;
     span {
       vertical-align: top;
-      font-weight: normal;
+      font-weight: normal; 
       font-size:20px;
     }
   }
@@ -61,6 +61,44 @@ header {
 
   &.pad {
     margin-top:100px;
+  }
+}
+
+.modal {
+  position:fixed;
+  left:50%;
+  top:50%;
+  
+  .container {
+    background-color:$white; 
+    h2 {
+      text-align:center;
+    }
+    .fa-times {
+      position:absolute;
+      top:10px;
+      right:10px;
+      font-size:25px;
+      cursor:pointer;
+    }
+  }
+
+  @include transform(translate(-50%,-50%));
+  &.hidden {
+    display:none;
+  }
+
+  
+  &:before {
+    content:'';
+    position:absolute;
+    width:100vw;
+    height:100vh;
+    background-color: $fade;
+    left:50%;
+    top:50%;
+
+    @include transform(translate(-50%,-50%));
   }
 }
 
