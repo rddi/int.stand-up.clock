@@ -181,3 +181,27 @@ label {
     @include transform(translate(-50%, -75%));
   }
 }
+
+input[type="text"] {
+  margin-top:20px;
+  border-radius:5px;
+  padding:15px;
+  color:$orange;
+  border:1px solid $green;
+  min-width:300px;
+}
+
+.edit-team-member {
+  color:$green;
+  font-weight:bold;
+  margin-bottom:5px;
+  .fa {
+    background-color:$red;
+    border-radius:50%;
+    color:$white;
+    margin-right:10px;
+    padding: 3px;
+    width: 20px;
+    text-align: center;
+  }
+}

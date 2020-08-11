@@ -1,3 +1,6 @@
+// const Memory = require("./memory");
+// const TeamMembers = require("./team");
+
 class Timer {
   constructor(id) {
     this.element = document.getElementById(id);
@@ -150,13 +153,13 @@ class Sound {
   }
 }
 
-let Storage = window.localStorage,
-  muted,
+let muted,
   timer,
   subtimer,
   collapser,
   selectAll,
   deselectAll,
+  edit,
   endScreen,
   setButton,
   settings,
@@ -176,7 +179,11 @@ let Storage = window.localStorage,
   updateSpeed = 100,
   teamRemaining = 0,
   wheelRot = 0,
-  sounds = [];
+  sounds = [],
+  teamModal,
+  teamModalList,
+  teamModalInput,
+  localTeamMembers = [];
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -269,9 +276,11 @@ function showEndScreen() {
 function setSelectionButtons() {
   selectAll = document.getElementById("select-all");
   deselectAll = document.getElementById("deselect-all");
+  edit = document.getElementById("edit-team");
 
   selectAll.addEventListener("click", function(e) {
     const allMembers = document.getElementsByClassName("team-member");
+    console.log(allMembers);
     let i = 0;
 
     for(i = 0;i < allMembers.length;i += 1) {
@@ -286,6 +295,10 @@ function setSelectionButtons() {
     for(i = 0;i < allMembers.length;i += 1) {
       allMembers[i].checked = false;
     }
+  });
+
+  edit.addEventListener("click", function(e) {
+    teamModal.classList.remove('hidden');
   });
 }
 
@@ -354,12 +367,10 @@ function setForm() {
     subtimer.setTimer(duration / team);
     toggleTray(true);
   });
-  console.log(muteInput);
 
   muteInput.addEventListener("click", function(e) {
-    console.log(muteInput.checked);
     muted = muteInput.checked;
-    Storage.setItem("standup_mute", muted);
+    Memory.set("standup_mute", muted);
   });
 }
 
@@ -405,10 +416,8 @@ function stopSound(name) {
 }
 
 function setupSounds() {
-  const memory = Storage.getItem('standup_mute');
-  console.log(typeof memory);
-  if(memory != null) {
-    muted = (memory == "true");
+  if (Memory.exists('standup_mute')) {
+    muted = Memory.exists('standup_mute');
   } else {
     muted = false;
   }
@@ -574,22 +583,89 @@ function spinPep(time, stop = false) {
     }, time);
   }
 }
-function setUpTeamMembers() {
-  let randomOrder = randomiseArray(members);
-
-  let memberList = [];
+function setUpTeamMembers(maintainOrder = false) {
+  let randomOrder = randomiseArray(TeamMembers.getList());
   let i = 0;
+
+  console.log(typeof randomOrder, randomOrder);
+  
+  if (maintainOrder && localTeamMembers != []) {
+    for(i = localTeamMembers.length - 1;i>=0;i-=1) {
+      if (!randomOrder.includes(localTeamMembers[i])) {
+        localTeamMembers.splice(i, 1);
+      }
+    }
+
+    for(i = 0;i < randomOrder.length;i += 1) {
+      if (!localTeamMembers.includes(randomOrder[i])) {
+        localTeamMembers.push(randomOrder[i]);
+      }
+    }
+
+    randomOrder = localTeamMembers;
+  } else {
+    localTeamMembers = randomOrder;
+  }
+  
+
+  let memberList = [`<div id="edit-team" class="selection-button">Edit</div>`];
+  let editList = [];
+  
   for (i = 0;i < randomOrder.length;i += 1){
     memberList.push(`<input id="member-${i}" type="checkbox" class="team-member set-check" name="team-${randomOrder[i]}" />
-    <label for="member-${i}">${randomOrder[i]}</label>`)
+    <label for="member-${i}">${randomOrder[i]}</label>`);
+    editList.push(`<div class="edit-team-member"><span class="fa fa-minus remove-member" id="remove-${randomOrder[i]}"></span>${randomOrder[i]}</div>`);
   }
 
   memberList.push(`<div id="select-all" class="selection-button set-check">Select All</div>
   <div id="deselect-all" class="selection-button set-check hidden">Deselect All</div>`);
 
   let listElement = document.getElementById('team-members');
+  let editListElement = document.getElementById('team-editor-list');
 
   listElement.innerHTML = memberList.join('');
+  editListElement.innerHTML = editList.join('');
+}
+
+function setUpTeamEdit() {
+  teamModal = document.getElementById('team-modal');
+  teamModalList = document.getElementById('team-editor-list');
+  teamModalInput = document.getElementById('team-add-input');
+
+  teamModalInput.addEventListener('input', function(e) {
+    let value = teamModalInput.value;
+
+    if (value.slice(-1) != " ") {
+      return;
+    }
+
+    TeamMembers.add(value.substr(0, value.length -1));
+    teamModalInput.value = '';
+
+    buildTeamSections(true);
+  });
+
+  document.addEventListener('click', function(e){
+    console.log(event);
+    if (!e.target.classList.contains('remove-member')) {
+      return;
+    }
+
+    console.log(e.target.id);
+
+    const removee = e.target.id.split('remove-')[1];
+    TeamMembers.remove(removee);
+
+    console.log(removee);
+
+    buildTeamSections(true);
+  });
+
+  let close = document.getElementById('team-modal-close');
+
+  close.addEventListener('click', function(e) {
+    teamModal.classList.add("hidden");
+  });
 }
 
 function recordTime(element) {
@@ -815,14 +891,18 @@ function startUpdates() {
   }, updateSpeed);
 }
 
+function buildTeamSections(maintainOrder = false) {
+  setUpTeamMembers(maintainOrder);
+  setUpTeamEdit();
+  setSelectionButtons();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-  setUpTeamMembers();
+  buildTeamSections();
 
   setCollapser();
   setCollapseButton();
   setForm();
-  
-  setSelectionButtons();
 
   setupSounds();
 
