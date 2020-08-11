@@ -1,19 +1,3 @@
-// const Memory = require('./memory');
-
-// 'Nidhal',
-//   'Nick',
-//   'Matt',
-//   'Jordan',
-//   'Luke',
-//   'Conran',
-//   'Karim',
-//   'Joe',
-//   'Julien',
-//   'Leo',
-//   'Jacques',
-//   'Slimane',
-//   'Xuan'
-
 const TeamMembers = {
   getList: function() {
     let list = [];

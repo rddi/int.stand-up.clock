@@ -280,7 +280,6 @@ function setSelectionButtons() {
 
   selectAll.addEventListener("click", function(e) {
     const allMembers = document.getElementsByClassName("team-member");
-    console.log(allMembers);
     let i = 0;
 
     for(i = 0;i < allMembers.length;i += 1) {
@@ -400,7 +399,6 @@ function mstodec(ms) {
 }
 
 function playSound(name) {
-  console.log(muted);
   if (muted) {
     return;
   }
@@ -586,8 +584,6 @@ function spinPep(time, stop = false) {
 function setUpTeamMembers(maintainOrder = false) {
   let randomOrder = randomiseArray(TeamMembers.getList());
   let i = 0;
-
-  console.log(typeof randomOrder, randomOrder);
   
   if (maintainOrder && localTeamMembers != []) {
     for(i = localTeamMembers.length - 1;i>=0;i-=1) {
@@ -632,31 +628,33 @@ function setUpTeamEdit() {
   teamModalList = document.getElementById('team-editor-list');
   teamModalInput = document.getElementById('team-add-input');
 
-  teamModalInput.addEventListener('input', function(e) {
+  teamModalInput.addEventListener('keypress', function(e) {
     let value = teamModalInput.value;
 
-    if (value.slice(-1) != " ") {
+    if(!['Enter', ' '].includes(e.key)) {
       return;
     }
 
-    TeamMembers.add(value.substr(0, value.length -1));
     teamModalInput.value = '';
+
+    if (['',' '].includes(value)) {
+      return;
+    }
+
+    value = value.trim();
+
+    TeamMembers.add(value);
 
     buildTeamSections(true);
   });
 
   document.addEventListener('click', function(e){
-    console.log(event);
     if (!e.target.classList.contains('remove-member')) {
       return;
     }
 
-    console.log(e.target.id);
-
     const removee = e.target.id.split('remove-')[1];
     TeamMembers.remove(removee);
-
-    console.log(removee);
 
     buildTeamSections(true);
   });
