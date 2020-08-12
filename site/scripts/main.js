@@ -2,7 +2,7 @@
 // const TeamMembers = require("./team");
 
 class Timer {
-  constructor(id) {
+  constructor(id, main = false) {
     this.element = document.getElementById(id);
 
     let hands = this.element.getElementsByClassName("hand");
@@ -10,6 +10,7 @@ class Timer {
     this.left = hands[0];
     this.right = hands[1];
     this.display = this.element.getElementsByClassName("timer-display")[0];
+    this.main = main;
 
     this.resetTimer();
   }
@@ -65,7 +66,9 @@ class Timer {
 
   stopTimer() {
     this.state = 2;
-    playSound('tada');
+    if (this.main) {
+      playSound('tada');
+    }
   }
 
   orange() {
@@ -445,7 +448,7 @@ function setupSounds() {
 }
 
 function setupTimers() {
-  timer = new Timer('timer');
+  timer = new Timer('timer', true);
   subtimer = new Timer('sub-timer');
 
   pause = document.getElementById("pause-button");
