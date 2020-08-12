@@ -465,12 +465,14 @@ function setupTimers() {
     if (timer.isPaused()) {
       timer.resumeTimer();
       subtimer.resumeTimer();
-      pause.innerHTML = "PAUSE";
+      pause.innerHTML = `<span class="fa fa-pause">`;
+      pause.classList.remove('paused');
       nameWheelPause(false);
     } else {
       timer.pauseTimer();
       subtimer.pauseTimer();
-      pause.innerHTML = "RESUME";
+      pause.innerHTML = `<span class="fa fa-play">`;
+      pause.classList.add('paused');
       nameWheelPause(true);
     }
   });
@@ -644,7 +646,7 @@ function setUpTeamMembers(maintainOrder = false) {
   }
   
 
-  let memberList = [`<div id="edit-team" class="selection-button">Edit</div>`];
+  let memberList = [`<div id="edit-team" class="selection-button"><span class="fa fa-pencil-square-o"></div>`];
   let editList = [];
   
   for (i = 0;i < randomOrder.length;i += 1){
@@ -907,7 +909,11 @@ function update() {
     } else if (teamRemaining > 1) {
       end.classList.add("hidden");
       pause.classList.remove("hidden");
-      next.classList.remove("hidden");
+      if (!timer.isPaused()) {
+        next.classList.remove("hidden");
+      } else {
+        next.classList.add("hidden");
+      }
     } else {
       end.classList.remove("hidden");
       pause.classList.remove("hidden");

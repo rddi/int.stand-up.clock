@@ -71,7 +71,8 @@
   }
 
   #end-button {
-    color:$blue;
+    @include transform(translate(0%, -50%));
+    color:$red;
   }
 
   #reset-button {
@@ -80,7 +81,15 @@
   }
 
   #pause-button {
-    @include transform(translate(-50%, 220px));
+    @include transform(translate(-100%, -50%));
+    @include transition(transform $transTime);
+    &.paused {
+      @include transform(translate(-50%, -50%));
+    }
+  }
+
+  #next-button {
+    @include transform(translate(0%, -50%));
   }
 
   #pep-button {
