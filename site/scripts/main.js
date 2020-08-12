@@ -201,10 +201,14 @@ let muted,
   teamModal,
   teamModalList,
   teamModalInput,
-  localTeamMembers = [];
+  localTeamMembers = [],
+  teamname = 'default',
+  teamInput,
+  title;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
+  title = document.getElementById("title");
 }
 
 function setSetButton() {
@@ -315,13 +319,25 @@ function setSelectionButtons() {
   });
 
   edit.addEventListener("click", function(e) {
-    teamModal.classList.remove('hidden');
+    openTeamModal();
   });
+}
+
+function openTeamModal() {
+  teamInput.value = teamname;
+  teamModal.classList.remove('hidden');
+}
+
+function closeTeamModal() {
+  setTeamName(teamInput.value);
+  teamModal.classList.add('hidden');
 }
 
 function setForm() {
   form = document.getElementById("input-form");
   muteInput = document.getElementById("mute-input");
+
+  teamInput = document.getElementById('team-name-input');
 
   form.addEventListener("submit", function(e) {
     e.preventDefault();
@@ -716,7 +732,7 @@ function setUpTeamEdit() {
   let close = document.getElementById('team-modal-close');
 
   close.addEventListener('click', function(e) {
-    teamModal.classList.add("hidden");
+    closeTeamModal();
   });
 }
 
@@ -959,12 +975,29 @@ function buildTeamSections(maintainOrder = false) {
   setSelectionButtons();
 }
 
+function setTeamName (name = null) {
+  if(!name) {
+    if(Memory.exists('standup_teamname')) {
+      teamname = Memory.get('standup_teamname');
+    } else {
+      teamname = "Super Awesome Team"
+    }
+  } else {
+    teamname = name;
+    Memory.set('standup_teamname', teamname);
+  }
+
+  title.innerHTML = teamname + ' - Stand Up';
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   buildTeamSections();
 
   setCollapser();
   setCollapseButton();
   setForm();
+
+  setTeamName();
 
   setupSounds();
 
