@@ -113,6 +113,9 @@ label {
     cursor:default;
   }
   &.symbol {
+    #{$symbolOutline}:2px;
+    #{$symbolScale}:1.1;
+
     background-color:transparent;
     font-size:60px;
     width:100px;
@@ -121,13 +124,45 @@ label {
       position:absolute;
       top:50%;
       left:50%;
-      @include transform(translate(-50%,-50%) scale(1)); 
-      @include transition(transform $transTime);
+      @include transition(transform $transTime, color $transTime);
+      
+      color:$blue;
+      &.pos-main {
+        color:$white;
+        @include transform(translate(-50%,-50%) scale(1));
+      }
+      &.pos-topright {
+        @include transform(translate(calc(-50% + #{$symbolOutline}), calc(-50% - #{$symbolOutline})) scale(1));
+      }
+      &.pos-topleft {
+        @include transform(translate(calc(-50% - #{$symbolOutline}), calc(-50% - #{$symbolOutline})) scale(1));
+      }
+      &.pos-bottomright {
+        @include transform(translate(calc(-50% + #{$symbolOutline}), calc(-50% + #{$symbolOutline})) scale(1));
+      }
+      &.pos-bottomleft {
+        @include transform(translate(calc(-50% - #{$symbolOutline}), calc(-50% + #{$symbolOutline})) scale(1));
+      }
+      
     }
     &:hover {
-      span.fa {
-        @include transform(translate(-50%,-50%) scale(1.1));
-        color:$yellow;
+      span {
+        &.pos-main {
+          @include transform(translate(-50%,-50%) scale(#{$symbolScale}));
+          color:$yellow;
+        }
+        &.pos-topright {
+          @include transform(translate(calc(-50% + #{$symbolOutline}),calc(-50% - #{$symbolOutline})) scale(#{$symbolScale}));
+        }
+        &.pos-topleft {
+          @include transform(translate(calc(-50% - #{$symbolOutline}),calc(-50% - #{$symbolOutline})) scale(#{$symbolScale}));
+        }
+        &.pos-bottomright {
+          @include transform(translate(calc(-50% + #{$symbolOutline}),calc(-50% + #{$symbolOutline})) scale(#{$symbolScale}));
+        }
+        &.pos-bottomleft {
+          @include transform(translate(calc(-50% - #{$symbolOutline}),calc(-50% + #{$symbolOutline})) scale(#{$symbolScale}));
+        }
       }
     }
   }

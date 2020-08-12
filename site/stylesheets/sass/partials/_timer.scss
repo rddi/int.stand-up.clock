@@ -68,6 +68,7 @@
     left:50%;
     top:75%;
     @include transform(translate(-50%,-50%));
+    @include transition(transform $transTime);
   }
 
   #end-button {
@@ -82,7 +83,6 @@
 
   #pause-button {
     @include transform(translate(-100%, -50%));
-    @include transition(transform $transTime);
     &.paused {
       @include transform(translate(-50%, -50%));
     }

@@ -183,7 +183,6 @@ let muted,
   time = 0,
   team = 0,
   ready = false,
-  start,
   pause,
   end,
   reset,
@@ -438,7 +437,7 @@ function setupSounds() {
   muteInput.checked = muted;
 
   sounds['beep'] = new Sound('sounds/beep.mp3');
-  sounds['end'] = new Sound('sounds/end.mp3');
+  sounds['next'] = new Sound('sounds/end.mp3');
   sounds['spin'] = new Sound('sounds/spin.mp3');
   sounds['found'] = new Sound('sounds/found.mp3');
 }
@@ -447,7 +446,6 @@ function setupTimers() {
   timer = new Timer('timer');
   subtimer = new Timer('sub-timer');
 
-  start = document.getElementById("start-button");
   pause = document.getElementById("pause-button");
   end = document.getElementById("end-button");
   reset = document.getElementById("reset-button");
@@ -456,22 +454,31 @@ function setupTimers() {
   pepDisplay = document.getElementById("pep-display");
   teamCount = document.getElementById("team-remaining");
 
-  start.addEventListener("click", function(e) {
-    timer.startTimer();
-    subtimer.startTimer();
-  });
-
   pause.addEventListener("click", function(e) {
-    if (timer.isPaused()) {
-      timer.resumeTimer();
-      subtimer.resumeTimer();
-      pause.innerHTML = `<span class="fa fa-pause">`;
+    let symbols = pause.getElementsByClassName('fa');
+    let i = 0;
+    if (timer.isPaused() || timer.isReady()) {
+      if (timer.isPaused()) {
+        timer.resumeTimer();
+        subtimer.resumeTimer();
+      } else {
+        timer.startTimer();
+        subtimer.startTimer();
+        playSound('next');
+      }
+      for(i=0;i<symbols.length;i += 1) {
+        symbols[i].classList.remove('fa-play');
+        symbols[i].classList.add('fa-pause');
+      }
       pause.classList.remove('paused');
       nameWheelPause(false);
     } else {
       timer.pauseTimer();
       subtimer.pauseTimer();
-      pause.innerHTML = `<span class="fa fa-play">`;
+      for(i=0;i<symbols.length;i += 1) {
+        symbols[i].classList.remove('fa-pause');
+        symbols[i].classList.add('fa-play');
+      }
       pause.classList.add('paused');
       nameWheelPause(true);
     }
@@ -501,7 +508,7 @@ function setupTimers() {
 
 function subtimerRebuild() {
   if (teamRemaining > 1) {
-    playSound('end');
+    playSound('next');
     teamRemaining--;
     subtimer.setTimer(mstodec((timer.full - timer.current) / teamRemaining));
     subtimer.startTimer();
@@ -882,12 +889,6 @@ function update() {
     manageSelectionButtons();
   }
 
-  if (timer.isReady()) {
-    start.classList.remove("hidden");
-  } else {
-    start.classList.add("hidden");
-  }
-
   if (subtimer.isFinished()) {
     randomSelectMember();
     subtimerRebuild();
@@ -915,14 +916,23 @@ function update() {
         next.classList.add("hidden");
       }
     } else {
-      end.classList.remove("hidden");
       pause.classList.remove("hidden");
       next.classList.add("hidden");
+      if (!timer.isPaused()) {
+        end.classList.remove("hidden");
+      } else {
+        end.classList.add("hidden");
+      }
     }
   } else {
     settings.classList.remove("lock");
     end.classList.add("hidden");
     next.classList.add("hidden");
+    if (timer.isReady()) {
+      pause.classList.remove("hidden");
+    } else {
+      pause.classList.add("hidden");
+    }
   }
 
   checkNameWheel();
