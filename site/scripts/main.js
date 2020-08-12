@@ -40,7 +40,7 @@ class Timer {
     this.current = 0;
     this.state = 0;
     this.start = null;
-    this.pause = false;
+    this.pause = null;
 
     this.notices = {
       '10000':false,
@@ -54,7 +54,13 @@ class Timer {
   }
 
   pauseTimer() {
-    this.pause = true;
+    this.pause = new Date().getTime();
+  }
+
+  resumeTimer() {
+    let timeDiff = (new Date().getTime() - this.pause);
+    this.start += timeDiff;
+    this.pause = null;
   }
 
   stopTimer() {
@@ -70,12 +76,11 @@ class Timer {
   }
 
   update() {
-    if (this.state != 1) {
+    if (this.state != 1 || this.isPaused()) {
       return;
     }
 
     this.current = new Date().getTime() - this.start;
-
 
     if (this.current >= this.full) {
       this.state = 2;
@@ -117,7 +122,7 @@ class Timer {
   }
 
   isPaused() {
-    return this.pause;
+    return this.pause != null;
   }
 
   getMilliseconds() {
@@ -458,14 +463,16 @@ function setupTimers() {
 
   pause.addEventListener("click", function(e) {
     if (timer.isPaused()) {
-      timer.resume();
-      subtimer.resume();
+      timer.resumeTimer();
+      subtimer.resumeTimer();
+      pause.innerHTML = "PAUSE";
+      nameWheelPause(false);
     } else {
-      timer.pause();
-      subtimer.pause();
+      timer.pauseTimer();
+      subtimer.pauseTimer();
+      pause.innerHTML = "RESUME";
+      nameWheelPause(true);
     }
-    timer.startTimer();
-    subtimer.startTimer();
   });
 
   end.addEventListener("click", function(e) {
@@ -497,6 +504,16 @@ function subtimerRebuild() {
     subtimer.setTimer(mstodec((timer.full - timer.current) / teamRemaining));
     subtimer.startTimer();
   }
+}
+
+function nameWheelPause(toPause) {
+  if (toPause) {
+    let transform = window.getComputedStyle(nameWheel).getPropertyValue('transform');
+    nameWheel.style.transform = transform;
+    return;
+  }
+  nameWheel.style.transform = `translate(-50%, -50%) rotate3d(0, 0, 1, ${wheelRot - 120}deg)`;
+  nameWheel.style.transitionDuration = `${(Math.floor((subtimer.full - subtimer.current) / 1000))}s`;
 }
 
 function newSpeaker() {
@@ -885,12 +902,15 @@ function update() {
     if(timer.isFinished()) {
       end.classList.add("hidden");
       next.classList.add("hidden");
+      pause.classList.add("hidden");
       pep.classList.remove("hidden");
     } else if (teamRemaining > 1) {
       end.classList.add("hidden");
+      pause.classList.remove("hidden");
       next.classList.remove("hidden");
     } else {
       end.classList.remove("hidden");
+      pause.classList.remove("hidden");
       next.classList.add("hidden");
     }
   } else {

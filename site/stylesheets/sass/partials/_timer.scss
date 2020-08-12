@@ -58,6 +58,7 @@
   }
 
   #start-button,
+  #pause-button,
   #end-button,
   #next-button,
   #pep-button,
@@ -76,6 +77,10 @@
   #reset-button {
     color:grey;
     background-color:$red;
+  }
+
+  #pause-button {
+    @include transform(translate(-50%, 220px));
   }
 
   #pep-button {

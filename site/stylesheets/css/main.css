@@ -398,7 +398,8 @@ input[type="text"] {
     margin-right: 10px;
     padding: 3px;
     width: 20px;
-    text-align: center; }
+    text-align: center;
+    cursor: pointer; }
 
 .timer {
   border-radius: 50%;
@@ -449,6 +450,7 @@ input[type="text"] {
     .timer .timer-display.green {
       color: #0F6B05 !important; }
   .timer #start-button,
+  .timer #pause-button,
   .timer #end-button,
   .timer #next-button,
   .timer #pep-button,
@@ -467,6 +469,12 @@ input[type="text"] {
   .timer #reset-button {
     color: grey;
     background-color: #650D1B; }
+  .timer #pause-button {
+    -webkit-transform: translate(-50%, 220px);
+    -moz-transform: translate(-50%, 220px);
+    -ms-transform: translate(-50%, 220px);
+    -o-transform: translate(-50%, 220px);
+    transform: translate(-50%, 220px); }
   .timer #pep-button {
     background-color: #d9643e;
     color: #fff; }
