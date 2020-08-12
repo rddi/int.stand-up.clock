@@ -432,7 +432,6 @@ function stopSound(name) {
 }
 
 function setupSounds() {
-  console.log(Memory.exists('standup_mute'), typeof Memory.getBoolean('standup_mute'), Memory.getBoolean('standup_mute'));
   if (Memory.exists('standup_mute')) {
     muted = Memory.getBoolean('standup_mute');
   } else {
