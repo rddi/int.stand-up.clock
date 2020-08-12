@@ -65,6 +65,7 @@ class Timer {
 
   stopTimer() {
     this.state = 2;
+    playSound('tada');
   }
 
   orange() {
@@ -83,7 +84,7 @@ class Timer {
     this.current = new Date().getTime() - this.start;
 
     if (this.current >= this.full) {
-      this.state = 2;
+      this.stopTimer();
       this.display.innerHTML = "00:00";
       this.right.style.transform = "rotate(180deg)";
       this.left.style.transform = "rotate(180deg)";
@@ -440,6 +441,7 @@ function setupSounds() {
   sounds['next'] = new Sound('sounds/end.mp3');
   sounds['spin'] = new Sound('sounds/spin.mp3');
   sounds['found'] = new Sound('sounds/found.mp3');
+  sounds['tada'] = new Sound('sounds/tada.mp3');
 }
 
 function setupTimers() {
