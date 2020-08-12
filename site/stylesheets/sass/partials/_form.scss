@@ -169,8 +169,8 @@ label {
 }
 
 .select-strip {
-  margin: 0 auto;
-  height:70px;
+  margin: 0 auto 50px;
+  // height:70px;
   text-align: center;
   label {
     padding:5px;
@@ -228,10 +228,137 @@ label {
       opacity:1;
     }
   }
-  input[type="range"] {
+  // input[type="range"] {
+  //   width:calc(100% - 100px);
+  //   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  //   background: transparent; /* Otherwise white in Chrome */
+
+  //   &::-webkit-slider-thumb {
+  //     -webkit-appearance: none;
+  //   }
+
+  //   &:focus {
+  //     outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+  //   }
+    
+  //   &::-ms-track {
+  //     width: 100%;
+  //     cursor: pointer;
+    
+  //     /* Hides the slider so custom styles can be added */
+  //     background: transparent; 
+  //     border-color: transparent;
+  //     color: transparent;
+  //   }
+
+
+
+
+
+
+  input[type=range] {
+    -webkit-appearance: none;
+    margin: 18px 0;
     width:calc(100% - 100px);
+    border-radius:6px;
+    overflow:hidden;
+    background-color:transparent;
+  
+    &:focus {
+      outline: none;
+    }
+    &::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 15px;
+      cursor: pointer;
+      background: $barColour;
+      border-radius: 7.5px;
+    }
+    &::-webkit-slider-thumb {
+      height: 15px;
+      width: 15px;
+      border-radius:50%;
+      
+      background: $thumbColour;
+      cursor: pointer;
+      -webkit-appearance: none;
+      // margin-top: -9px;
+      box-shadow: -$maxWidth 0 0 calc(#{$maxWidth} - 7.5px) $fillColour;
+    }
+    &:focus::-webkit-slider-runnable-track {
+      background: $barColour;
+    }
+    &::-moz-range-track {
+      width: 100%;
+      height: 15px;
+      cursor: pointer;
+      background: $barColour;
+      border-radius: 7.5px;
+    }
+    &::-moz-range-thumb {
+      height: 15px;
+      width: 15px;
+      border-radius: 50%;
+      background: $thumbColour;
+      cursor: pointer;
+    }
+    &::-ms-track {
+      width: 100%;
+      height: 15px;
+      cursor: pointer;
+      background: transparent;
+      border-color: transparent;
+      border-width: 16px 0;
+      color: transparent;
+    }
+    &::-ms-fill-lower {
+      background: $barColour;
+      border-radius: 2.6px;
+    }
+    &::-ms-fill-upper {
+      background: $barColour;
+      border-radius: 2.6px;
+    }
+    &::-ms-thumb {
+      height: 15px;
+      width: 15px;
+      border-radius: 50%;
+      background: $thumbColour;
+      cursor: pointer;
+    }
+    &:focus::-ms-fill-lower {
+      background: $barColour;
+    }
+    &:focus::-ms-fill-upper {
+      background: $barColour;
+    }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
 
 .selection-button {
   background-color:$blue;
@@ -294,4 +421,11 @@ input[type="text"] {
     text-align: center;
     cursor:pointer;
   }
+}
+
+#duration-display {
+ font-size:30px;
+ span {
+  color:$yellow;
+ }
 }

@@ -347,9 +347,9 @@ function updateDurationDisplay(_value = null) {
   
   let perperson = ' in total';
   if (options.pp) {
-    perperson = ' per person';
+    perperson = ` per person`;
   }
-  durationDisplay.innerHTML = `${value}m${perperson}`;
+  durationDisplay.innerHTML = `<span>${value}m</span>${perperson}`;
 }
 
 function setForm() {

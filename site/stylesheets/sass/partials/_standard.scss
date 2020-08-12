@@ -16,7 +16,7 @@ header {
 
   &::before {
     content:'';
-    background-color:#0008;
+    background-color:$fade;
     height:100%;
     width:100%;
     position:absolute;
@@ -27,7 +27,7 @@ header {
 
 .container {
   margin:0 auto;
-  max-width: 1080px;
+  max-width: $maxWidth;
   padding: 20px;
   position:relative;
   .left, .right {
