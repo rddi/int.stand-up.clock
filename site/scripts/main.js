@@ -543,6 +543,9 @@ function subtimerRebuild() {
   if (teamRemaining > 1) {
     playSound('next');
     teamRemaining--;
+    if (!options.collectTime) {
+      timer.full = timer.full - (subtimer.full - subtimer.current);
+    }
     subtimer.setTimer(mstodec((timer.full - timer.current) / teamRemaining));
     subtimer.startTimer();
   }
