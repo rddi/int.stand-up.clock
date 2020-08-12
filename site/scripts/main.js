@@ -171,8 +171,7 @@ class Sound {
   }
 }
 
-let muted,
-  timer,
+let timer,
   subtimer,
   collapser,
   selectAll,
@@ -206,6 +205,7 @@ let muted,
   teamInput,
   title,
   options = {
+    mute: false,
     pausable: false,
     collectTime: true,
   },
@@ -408,10 +408,10 @@ function setForm() {
     toggleTray(true);
   });
 
-  muteInput.addEventListener("click", function(e) {
-    muted = muteInput.checked;
-    Memory.set("standup_mute", muted);
-  });
+  // muteInput.addEventListener("click", function(e) {
+  //   options.mute = muteInput.checked;
+  //   Memory.set("standup_mute", options.mute);
+  // });
 }
 
 function stringtoms(string) {
@@ -440,7 +440,7 @@ function mstodec(ms) {
 }
 
 function playSound(name) {
-  if (muted) {
+  if (options.mute) {
     return;
   }
   if (sounds.hasOwnProperty(name)) {
@@ -455,13 +455,13 @@ function stopSound(name) {
 }
 
 function setupSounds() {
-  if (Memory.exists('standup_mute')) {
-    muted = Memory.getBoolean('standup_mute');
-  } else {
-    muted = false;
-  }
+  // if (Memory.exists('standup_mute')) {
+  //   options.mute = Memory.getBoolean('standup_mute');
+  // } else {
+  //   options.mute = false;
+  // }
 
-  muteInput.checked = muted;
+  // muteInput.checked = options.mute;
 
   sounds['beep'] = new Sound('sounds/beep.mp3');
   sounds['next'] = new Sound('sounds/end.mp3');
@@ -1024,7 +1024,7 @@ function setOptions (save = false) {
 function getMemory() {
   setTeamName();
 
-  let optionElements = document.getElementsByClassName('option-checkbox');
+  let optionElements = document.getElementsByClassName('option-control');
   let i = 0;
 
   optionInputs = {};
