@@ -185,11 +185,17 @@ label {
       width:140px;
     }
   }
-  &#team-members {
+  &#team-members,
+  &#options {
     label {
       width:auto;
     }
   }
+  // &#options {
+  //   label {
+  //     background-color:$yellow;
+  //   }
+  // }
   input[type="radio"] {
     display:none;
     &:checked+label {
@@ -209,6 +215,15 @@ label {
       margin:5px;
       transition: opacity $transTime;
     }
+    &.option-checkbox {
+      &+label {
+        background-color:$red;
+        opacity:1;
+      }
+      &:checked+label {
+        background-color:$green;
+      }
+    }
     &:checked+label {
       opacity:1;
     }
@@ -227,6 +242,17 @@ label {
   &.hidden {
     display:none;
   }
+}
+
+.edit-button {
+  background-color:transparent;
+  display:inline-block;
+  margin:0 auto;
+  padding:5px 15px;
+  border-radius:5px;
+  color:$white;
+  margin:5px;
+  cursor:pointer;
 }
 
 #mute-input {
@@ -262,7 +288,6 @@ input[type="text"] {
     color:$white;
     margin-right:10px;
     padding: 2px 3px;
-    // width: 20px;
     text-align: center;
     cursor:pointer;
   }

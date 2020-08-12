@@ -54,7 +54,7 @@
     }
     &.green {
       color:$green !important;
-    }
+    }  
   }
 
   #start-button,
@@ -86,6 +86,11 @@
     &.paused {
       @include transform(translate(-50%, -50%));
     }
+    &.no-pause {
+      &:not(.paused) {
+        display:none;
+      }
+    }
   }
 
   #next-button {
@@ -97,6 +102,13 @@
     color:$white;
     &.spinning {
       display:none;
+    }
+  }
+
+  &.no-pause {
+    #next-button,
+    #end-button {
+      @include transform(translate(-50%, -50%));
     }
   }
 

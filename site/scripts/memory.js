@@ -13,8 +13,18 @@ const Memory = {
 
     return variable == "true";
   },
-  exists: function(variable) {
-    let output = this.get(variable);
+  setObject: function(_variable, _value) {
+    let value = JSON.stringify(_value);
+
+    this.set(_variable, value)
+  },
+  getObject: function(_variable) {
+    let variable = this.get(_variable);
+
+    return JSON.parse(variable);
+  },
+  exists: function(_variable) {
+    let output = this.get(_variable);
     if (output == null) {
       return false;
     }

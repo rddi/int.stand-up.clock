@@ -204,7 +204,12 @@ let muted,
   localTeamMembers = [],
   teamname = 'default',
   teamInput,
-  title;
+  title,
+  options = {
+    pausable: false,
+    collectTime: true,
+  },
+  optionInputs;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -396,6 +401,8 @@ function setForm() {
       duration = team;
     }
 
+    // setOptions(true);
+
     timer.setTimer(duration);
     subtimer.setTimer(duration / team);
     toggleTray(true);
@@ -525,6 +532,11 @@ function setupTimers() {
     pepDisplay.classList.remove("green");
     spinPep(100);
   })
+
+  if (!options.pausable) {
+    subtimer.element.classList.add('no-pause');
+    pause.classList.add('no-pause');
+  }
 }
 
 function subtimerRebuild() {
@@ -674,7 +686,8 @@ function setUpTeamMembers(maintainOrder = false) {
   }
   
 
-  let memberList = [`<div id="edit-team" class="selection-button"><span class="fa fa-pencil-square-o"></div>`];
+  // let memberList = [`<div id="edit-team" class="selection-button"><span class="fa fa-pencil-square-o"></div>`];
+  let memberList = [];
   let editList = [];
   
   for (i = 0;i < randomOrder.length;i += 1){
@@ -990,6 +1003,40 @@ function setTeamName (name = null) {
   title.innerHTML = teamname + ' - Stand Up';
 }
 
+function setOptions (save = false) {
+  if(!save) {
+    if(Memory.exists('standup_options')) {
+      options = Memory.getObject('standup_options');
+    }
+  } else {
+    Memory.setObject('standup_options', options);
+  }
+
+
+  for(let option in options) {
+    optionInputs[option].checked = options[option];
+  }
+}
+
+function getMemory() {
+  setTeamName();
+
+  let optionElements = document.getElementsByClassName('option-checkbox');
+  let i = 0;
+
+  optionInputs = {};
+
+  for(i = 0;i < optionElements.length;i+=1) {
+    optionInputs[optionElements[i].getAttribute('name')] = optionElements[i];
+    optionElements[i].addEventListener("input", function(e) {
+      options[e.target.getAttribute('name')] = e.target.checked;
+      setOptions(true);
+    });
+  }
+
+  setOptions();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   buildTeamSections();
 
@@ -997,7 +1044,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setCollapseButton();
   setForm();
 
-  setTeamName();
+  getMemory();
 
   setupSounds();
 

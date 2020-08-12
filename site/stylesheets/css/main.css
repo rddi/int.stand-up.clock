@@ -41,7 +41,7 @@ header {
   .container.collapser {
     overflow: hidden;
     transition: max-height 300ms, padding 300ms;
-    max-height: 400px; }
+    max-height: 600px; }
     .container.collapser.closed {
       max-height: 0vh;
       padding: 0 20px; }
@@ -411,7 +411,7 @@ label {
     line-height: 70px; }
     .select-strip label.extra {
       width: 140px; }
-  .select-strip#team-members label {
+  .select-strip#team-members label, .select-strip#options label {
     width: auto; }
   .select-strip input[type="radio"] {
     display: none; }
@@ -433,6 +433,11 @@ label {
       height: 30px;
       margin: 5px;
       transition: opacity 300ms; }
+    .select-strip input[type="checkbox"].option-checkbox + label {
+      background-color: #650D1B;
+      opacity: 1; }
+    .select-strip input[type="checkbox"].option-checkbox:checked + label {
+      background-color: #0F6B05; }
     .select-strip input[type="checkbox"]:checked + label {
       opacity: 1; }
 
@@ -447,6 +452,16 @@ label {
   cursor: pointer; }
   .selection-button.hidden {
     display: none; }
+
+.edit-button {
+  background-color: transparent;
+  display: inline-block;
+  margin: 0 auto;
+  padding: 5px 15px;
+  border-radius: 5px;
+  color: #fff;
+  margin: 5px;
+  cursor: pointer; }
 
 #mute-input {
   display: none; }
@@ -573,6 +588,8 @@ input[type="text"] {
       -ms-transform: translate(-50%, -50%);
       -o-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%); }
+    .timer #pause-button.no-pause:not(.paused) {
+      display: none; }
   .timer #next-button {
     -webkit-transform: translate(0%, -50%);
     -moz-transform: translate(0%, -50%);
@@ -584,6 +601,13 @@ input[type="text"] {
     color: #fff; }
     .timer #pep-button.spinning {
       display: none; }
+  .timer.no-pause #next-button,
+  .timer.no-pause #end-button {
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); }
   .timer .backing {
     height: 370px;
     width: 370px;

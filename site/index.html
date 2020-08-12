@@ -69,8 +69,15 @@
             <input id="dur-60" type="radio" name="duration" value="60" class="set-check"/>
             <label for="dur-60">60</label>
           </div>
-          <label>Team Members</label>
+          <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
           <div class="select-strip" id="team-members">
+          </div>
+          <label>Options</label>
+          <div class="select-strip" id="options">
+            <input id="pausable" type="checkbox" name="pausable" class="option-checkbox"/>
+            <label for="pausable">Pausable</label>
+            <input id="collect-time" type="checkbox" name="collectTime" class="option-checkbox"/>
+            <label for="collect-time">Collect Time</label>
           </div>
           <input id="set-button" type="submit" value="Set" class="button disabled"></input>
         </form>
@@ -106,13 +113,6 @@
           <div class="hand"></div>
         </div>
         <div class="timer-display">00:00</div>
-        <!-- <a id="start-button" class="button symbol hidden">
-          <span class="fa fa-play pos-topright"></span>
-          <span class="fa fa-play pos-topleft"></span>
-          <span class="fa fa-play pos-bottomright"></span>
-          <span class="fa fa-play pos-bottomleft"></span>
-          <span class="fa fa-play pos-main"></span>
-          </a> -->
         <a id="pause-button" class="button symbol paused hidden">
           <span class="fa fa-play pos-topright"></span>
           <span class="fa fa-play pos-topleft"></span>
