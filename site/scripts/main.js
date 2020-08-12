@@ -208,8 +208,11 @@ let timer,
     mute: false,
     pausable: false,
     collectTime: true,
+    pp: false,
   },
-  optionInputs;
+  optionInputs,
+  timeSlider,
+  durationDisplay;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -231,20 +234,21 @@ function setSetButton() {
 function checkSetButton() {
   const checked = document.querySelectorAll('input:checked');
   let i = 0;
-  let durSet = false;
+  // let durSet = false;
   let memSet = false;
 
 
   for(i = 0;i < checked.length;i += 1) {
-    if (checked[i].id.match(/dur-/g)) {
-      durSet = true;
-    }
+    // if (checked[i].id.match(/dur-/g)) {
+    //   durSet = true;
+    // }
     if (checked[i].id.match(/member-/g)) {
       memSet = true;
     }
   }
   
-  if (durSet && memSet) {
+  // if (durSet && memSet) {
+    if (memSet) {
     setButton.classList.remove('disabled');
     return;
   }
@@ -338,18 +342,35 @@ function closeTeamModal() {
   teamModal.classList.add('hidden');
 }
 
+function updateDurationDisplay(_value = null) {
+  value = timeSlider.value;
+  
+  let perperson = ' in total';
+  if (options.pp) {
+    perperson = ' per person';
+  }
+  durationDisplay.innerHTML = `${value}m${perperson}`;
+}
+
 function setForm() {
   form = document.getElementById("input-form");
   muteInput = document.getElementById("mute-input");
 
-  teamInput = document.getElementById('team-name-input');
+  teamInput = document.getElementById('meeting-name-input');
+
+  timeSlider = document.getElementById('time-slider');
+  durationDisplay = document.getElementById('duration-display');
+
+  timeSlider.addEventListener('input', function(e) {
+    updateDurationDisplay(e.target.value);
+  });
 
   form.addEventListener("submit", function(e) {
     e.preventDefault();
     if (setButton.classList.contains('disabled')) {
       return;
     }
-    const results = document.querySelectorAll('input:checked');
+    const results = document.querySelectorAll('input');
     let formData = {};
 
     for (let i = 0;i < results.length;i++) {
@@ -397,21 +418,16 @@ function setForm() {
 
     let duration = formData['duration'];
 
-    if (formData['duration'] == 1) {
-      duration = team;
-    }
+    console.log(formData['duration'], formData);
 
-    // setOptions(true);
+    if (options.pp) {
+      duration = duration * team;
+    }
 
     timer.setTimer(duration);
     subtimer.setTimer(duration / team);
     toggleTray(true);
   });
-
-  // muteInput.addEventListener("click", function(e) {
-  //   options.mute = muteInput.checked;
-  //   Memory.set("standup_mute", options.mute);
-  // });
 }
 
 function stringtoms(string) {
@@ -712,7 +728,7 @@ function setUpTeamMembers(maintainOrder = false) {
 function setUpTeamEdit() {
   teamModal = document.getElementById('team-modal');
   teamModalList = document.getElementById('team-editor-list');
-  teamModalInput = document.getElementById('team-add-input');
+  teamModalInput = document.getElementById('member-name-input');
 
   teamModalInput.addEventListener('keypress', function(e) {
     let value = teamModalInput.value;
@@ -792,7 +808,7 @@ function setUpTeamButtons() {
   };
 }
 
-function checkTimes(){
+function checkTimes() {
   const teamMembers = document.getElementsByClassName("team-button");
   
   let i = 0;
@@ -1019,6 +1035,8 @@ function setOptions (save = false) {
   for(let option in options) {
     optionInputs[option].checked = options[option];
   }
+
+  updateDurationDisplay();
 }
 
 function getMemory() {

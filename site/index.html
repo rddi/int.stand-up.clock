@@ -42,7 +42,19 @@
         <form id="input-form">
           <label>Duration</label>
           <div class="select-strip">
-            <input id="dur-1" type="radio" name="duration" value="1" class="set-check"/>
+          <div>
+            <input id="time-slider" type="range" name="duration" value="1" class="slider" min="1" max="60"/>
+
+            <input id="pp" type="checkbox" name="pp" class="option-checkbox option-control"/>
+            <label for="pp">pp</label>
+          </div>
+        
+            <div id="duration-display">1m</div>
+
+            
+            
+
+            <!-- <input id="dur-1" type="radio" name="duration" value="1" class="set-check"/>
             <label for="dur-1">1pp</label>
             <input id="dur-5" type="radio" name="duration" value="5" class="set-check"/>
             <label for="dur-5">5</label>
@@ -67,7 +79,7 @@
             <input id="dur-55" type="radio" name="duration" value="55" class="set-check"/>
             <label for="dur-55">55</label>
             <input id="dur-60" type="radio" name="duration" value="60" class="set-check"/>
-            <label for="dur-60">60</label>
+            <label for="dur-60">60</label> -->
           </div>
           <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
           <div class="select-strip" id="team-members">
@@ -150,13 +162,13 @@
       <div class="container">
         <span id="team-modal-close" class="fa fa-times"></span>
         <h2>Manage Team</h2>
-        <input type="text" id="team-name-input" name="team-name" placeholder="Team name"/>
+        <input type="text" id="meeting-name-input" name="meeting-name" placeholder="Team name"/>
         <div id="team-editor">
           <div id="team-editor-list">
 
           </div>
-          <div class="team-add-input">
-            <input type="text" id="team-add-input" name="team-add" placeholder="Add Member"/>
+          <div class="member-name-input">
+            <input type="text" id="member-name-input" name="member-name" placeholder="Add Member"/>
           </div>
 
         </div>

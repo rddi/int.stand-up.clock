@@ -440,6 +440,8 @@ label {
       background-color: #0F6B05; }
     .select-strip input[type="checkbox"]:checked + label {
       opacity: 1; }
+  .select-strip input[type="range"] {
+    width: calc(100% - 100px); }
 
 .selection-button {
   background-color: #335fa3;
@@ -480,7 +482,7 @@ input[type="text"] {
   border: 1px solid #0F6B05;
   min-width: 300px; }
 
-#team-name-input {
+#meeting-name-input {
   margin: 0 0 20px 0;
   font-size: 20px;
   font-weight: bold;
