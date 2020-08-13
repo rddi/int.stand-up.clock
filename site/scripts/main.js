@@ -219,32 +219,26 @@ function setCollapser() {
 function setSetButton() {
   setButton = document.getElementById("set-button");
 
-  let formInputs = document.getElementsByClassName('set-check');
-
-  for(i = 0;i < formInputs.length;i += 1){
-    formInputs[i].addEventListener('click', function(e) {
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('set-check')) {
       checkSetButton();
-    });
-  }
+    }
+  });
 }
 
 function checkSetButton() {
   const checked = document.querySelectorAll('input:checked');
   let i = 0;
-  // let durSet = false;
   let memSet = false;
 
 
   for(i = 0;i < checked.length;i += 1) {
-    // if (checked[i].id.match(/dur-/g)) {
-    //   durSet = true;
-    // }
+
     if (checked[i].id.match(/member-/g)) {
       memSet = true;
     }
   }
   
-  // if (durSet && memSet) {
     if (memSet) {
     setButton.classList.remove('disabled');
     return;
@@ -475,14 +469,6 @@ function stopSound(name) {
 }
 
 function setupSounds() {
-  // if (Memory.exists('standup_mute')) {
-  //   options.mute = Memory.getBoolean('standup_mute');
-  // } else {
-  //   options.mute = false;
-  // }
-
-  // muteInput.checked = options.mute;
-
   sounds['beep'] = new Sound('sounds/beep.mp3');
   sounds['next'] = new Sound('sounds/end.mp3');
   sounds['spin'] = new Sound('sounds/spin.mp3');
