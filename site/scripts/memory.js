@@ -16,7 +16,7 @@ const Memory = {
   setObject: function(_variable, _value) {
     let value = JSON.stringify(_value);
 
-    this.set(_variable, value)
+    this.set(_variable, value);
   },
   getObject: function(_variable) {
     let variable = this.get(_variable);

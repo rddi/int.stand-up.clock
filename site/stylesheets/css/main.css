@@ -488,6 +488,8 @@ label {
   cursor: pointer; }
   .selection-button.hidden {
     display: none; }
+  .selection-button.superhidden {
+    display: none; }
 
 .edit-button {
   background-color: transparent;

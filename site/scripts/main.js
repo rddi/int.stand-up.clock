@@ -1,6 +1,3 @@
-// const Memory = require("./memory");
-// const TeamMembers = require("./team");
-
 class Timer {
   constructor(id, main = false) {
     this.element = document.getElementById(id);
@@ -375,8 +372,6 @@ function setForm() {
       duration: timeSlider.value
     };
 
-
-
     for (let i = 0;i < results.length;i++) {                                                                                                                               
       formData[results[i].getAttribute('name')] = results[i].value;
     }
@@ -717,12 +712,15 @@ function setUpTeamMembers(maintainOrder = false) {
     editList.push(`<div class="edit-team-member"><span class="fa fa-minus remove-member" id="remove-${randomOrder[i]}"></span>${randomOrder[i]}</div>`);
   }
 
+  let hide = '';
+
   if (memberList.length === 0) {
     memberList.push(`<div>To get started, add members to your team by pressing the edit button above</div>`);
-  } else {
-    memberList.push(`<div id="select-all" class="selection-button set-check">Select All</div>
-    <div id="deselect-all" class="selection-button set-check hidden">Deselect All</div>`);
+    hide = " superhidden";
   }
+
+  memberList.push(`<div id="select-all" class="selection-button set-check ${hide}">Select All</div>
+  <div id="deselect-all" class="selection-button set-check hidden ${hide}">Deselect All</div>`);
 
   let listElement = document.getElementById('team-members');
   let editListElement = document.getElementById('team-editor-list');
