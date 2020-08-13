@@ -370,12 +370,18 @@ function setForm() {
     if (setButton.classList.contains('disabled')) {
       return;
     }
-    const results = document.querySelectorAll('input');
-    let formData = {};
+    const results = document.querySelectorAll('input:checked');
+    let formData = {
+      duration: timeSlider.value
+    };
 
-    for (let i = 0;i < results.length;i++) {
+
+
+    for (let i = 0;i < results.length;i++) {                                                                                                                               
       formData[results[i].getAttribute('name')] = results[i].value;
     }
+
+    console.log('results', results);
 
     team = 0;
     let flipflop = false;
@@ -702,8 +708,6 @@ function setUpTeamMembers(maintainOrder = false) {
     localTeamMembers = randomOrder;
   }
   
-
-  // let memberList = [`<div id="edit-team" class="selection-button"><span class="fa fa-pencil-square-o"></div>`];
   let memberList = [];
   let editList = [];
   
@@ -713,8 +717,12 @@ function setUpTeamMembers(maintainOrder = false) {
     editList.push(`<div class="edit-team-member"><span class="fa fa-minus remove-member" id="remove-${randomOrder[i]}"></span>${randomOrder[i]}</div>`);
   }
 
-  memberList.push(`<div id="select-all" class="selection-button set-check">Select All</div>
-  <div id="deselect-all" class="selection-button set-check hidden">Deselect All</div>`);
+  if (memberList.length === 0) {
+    memberList.push(`<div>To get started, add members to your team by pressing the edit button above</div>`);
+  } else {
+    memberList.push(`<div id="select-all" class="selection-button set-check">Select All</div>
+    <div id="deselect-all" class="selection-button set-check hidden">Deselect All</div>`);
+  }
 
   let listElement = document.getElementById('team-members');
   let editListElement = document.getElementById('team-editor-list');
