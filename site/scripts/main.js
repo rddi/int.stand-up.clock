@@ -418,10 +418,13 @@ function setForm() {
 
     let duration = formData['duration'];
 
-    console.log(formData['duration'], formData);
-
     if (options.pp) {
       duration = duration * team;
+    }
+
+    if (!options.pausable) {
+      subtimer.element.classList.add('no-pause');
+      pause.classList.add('no-pause');
     }
 
     timer.setTimer(duration);
@@ -548,11 +551,6 @@ function setupTimers() {
     pepDisplay.classList.remove("green");
     spinPep(100);
   })
-
-  if (!options.pausable) {
-    subtimer.element.classList.add('no-pause');
-    pause.classList.add('no-pause');
-  }
 }
 
 function subtimerRebuild() {

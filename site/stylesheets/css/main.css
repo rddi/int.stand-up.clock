@@ -315,8 +315,6 @@ label {
     opacity: 0;
     cursor: default; }
   .button.symbol {
-    1px: 2px;
-    1.1: 1.1;
     background-color: transparent;
     font-size: 60px;
     width: 100px;
@@ -329,38 +327,14 @@ label {
       -moz-transition: -moz-transform 300ms, color 300ms;
       -o-transition: -o-transform 300ms, color 300ms;
       transition: transform 300ms, color 300ms;
-      color: #335fa3; }
+      color: #fff; }
       .button.symbol span.pos-main {
-        color: #fff;
         -webkit-transform: translate(-50%, -50%) scale(1);
         -moz-transform: translate(-50%, -50%) scale(1);
         -ms-transform: translate(-50%, -50%) scale(1);
         -o-transform: translate(-50%, -50%) scale(1);
-        transform: translate(-50%, -50%) scale(1); }
-      .button.symbol span.pos-topright {
-        -webkit-transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1);
-        -moz-transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1);
-        -ms-transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1);
-        -o-transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1);
-        transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1); }
-      .button.symbol span.pos-topleft {
-        -webkit-transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1);
-        -moz-transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1);
-        -ms-transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1);
-        -o-transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1);
-        transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1); }
-      .button.symbol span.pos-bottomright {
-        -webkit-transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1);
-        -moz-transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1);
-        -ms-transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1);
-        -o-transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1);
-        transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1); }
-      .button.symbol span.pos-bottomleft {
-        -webkit-transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1);
-        -moz-transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1);
-        -ms-transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1);
-        -o-transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1);
-        transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1); }
+        transform: translate(-50%, -50%) scale(1);
+        text-shadow: 0 -2px 0 #335fa3, 2px 0 0 #335fa3, 0 2px 0 #335fa3, -2px 0 0 #335fa3, -2px -2px 0 #335fa3, 2px -2px 0 #335fa3, -2px 2px 0 #335fa3, 2px 2px 0 #335fa3; }
     .button.symbol:hover span.pos-main {
       -webkit-transform: translate(-50%, -50%) scale(1.1);
       -moz-transform: translate(-50%, -50%) scale(1.1);
@@ -368,30 +342,6 @@ label {
       -o-transform: translate(-50%, -50%) scale(1.1);
       transform: translate(-50%, -50%) scale(1.1);
       color: #e9a351; }
-    .button.symbol:hover span.pos-topright {
-      -webkit-transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1.1);
-      -moz-transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1.1);
-      -ms-transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1.1);
-      -o-transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1.1);
-      transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1.1); }
-    .button.symbol:hover span.pos-topleft {
-      -webkit-transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1.1);
-      -moz-transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1.1);
-      -ms-transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1.1);
-      -o-transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1.1);
-      transform: translate(calc(-50% - 1px), calc(-50% - 1px)) scale(1.1); }
-    .button.symbol:hover span.pos-bottomright {
-      -webkit-transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1.1);
-      -moz-transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1.1);
-      -ms-transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1.1);
-      -o-transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1.1);
-      transform: translate(calc(-50% + 1px), calc(-50% + 1px)) scale(1.1); }
-    .button.symbol:hover span.pos-bottomleft {
-      -webkit-transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1.1);
-      -moz-transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1.1);
-      -ms-transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1.1);
-      -o-transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1.1);
-      transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1.1); }
 
 .select-strip {
   margin: 0 auto 50px;

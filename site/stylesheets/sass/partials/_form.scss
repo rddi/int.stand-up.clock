@@ -113,9 +113,6 @@ label {
     cursor:default;
   }
   &.symbol {
-    #{$symbolOutline}:2px;
-    #{$symbolScale}:1.1;
-
     background-color:transparent;
     font-size:60px;
     width:100px;
@@ -126,23 +123,32 @@ label {
       left:50%;
       @include transition(transform $transTime, color $transTime);
       
-      color:$blue;
+      color:$white;
       &.pos-main {
-        color:$white;
+        // color:$white;
         @include transform(translate(-50%,-50%) scale(1));
+        text-shadow:
+          0 -#{$symbolOutline} 0 $blue,  
+          #{$symbolOutline} 0 0 $blue,
+          0 #{$symbolOutline} 0 $blue,
+          -#{$symbolOutline} 0 0 $blue,
+          -#{$symbolOutline} -#{$symbolOutline} 0 $blue,  
+          #{$symbolOutline} -#{$symbolOutline} 0 $blue,
+          -#{$symbolOutline} #{$symbolOutline} 0 $blue,
+          #{$symbolOutline} #{$symbolOutline} 0 $blue;
       }
-      &.pos-topright {
-        @include transform(translate(calc(-50% + #{$symbolOutline}), calc(-50% - #{$symbolOutline})) scale(1));
-      }
-      &.pos-topleft {
-        @include transform(translate(calc(-50% - #{$symbolOutline}), calc(-50% - #{$symbolOutline})) scale(1));
-      }
-      &.pos-bottomright {
-        @include transform(translate(calc(-50% + #{$symbolOutline}), calc(-50% + #{$symbolOutline})) scale(1));
-      }
-      &.pos-bottomleft {
-        @include transform(translate(calc(-50% - #{$symbolOutline}), calc(-50% + #{$symbolOutline})) scale(1));
-      }
+      // &.pos-topright {
+      //   @include transform(translate(calc(-50% + #{$symbolOutline}), calc(-50% - #{$symbolOutline})) scale(1));
+      // }
+      // &.pos-topleft {
+      //   @include transform(translate(calc(-50% - #{$symbolOutline}), calc(-50% - #{$symbolOutline})) scale(1));
+      // }
+      // &.pos-bottomright {
+      //   @include transform(translate(calc(-50% + #{$symbolOutline}), calc(-50% + #{$symbolOutline})) scale(1));
+      // }
+      // &.pos-bottomleft {
+      //   @include transform(translate(calc(-50% - #{$symbolOutline}), calc(-50% + #{$symbolOutline})) scale(1));
+      // }
       
     }
     &:hover {
@@ -151,18 +157,18 @@ label {
           @include transform(translate(-50%,-50%) scale(#{$symbolScale}));
           color:$yellow;
         }
-        &.pos-topright {
-          @include transform(translate(calc(-50% + #{$symbolOutline}),calc(-50% - #{$symbolOutline})) scale(#{$symbolScale}));
-        }
-        &.pos-topleft {
-          @include transform(translate(calc(-50% - #{$symbolOutline}),calc(-50% - #{$symbolOutline})) scale(#{$symbolScale}));
-        }
-        &.pos-bottomright {
-          @include transform(translate(calc(-50% + #{$symbolOutline}),calc(-50% + #{$symbolOutline})) scale(#{$symbolScale}));
-        }
-        &.pos-bottomleft {
-          @include transform(translate(calc(-50% - #{$symbolOutline}),calc(-50% + #{$symbolOutline})) scale(#{$symbolScale}));
-        }
+        // &.pos-topright {
+        //   @include transform(translate(calc(-50% + #{$symbolOutline}),calc(-50% - #{$symbolOutline})) scale(#{$symbolScale}));
+        // }
+        // &.pos-topleft {
+        //   @include transform(translate(calc(-50% - #{$symbolOutline}),calc(-50% - #{$symbolOutline})) scale(#{$symbolScale}));
+        // }
+        // &.pos-bottomright {
+        //   @include transform(translate(calc(-50% + #{$symbolOutline}),calc(-50% + #{$symbolOutline})) scale(#{$symbolScale}));
+        // }
+        // &.pos-bottomleft {
+        //   @include transform(translate(calc(-50% - #{$symbolOutline}),calc(-50% + #{$symbolOutline})) scale(#{$symbolScale}));
+        // }
       }
     }
   }
