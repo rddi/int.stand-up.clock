@@ -357,9 +357,35 @@ label {
     -o-transition: font-size 300ms, font-weight 300ms, -o-transform 300ms;
     transition: font-size 300ms, font-weight 300ms, transform 300ms;
     text-align: center;
-    line-height: 70px; }
+    line-height: 70px;
+    position: relative; }
     .select-strip label.extra {
       width: 140px; }
+    .select-strip label[data-info]::after {
+      content: attr(data-info);
+      background-color: #000000CC;
+      position: absolute;
+      padding: 5px;
+      border-radius: 3px;
+      top: 100%;
+      right: 100%;
+      width: auto;
+      min-width: 200px;
+      opacity: 0;
+      pointer-events: none;
+      -webkit-transition: opacity 300ms;
+      -moz-transition: opacity 300ms;
+      -o-transition: opacity 300ms;
+      transition: opacity 300ms;
+      font-size: 12px; }
+      .select-strip label[data-info]::after:empty {
+        display: none; }
+    .select-strip label[data-info]:hover::after {
+      -webkit-transition-delay: 1000ms;
+      -moz-transition-delay: 1000ms;
+      -o-transition-delay: 1000ms;
+      transition-delay: 1000ms;
+      opacity: 1; }
   .select-strip#team-members label, .select-strip#options label {
     width: auto; }
   .select-strip input[type="radio"] {
