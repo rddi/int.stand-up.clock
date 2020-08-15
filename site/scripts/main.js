@@ -417,9 +417,14 @@ function setForm() {
       duration = duration * team;
     }
 
-    if (!options.pausable) {
-      subtimer.element.classList.add('no-pause');
-      pause.classList.add('no-pause');
+    if (options.pausable) {
+      subtimer.element.classList.add('pause');
+      // pause.classList.add('no-pause');
+    }
+
+    if (options.skipable) {
+      subtimer.element.classList.add('skip');
+      // skip.classList.add('no-pause');
     }
 
     timer.setTimer(duration);
@@ -947,11 +952,13 @@ function update() {
     settings.classList.add("lock");
     if(timer.isFinished()) {
       end.classList.add("hidden");
+      subtimer.element.classList.remove("end");
       next.classList.add("hidden");
       pause.classList.add("hidden");
       pep.classList.remove("hidden");
     } else if (teamRemaining > 1) {
       end.classList.add("hidden");
+      subtimer.element.classList.remove("end");
       pause.classList.remove("hidden");
       if (!timer.isPaused()) {
         next.classList.remove("hidden");
@@ -963,17 +970,23 @@ function update() {
       next.classList.add("hidden");
       if (!timer.isPaused()) {
         end.classList.remove("hidden");
+        subtimer.element.classList.add("end");
       } else {
         end.classList.add("hidden");
+        subtimer.element.classList.remove("end");
       }
     }
   } else {
     settings.classList.remove("lock");
     end.classList.add("hidden");
+    console.log(subtimer);
+    subtimer.element.classList.remove("end");
     next.classList.add("hidden");
     if (timer.isReady()) {
       pause.classList.remove("hidden");
+      console.log("SHOWING PAUSE");
     } else {
+      console.log("HIDING PAUSE");
       pause.classList.add("hidden");
     }
   }

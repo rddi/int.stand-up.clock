@@ -71,30 +71,9 @@
     @include transition(transform $transTime);
   }
 
-  #end-button {
-    @include transform(translate(0%, -50%));
-    color:$red;
-  }
-
   #reset-button {
     color:grey;
     background-color:$red;
-  }
-
-  #pause-button {
-    @include transform(translate(-100%, -50%));
-    &.paused {
-      @include transform(translate(-50%, -50%));
-    }
-    &.no-pause {
-      &:not(.paused) {
-        display:none;
-      }
-    }
-  }
-
-  #next-button {
-    @include transform(translate(0%, -50%));
   }
 
   #pep-button {
@@ -105,10 +84,38 @@
     }
   }
 
-  &.no-pause {
-    #next-button,
-    #end-button {
-      @include transform(translate(-50%, -50%));
+  &:not(.pause) {
+    #pause-button {
+      &:not(.paused) {
+        display:none;
+      }
+    }
+  }
+
+  &.pause {
+    #end-button,
+    #next-button {
+      @include transform(translate(0%, -50%));
+    }
+    &.end {
+      #pause-button { 
+        @include transform(translate(-100%, -50%));
+      }
+    }
+  }
+
+  &:not(.skip) {
+    #next-button {
+      display:none;
+    }
+  }
+
+  &.skip {
+    #pause-button {
+      @include transform(translate(-100%, -50%));
+      &.paused {
+        @include transform(translate(-50%, -50%));
+      }
     }
   }
 

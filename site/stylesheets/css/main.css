@@ -609,48 +609,43 @@ input[type="text"] {
     -moz-transition: -moz-transform 300ms;
     -o-transition: -o-transform 300ms;
     transition: transform 300ms; }
-  .timer #end-button {
-    -webkit-transform: translate(0%, -50%);
-    -moz-transform: translate(0%, -50%);
-    -ms-transform: translate(0%, -50%);
-    -o-transform: translate(0%, -50%);
-    transform: translate(0%, -50%);
-    color: #650D1B; }
   .timer #reset-button {
     color: grey;
     background-color: #650D1B; }
-  .timer #pause-button {
-    -webkit-transform: translate(-100%, -50%);
-    -moz-transform: translate(-100%, -50%);
-    -ms-transform: translate(-100%, -50%);
-    -o-transform: translate(-100%, -50%);
-    transform: translate(-100%, -50%); }
-    .timer #pause-button.paused {
-      -webkit-transform: translate(-50%, -50%);
-      -moz-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-      -o-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%); }
-    .timer #pause-button.no-pause:not(.paused) {
-      display: none; }
-  .timer #next-button {
-    -webkit-transform: translate(0%, -50%);
-    -moz-transform: translate(0%, -50%);
-    -ms-transform: translate(0%, -50%);
-    -o-transform: translate(0%, -50%);
-    transform: translate(0%, -50%); }
   .timer #pep-button {
     background-color: #d9643e;
     color: #fff; }
     .timer #pep-button.spinning {
       display: none; }
-  .timer.no-pause #next-button,
-  .timer.no-pause #end-button {
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%); }
+  .timer:not(.pause) #pause-button:not(.paused) {
+    display: none; }
+  .timer.pause #end-button,
+  .timer.pause #next-button {
+    -webkit-transform: translate(0%, -50%);
+    -moz-transform: translate(0%, -50%);
+    -ms-transform: translate(0%, -50%);
+    -o-transform: translate(0%, -50%);
+    transform: translate(0%, -50%); }
+  .timer.pause.end #pause-button {
+    -webkit-transform: translate(-100%, -50%);
+    -moz-transform: translate(-100%, -50%);
+    -ms-transform: translate(-100%, -50%);
+    -o-transform: translate(-100%, -50%);
+    transform: translate(-100%, -50%); }
+  .timer:not(.skip) #next-button {
+    display: none; }
+  .timer.skip #pause-button {
+    -webkit-transform: translate(-100%, -50%);
+    -moz-transform: translate(-100%, -50%);
+    -ms-transform: translate(-100%, -50%);
+    -o-transform: translate(-100%, -50%);
+    transform: translate(-100%, -50%); }
+    .timer.skip #pause-button.paused {
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%); }
   .timer .backing {
     height: 370px;
     width: 370px;
