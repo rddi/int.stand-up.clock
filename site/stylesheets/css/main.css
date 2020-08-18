@@ -61,13 +61,25 @@ header {
   .modal .container {
     background-color: #fff; }
     .modal .container h2 {
-      text-align: center; }
+      text-align: center;
+      margin-top: 0; }
     .modal .container .fa-times {
       position: absolute;
       top: 10px;
       right: 10px;
       font-size: 25px;
-      cursor: pointer; }
+      cursor: pointer;
+      -webkit-transition: color 300ms, -webkit-transform 300ms;
+      -moz-transition: color 300ms, -moz-transform 300ms;
+      -o-transition: color 300ms, -o-transform 300ms;
+      transition: color 300ms, transform 300ms; }
+      .modal .container .fa-times:hover {
+        color: #650D1B;
+        -webkit-transform: rotate3d(0, 0, 1, 180deg);
+        -moz-transform: rotate3d(0, 0, 1, 180deg);
+        -ms-transform: rotate3d(0, 0, 1, 180deg);
+        -o-transform: rotate3d(0, 0, 1, 180deg);
+        transform: rotate3d(0, 0, 1, 180deg); }
   .modal.hidden {
     display: none; }
   .modal:before {
@@ -225,6 +237,51 @@ h1 {
   transform: translate(-50%, -50%);
   border: 330px solid transparent;
   border-bottom-color: #fff; }
+
+#flash-message {
+  color: #fff;
+  position: fixed;
+  left: 50%;
+  top: 100px;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  border-radius: 10px;
+  padding: 20px;
+  display: block;
+  max-width: 1080px;
+  width: calc(100% - 40px);
+  box-shadow: 0px 5px 8px #00000088;
+  pointer-events: none;
+  opacity: 1;
+  -webkit-transition: opacity 300ms;
+  -moz-transition: opacity 300ms;
+  -o-transition: opacity 300ms;
+  transition: opacity 300ms; }
+  #flash-message span {
+    display: none;
+    color: #fff;
+    float: left;
+    margin-right: 20px; }
+  #flash-message.success {
+    background-color: #0F6B05; }
+    #flash-message.success #icon-success {
+      display: block; }
+  #flash-message.notice {
+    background-color: #e9a351; }
+    #flash-message.notice #icon-notice {
+      display: block; }
+  #flash-message.error {
+    background-color: #650D1B; }
+    #flash-message.error #icon-error {
+      display: block; }
+  #flash-message.hidden {
+    opacity: 0; }
+  #flash-message::after {
+    content: attr(message);
+    font-weight: bold; }
 
 .header-button {
   height: 60px;
@@ -547,7 +604,17 @@ input[type="text"] {
   margin-right: 10px;
   padding: 2px 3px;
   text-align: center;
-  cursor: pointer; }
+  cursor: pointer;
+  -webkit-transition: -webkit-transform 300ms;
+  -moz-transition: -moz-transform 300ms;
+  -o-transition: -o-transform 300ms;
+  transition: transform 300ms; }
+  .remove:hover {
+    -webkit-transform: rotate3d(0, 0, 1, 180deg);
+    -moz-transform: rotate3d(0, 0, 1, 180deg);
+    -ms-transform: rotate3d(0, 0, 1, 180deg);
+    -o-transform: rotate3d(0, 0, 1, 180deg);
+    transform: rotate3d(0, 0, 1, 180deg); }
 
 #save-settings-button {
   background-color: #d9643e;
@@ -621,7 +688,7 @@ input[type="text"] {
     -o-transition: -o-transform 300ms;
     transition: transform 300ms; }
   .timer #reset-button {
-    color: grey;
+    color: #888;
     background-color: #650D1B; }
   .timer #pep-button {
     background-color: #d9643e;

@@ -385,13 +385,13 @@ input[type="text"] {
   padding: 2px 3px;
   text-align: center;
   cursor:pointer;
+  @include transition(transform $transTime);
+  &:hover {
+    @include transform(rotate3d(0, 0, 1, 180deg));
+  }
 }
 
 #save-settings-button {
   background-color:$orange;
   color:$white;
-}
-
-.load-selection {
-  
 }

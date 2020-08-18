@@ -46,7 +46,8 @@ let timer,
   durationDisplay,
   saveButton,
   saveSettingsButton,
-  loadButton;
+  loadButton,
+  flash;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -71,12 +72,6 @@ function openLoadModal() {
   loadList.innerHTML = list.join('');
 
   loadModal.classList.remove('hidden');
-}
-
-function loadSettingsFromSave(saveName) {
-  let loadSettings = Memory.get(saveName);
-
-  
 }
 
 function setSetButton() {
@@ -627,6 +622,8 @@ function setUpTeamEdit() {
       return;
     }
 
+    flashMessage(`Team member \"${teamModalInput.value}\" added to team`, 'success');
+
     teamModalInput.value = '';
 
     if (['',' '].includes(value)) {
@@ -647,6 +644,8 @@ function setUpTeamEdit() {
 
     const removee = e.target.id.split('remove-')[1];
     TeamMembers.remove(removee);
+
+    flashMessage(`Team member \"${removee}\" removed from team`, 'success');
 
     buildTeamSections(true);
   });
@@ -677,6 +676,7 @@ function setUpSaveLoad() {
 
   saveSettingsButton.addEventListener('click', function(e) {
     if(saveInput.value == '') { // More robust 
+      flashMessage(`Please provide a name for the meeting profile`, 'notice');
       return;
     }
 
@@ -697,6 +697,8 @@ function setUpSaveLoad() {
     
     Memory.setObject(`save-${name}`, fullOptions);
 
+    flashMessage(`Meeting profile saved as \"${saveInput.value}\"`, 'success');
+
     saveInput.value = '';
 
     closeSaveModal();
@@ -710,6 +712,9 @@ function setUpSaveLoad() {
     let loadname = e.target.getAttribute('data-loadname');
 
     setOptions(false, loadname);
+
+    flashMessage(`Meeting profile \"${e.target.innerHTML}\" loaded successfully`, 'success');
+
     checkSetButton();
     closeLoadModal();
   });
@@ -723,12 +728,32 @@ function setUpSaveLoad() {
     
     Memory.remove(removee);
 
+    flashMessage(`Meeting profile \"${e.target.parentNode.getElementsByClassName('load-selection')[0].innerHTML}\" successfully removed`,'success');
+
     e.target.parentNode.parentNode.removeChild(e.target.parentNode);
   });
 }
 
 function recordTime(element) {
     element.setAttribute('data-time', subtimer.getElapsedTimer());
+}
+
+function setUpFlash() {
+  flash = document.getElementById('flash-message');
+}
+
+function flashMessage(message, type = 'notice') {
+  flash.classList.remove('success', 'notice', 'error');
+  flash.classList.remove('hidden');
+
+  flash.classList.add(type);
+
+  flash.setAttribute('message', message);
+
+  setTimeout(function(e) {
+    flash.classList.add('hidden');
+    flash.setAttribute('message', '');
+  },3000);
 }
 
 function setUpTeamButtons() {
@@ -1063,6 +1088,8 @@ document.addEventListener("DOMContentLoaded", function () {
   setSpeaker();
 
   setSetButton();
+
+  setUpFlash();
 
   startUpdates();
 });

@@ -74,6 +74,7 @@ header {
     background-color:$white; 
     h2 {
       text-align:center;
+      margin-top:0;
     }
     .fa-times {
       position:absolute;
@@ -81,6 +82,11 @@ header {
       right:10px;
       font-size:25px;
       cursor:pointer;
+      @include transition(color $transTime, transform $transTime);
+      &:hover {
+        color:$red;
+        @include transform(rotate3d(0, 0, 1, 180deg));
+      }
     }
   }
 
@@ -218,4 +224,50 @@ h1 {
   border-bottom-color: $white;
 }
 
-// @keyframes spin { 100% { transform: translate(-50%,-50%) rotate3d(0,0,1, 360deg); } }
+#flash-message {
+  color: $white;
+  position:fixed;
+  left:50%;
+  top:100px;
+  @include transform(translateX(-50%));
+  border-radius:10px;
+  padding:20px;
+  display:block;
+  max-width:$maxWidth;
+  width:calc(100% - 40px);
+  box-shadow: 0px 5px 8px $shadow;
+  pointer-events: none;
+  opacity:1;
+  @include transition(opacity $transTime);
+  span {
+    display:none;
+    color: $white;
+    float:left;
+    margin-right:20px;
+  }
+  &.success {
+    background-color: $green;
+    #icon-success {
+      display:block;
+    }
+  }
+  &.notice {
+    background-color: $yellow;
+    #icon-notice {
+      display:block;
+    }
+  }
+  &.error {
+    background-color: $red;
+    #icon-error {
+      display:block;
+    }
+  }
+  &.hidden {
+    opacity:0;
+  }
+  &::after {
+    content:attr(message);
+    font-weight:bold;
+  }
+}
