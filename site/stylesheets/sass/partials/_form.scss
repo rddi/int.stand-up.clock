@@ -142,6 +142,15 @@ label {
   }
 }
 
+.save-load-section {
+  text-align:center;
+  .selection-button {
+    &.disabled {
+      opacity:.5;
+    }
+  }
+}
+
 .select-strip {
   margin: 0 auto 50px;
   text-align: center;
@@ -185,6 +194,7 @@ label {
       }
     }
   }
+
   &#team-members,
   &#options {
     label {
@@ -358,15 +368,6 @@ input[type="text"] {
   color:$green;
   font-weight:bold;
   margin-bottom:5px;
-  .fa {
-    background-color:$red;
-    border-radius:50%;
-    color:$white;
-    margin-right:10px;
-    padding: 2px 3px;
-    text-align: center;
-    cursor:pointer;
-  }
 }
 
 #duration-display {
@@ -374,4 +375,23 @@ input[type="text"] {
  span {
   color:$yellow;
  }
+}
+
+.remove {
+  background-color:$red;
+  border-radius:50%;
+  color:$white;
+  margin-right:10px;
+  padding: 2px 3px;
+  text-align: center;
+  cursor:pointer;
+}
+
+#save-settings-button {
+  background-color:$orange;
+  color:$white;
+}
+
+.load-selection {
+  
 }

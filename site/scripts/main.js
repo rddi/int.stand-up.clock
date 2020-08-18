@@ -1,173 +1,3 @@
-class Timer {
-  constructor(id, main = false) {
-    this.element = document.getElementById(id);
-
-    let hands = this.element.getElementsByClassName("hand");
-
-    this.left = hands[0];
-    this.right = hands[1];
-    this.display = this.element.getElementsByClassName("timer-display")[0];
-    this.main = main;
-
-    this.resetTimer();
-  }
-
-  setTimer(time) {
-    this.resetTimer();
-    this.full = mintoms(time);
-    this.current = mintoms(time);
-    this.display.innerHTML = mstomin(this.full);
-
-    for(let key in this.notices) {
-      if (this.full <= parseInt(key, 10)) {
-        this.notices[key] = true;
-      }
-    }
-  }
-
-  startTimer() {
-    if (this.full == 0) {
-      return;
-    }
-    this.start = new Date().getTime();
-    this.state = 1;
-  }
-
-  resetTimer() {
-    this.full = 0;
-    this.current = 0;
-    this.state = 0;
-    this.start = null;
-    this.pause = null;
-
-    this.notices = {
-      '10000':false,
-      '5000':false,
-      '4000':false,
-      '3000':false,
-      '2000':false,
-      '1000':false,
-      '0':false 
-    }
-  }
-
-  pauseTimer() {
-    this.pause = new Date().getTime();
-  }
-
-  resumeTimer() {
-    let timeDiff = (new Date().getTime() - this.pause);
-    this.start += timeDiff;
-    this.pause = null;
-  }
-
-  stopTimer() {
-    this.state = 2;
-    if (this.main) {
-      playSound('tada');
-    }
-  }
-
-  orange() {
-    this.display.classList.add('orange');
-  }
-
-  green() {
-    this.display.classList.add('green');
-  }
-
-  update() {
-    if (this.state != 1 || this.isPaused()) {
-      return;
-    }
-
-    this.current = new Date().getTime() - this.start;
-
-    if (this.current >= this.full) {
-      this.stopTimer();
-      this.display.innerHTML = "00:00";
-      this.right.style.transform = "rotate(180deg)";
-      this.left.style.transform = "rotate(180deg)";
-      return;
-    }
-
-    let half = this.full / 2;
-    let angle = 360 * (this.current / this.full);
-
-    if (this.current >= half) {
-      this.right.style.transform = "rotate(180deg)";
-      this.left.style.transform = `rotate(${angle - 180}deg)`;
-    } else {
-      this.right.style.transform = `rotate(${angle}deg)`;
-      this.left.style.transform = `rotate(0deg)`;
-    }
-
-    this.display.innerHTML = this.getTimer();
-
-    const timeLeft = this.full - this.current;
-
-    for (let key in this.notices) {
-      if (!this.notices[key] && (timeLeft < (parseInt(key, 10) + 1000))) {
-        this.notices[key] = true;
-        playSound('beep');
-      }
-    }
-  }
-
-  isReady() {
-    return this.state == 0 && this.full != 0;
-  }
-
-  isFinished() {
-    return this.state == 2;
-  }
-
-  isPaused() {
-    return this.pause != null;
-  }
-
-  getMilliseconds() {
-    return this.full - this.current;
-  }
-
-  getElapsedMilliseconds() {
-    return this.current;
-  }
-
-  getTimer() {
-    return mstomin(this.getMilliseconds());
-  }
-
-  getElapsedTimer() {
-    return mstomin(this.getElapsedMilliseconds());
-  }
-
-  fade() {
-    this.left.classList.add('fade');
-    this.right.classList.add('fade');
-  }
-}
-
-class Sound {
-  constructor(src) {
-    this.sound = document.createElement("audio");
-    this.sound.src = src;
-    this.sound.setAttribute('preload', 'auto');
-    this.sound.setAttribute('controls', 'none');
-    this.sound.style.display = 'none';
-    document.body.appendChild(this.sound);
-  }
- 
-  play() {
-    this.sound.currentTime = 0
-    this.sound.play();
-  }
-
-  stop() {
-    this.sound.stop();
-  }
-}
-
 let timer,
   subtimer,
   collapser,
@@ -197,6 +27,10 @@ let timer,
   teamModal,
   teamModalList,
   teamModalInput,
+  saveModal,
+  loadModal,
+  loadList,
+  saveInput,
   localTeamMembers = [],
   teamname = 'default',
   teamInput,
@@ -209,21 +43,68 @@ let timer,
   },
   optionInputs,
   timeSlider,
-  durationDisplay;
+  durationDisplay,
+  saveButton,
+  saveSettingsButton,
+  loadButton;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
   title = document.getElementById("title");
 }
 
+function openSaveModal() {
+  saveModal.classList.remove('hidden');
+}
+
+function openLoadModal() {
+  let loads = Memory.partial('save-');
+
+  let list = [];
+
+  for(let index in loads) {
+    let name = decodeURI(index.slice(5));
+
+    list.push(`<div class="load-option"><span class="fa fa-minus remove-save remove" id="remove-${index}"></span><div class='load-selection selection-button' data-loadname="${index}">${name}</div></div>`);
+  }
+
+  loadList.innerHTML = list.join('');
+
+  loadModal.classList.remove('hidden');
+}
+
+function loadSettingsFromSave(saveName) {
+  let loadSettings = Memory.get(saveName);
+
+  
+}
+
 function setSetButton() {
   setButton = document.getElementById("set-button");
+  saveButton = document.getElementById("save-button");
+  loadButton = document.getElementById("load-button");
 
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('set-check')) {
       checkSetButton();
     }
   });
+
+  saveButton.addEventListener('click', function(e) {
+    if (e.target.classList.contains('disabled')) {
+      return;
+    }
+    openSaveModal();
+  });
+
+  loadButton.addEventListener('click', function(e) {
+    if (e.target.classList.contains('disabled')) {
+      return;
+    }
+    openLoadModal();
+  });
+
+  checkSetButton();
 }
 
 function checkSetButton() {
@@ -239,12 +120,20 @@ function checkSetButton() {
     }
   }
   
-    if (memSet) {
+  if (memSet) {
     setButton.classList.remove('disabled');
+    saveButton.classList.remove('disabled');
     return;
   }
 
   setButton.classList.add('disabled');
+  saveButton.classList.add('disabled');
+
+  if (Object.keys(Memory.partial('save-')).length) {
+    loadButton.classList.remove('disabled');
+  } else {
+    loadButton.classList.add('disabled');
+  }
 }
 
 function toggleTray(close = false) {
@@ -333,10 +222,20 @@ function closeTeamModal() {
   teamModal.classList.add('hidden');
 }
 
+function closeSaveModal() {
+  saveModal.classList.add('hidden');
+  checkSetButton();
+}
+
+function closeLoadModal() {
+  loadModal.classList.add('hidden');
+  checkSetButton();
+}
+
 function updateDurationDisplay(_value = null) {
   value = timeSlider.value;
   
-  let perperson = ' in total';
+  let perperson = ` in total`;
   if (options.pp) {
     perperson = ` per person`;
   }
@@ -369,8 +268,6 @@ function setForm() {
     for (let i = 0;i < results.length;i++) {                                                                                                                               
       formData[results[i].getAttribute('name')] = results[i].value;
     }
-
-    console.log('results', results);
 
     team = 0;
     let flipflop = false;
@@ -700,7 +597,7 @@ function setUpTeamMembers(maintainOrder = false) {
   for (i = 0;i < randomOrder.length;i += 1){
     memberList.push(`<input id="member-${i}" type="checkbox" class="team-member set-check" name="team-${randomOrder[i]}" />
     <label for="member-${i}">${randomOrder[i]}</label>`);
-    editList.push(`<div class="edit-team-member"><span class="fa fa-minus remove-member" id="remove-${randomOrder[i]}"></span>${randomOrder[i]}</div>`);
+    editList.push(`<div class="edit-team-member"><span class="fa fa-minus remove-member remove" id="remove-${randomOrder[i]}"></span>${randomOrder[i]}</div>`);
   }
 
   let hide = '';
@@ -763,6 +660,75 @@ function setUpTeamEdit() {
   });
 }
 
+function setUpSaveLoad() {
+  saveModal = document.getElementById('save-modal');
+  saveInput = document.getElementById('save-name-input');
+  saveSettingsButton = document.getElementById('save-settings-button');
+  loadModal = document.getElementById('load-modal');
+  loadList = document.getElementById('load-editor-list');
+
+  let saveClose = document.getElementById('save-modal-close');
+  let loadClose = document.getElementById('load-modal-close');
+
+  saveClose.addEventListener('click', function(e) {
+    closeSaveModal();
+  });
+  loadClose.addEventListener('click', function(e) {
+    closeLoadModal();
+  });
+
+  saveSettingsButton.addEventListener('click', function(e) {
+    if(saveInput.value == '') { // More robust 
+      return;
+    }
+
+    let name =  encodeURI(saveInput.value)
+
+    let fullOptions = options; // deep copy?
+
+    fullOptions.duration = timeSlider.value;
+    
+    const selected = document.querySelectorAll('#team-members input:checked');
+    let i = 0;
+
+    fullOptions.team = [];
+
+    for(i = 0;i < selected.length;i += 1) {
+      fullOptions.team.push(selected[i].name);
+    }
+    
+    Memory.setObject(`save-${name}`, fullOptions);
+
+    saveInput.value = '';
+
+    closeSaveModal();
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('load-selection')) {
+      return;
+    }
+
+    let loadname = e.target.getAttribute('data-loadname');
+
+    setOptions(false, loadname);
+    checkSetButton();
+    closeLoadModal();
+  });
+
+  document.addEventListener('click', function(e){
+    if (!e.target.classList.contains('remove-save')) {
+      return;
+    }
+
+    const removee = e.target.id.split('remove-')[1];
+    
+    Memory.remove(removee);
+
+    e.target.parentNode.parentNode.removeChild(e.target.parentNode);
+  });
+}
+
 function recordTime(element) {
     element.setAttribute('data-time', subtimer.getElapsedTimer());
 }
@@ -774,7 +740,7 @@ function setUpTeamButtons() {
 
     for(i=0;i<teamButtons.length;i+=1) {
       
-      teamButtons[i].addEventListener("click", function(e) {
+    teamButtons[i].addEventListener("click", function(e) {
       if (event.target.classList.contains('active') || event.target.classList.contains('done')) {
         return;
       }
@@ -979,14 +945,11 @@ function update() {
   } else {
     settings.classList.remove("lock");
     end.classList.add("hidden");
-    console.log(subtimer);
     subtimer.element.classList.remove("end");
     next.classList.add("hidden");
     if (timer.isReady()) {
       pause.classList.remove("hidden");
-      console.log("SHOWING PAUSE");
     } else {
-      console.log("HIDING PAUSE");
       pause.classList.add("hidden");
     }
   }
@@ -1025,18 +988,40 @@ function setTeamName (name = null) {
   title.innerHTML = teamname + ' - Stand Up';
 }
 
-function setOptions (save = false) {
+function setOptions (save = false, memorySlot = 'standup_options') {
   if(!save) {
-    if(Memory.exists('standup_options')) {
-      options = Memory.getObject('standup_options');
+    if(Memory.exists(memorySlot)) {
+      options = Memory.getObject(memorySlot);
     }
   } else {
-    Memory.setObject('standup_options', options);
+    Memory.setObject(memorySlot, options);
+  }
+  for(let option in options) {
+    if (optionInputs.hasOwnProperty(option)) {
+      optionInputs[option].checked = options[option];
+    }
   }
 
+  if (options.hasOwnProperty('duration')) {
+    timeSlider.value = options['duration'];
+  }
 
-  for(let option in options) {
-    optionInputs[option].checked = options[option];
+  if (options.hasOwnProperty('team')) {
+    const teamInputs = document.querySelectorAll('#team-members input');
+    let i = 0;
+
+    for(i = 0;i < teamInputs.length;i += 1) {
+      let value = false;
+
+      console.log(options);
+      console.log(options.team);
+
+      if (options.team.includes(teamInputs[i].getAttribute('name'))) {
+        value = true;
+      }
+
+      teamInputs[i].checked = value;
+    }
   }
 
   updateDurationDisplay();
@@ -1069,6 +1054,8 @@ document.addEventListener("DOMContentLoaded", function () {
   setForm();
 
   getMemory();
+
+  setUpSaveLoad();
 
   setupSounds();
 

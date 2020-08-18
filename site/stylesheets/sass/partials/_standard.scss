@@ -52,7 +52,7 @@ header {
   &.collapser {
     overflow:hidden;
     transition: max-height $transTime, padding $transTime;
-    max-height:600px;
+    max-height:700px;
     &.closed {
       max-height:0vh;
       padding:0 20px;
@@ -68,6 +68,7 @@ header {
   position:fixed;
   left:50%;
   top:50%;
+  min-width:340px;
   
   .container {
     background-color:$white; 

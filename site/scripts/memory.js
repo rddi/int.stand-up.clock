@@ -29,5 +29,20 @@ const Memory = {
       return false;
     }
     return true;
+  },
+  remove: function(index) {
+    if(Storage.hasOwnProperty(index)) {
+      delete Storage[index];
+    }
+  },
+  partial: function(_partial) {
+    let output = {};
+    for(let item in Storage) {
+      if (item.startsWith(_partial)) {
+        output[item] = Storage[item];
+      }
+    }
+
+    return output;
   }
 }

@@ -64,7 +64,12 @@
             <label for="collect-time" data-info="Do you want a team member's unused time to be split amongst everyone else?">Collect Time</label>
           </div>
           <input id="set-button" type="submit" value="Set" class="button disabled"></input>
+          <div class="save-load-section">
+            <div id="save-button" class="button selection-button disabled">Save</div>
+            <div id="load-button" class="button selection-button">Load</div>
+          </div>
         </form>
+        
       </div>
     </header>
     <div class="container pad">
@@ -134,6 +139,35 @@
         </div>
       </div>
     </div>
+
+    <div id="save-modal" class="modal hidden">
+      <div class="container">
+        <span id="save-modal-close" class="fa fa-times"></span>
+        <h2>Save Meeting</h2>
+        <div id="save-editor">
+          <div class="save-name-input">
+            <input type="text" id="save-name-input" name="save-name" placeholder="Meeting name"/>
+          </div>
+          <div id="save-settings-button" class="button">Save</div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="load-modal" class="modal hidden">
+      <div class="container">
+        <span id="load-modal-close" class="fa fa-times"></span>
+        <h2>Load Meeting</h2>
+        <div id="load-editor">
+          <div id="load-editor-list">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="scripts/timer.js"></script>
+    <script type="text/javascript" src="scripts/sound.js"></script>
     <script type="text/javascript" src="scripts/memory.js"></script>
     <script type="text/javascript" src="scripts/team.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
