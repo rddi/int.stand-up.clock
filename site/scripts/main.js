@@ -316,12 +316,10 @@ function setForm() {
 
     if (options.pausable) {
       subtimer.element.classList.add('pause');
-      // pause.classList.add('no-pause');
     }
 
     if (options.skipable) {
       subtimer.element.classList.add('skip');
-      // skip.classList.add('no-pause');
     }
 
     timer.setTimer(duration);
@@ -741,7 +739,7 @@ function setUpTeamButtons() {
     for(i=0;i<teamButtons.length;i+=1) {
       
     teamButtons[i].addEventListener("click", function(e) {
-      if (event.target.classList.contains('active') || event.target.classList.contains('done')) {
+      if (timer.isPaused() || event.target.classList.contains('active') || event.target.classList.contains('done')) {
         return;
       }
 
