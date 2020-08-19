@@ -712,6 +712,8 @@ input[type="text"] {
     transform: translate(-100%, -50%); }
   .timer:not(.skip) #next-button {
     display: none; }
+  .timer:not(.pep) #pep-button {
+    display: none; }
   .timer.skip #pause-button {
     -webkit-transform: translate(-100%, -50%);
     -moz-transform: translate(-100%, -50%);

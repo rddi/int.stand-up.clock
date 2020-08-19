@@ -317,6 +317,10 @@ function setForm() {
       subtimer.element.classList.add('skip');
     }
 
+    if (options.pepTalk) {
+      subtimer.element.classList.add('pep');
+    }
+
     timer.setTimer(duration);
     subtimer.setTimer(duration / team);
     toggleTray(true);
@@ -682,7 +686,7 @@ function setUpSaveLoad() {
 
     let name =  encodeURI(saveInput.value)
 
-    let fullOptions = options; // deep copy?
+    let fullOptions = options;
 
     fullOptions.duration = timeSlider.value;
     
@@ -694,10 +698,16 @@ function setUpSaveLoad() {
     for(i = 0;i < selected.length;i += 1) {
       fullOptions.team.push(selected[i].name);
     }
+
+    let message = `Meeting profile saved as \"${saveInput.value}\"`;
+
+    if(Memory.exists(`save-${name}`)) {
+      message = `Meeting profile replaced existing \"${saveInput.value}\"`;
+    }
     
     Memory.setObject(`save-${name}`, fullOptions);
 
-    flashMessage(`Meeting profile saved as \"${saveInput.value}\"`, 'success');
+    flashMessage(message, 'success');
 
     saveInput.value = '';
 
@@ -866,6 +876,7 @@ function manageSelectionButtons() {
     selectAll.classList.remove("hidden");
   }
 }
+
 function setStage(stage, finish = false) {
   nameWheel.classList.remove('stage-0', 'stage-1', 'stage-2');
   nameWheel.classList.add(`stage-${stage}`);

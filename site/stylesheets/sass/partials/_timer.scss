@@ -110,6 +110,12 @@
     }
   }
 
+  &:not(.pep) {
+    #pep-button {
+      display:none;
+    }
+  }
+
   &.skip {
     #pause-button {
       @include transform(translate(-100%, -50%));
