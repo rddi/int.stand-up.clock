@@ -46,8 +46,7 @@ let timer,
   durationDisplay,
   saveButton,
   saveSettingsButton,
-  loadButton,
-  flash;
+  loadButton;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -324,6 +323,7 @@ function setForm() {
     timer.setTimer(duration);
     subtimer.setTimer(duration / team);
     toggleTray(true);
+    sendUpdate();
   });
 }
 
@@ -488,6 +488,7 @@ function newSpeaker() {
   }
 
   nameWheel.innerHTML = nameElement;
+  sendUpdate();
 }
 
 function randomSelectMember() {
@@ -748,24 +749,6 @@ function recordTime(element) {
     element.setAttribute('data-time', subtimer.getElapsedTimer());
 }
 
-function setUpFlash() {
-  flash = document.getElementById('flash-message');
-}
-
-function flashMessage(message, type = 'notice') {
-  flash.classList.remove('success', 'notice', 'error');
-  flash.classList.remove('hidden');
-
-  flash.classList.add(type);
-
-  flash.setAttribute('message', message);
-
-  setTimeout(function(e) {
-    flash.classList.add('hidden');
-    flash.setAttribute('message', '');
-  },3000);
-}
-
 function setUpTeamButtons() {
   let teamButtons = document.getElementsByClassName('team-button');
   let i = 0;
@@ -798,6 +781,8 @@ function setUpTeamButtons() {
 
         subtimerRebuild();
       }
+      // sendMemberList();
+      sendUpdate();
     });
   };
 }
@@ -1080,6 +1065,90 @@ function getMemory() {
   setOptions();
 }
 
+
+
+function handleReciept(input) {
+  console.log(input, input._getPayloadString());
+
+  let message = input._getPayloadString();
+
+  try{
+    message = JSON.parse(message);
+    
+    switch (message.type) {
+      case 'Message':
+        console.log(message.body);
+        break;
+      case 'Nomination':
+        handleNomination(message.client, message.body);
+        break;
+      case 'Register':
+        handleRegistration(message.body);
+        break;
+      default:
+        console.log(`Could not handle message type: "${message.type}"`);
+    }
+  }
+  catch (err) {
+    console.log('FAIL!', error);
+  }
+  
+}
+
+function handleNomination(sender, nomination) {
+  const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
+  if (sender == currentSpeaker) {
+    let target = document.getElementById(`team-${nomination}`);
+    target.click();
+  } else {
+    Page.flashMessage(`${sender} tried to nominate ${nomination}, but is not the current speaker`, 'notice');
+  }
+}
+
+
+function handleRegistration(registration) {
+  sendUpdate();
+}
+
+function sendUpdate() {
+  sendSpeaker();
+
+
+  sendMemberList();
+}
+
+function sendSpeaker() {
+  const currentSpeaker = document.querySelector('.team-button.active');
+
+  if (currentSpeaker == null) {
+    return;
+  }
+
+  Comms.sendEvent(currentSpeaker.innerHTML, 'UpdateSpeaker');
+}
+
+function sendMemberList() {
+  let currentMemberList = document.getElementsByClassName('team-button');
+  let membersObject = [];
+  let i;
+
+  for(i = 0;i < currentMemberList.length;i+=1) {
+    membersObject.push({
+      name: currentMemberList[i].innerHTML,
+      active: currentMemberList[i].classList.contains('active'),
+      done: currentMemberList[i].classList.contains('done')
+    });
+  }
+
+  Comms.sendEvent({
+    members: membersObject
+  }, 'MemberList');
+}
+
+function connectHandler() {
+  Page.flashMessage(`Successfully serving meeting "${Comms.params.meetingCode}"`, 'success');
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   buildTeamSections();
 
@@ -1100,8 +1169,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setSetButton();
 
-  setUpFlash();
+  Page.setUpFlash();
 
   startUpdates();
+
+  Comms.MQTTConnect();
 });
 

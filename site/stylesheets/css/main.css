@@ -238,8 +238,7 @@ h1 {
   border: 330px solid transparent;
   border-bottom-color: #fff; }
 
-#flash-message {
-  color: #fff;
+#flash-message-holder {
   position: fixed;
   left: 50%;
   top: 100px;
@@ -248,40 +247,44 @@ h1 {
   -ms-transform: translateX(-50%);
   -o-transform: translateX(-50%);
   transform: translateX(-50%);
-  border-radius: 10px;
-  padding: 20px;
-  display: block;
   max-width: 1080px;
-  width: calc(100% - 40px);
-  box-shadow: 0px 5px 8px #00000088;
-  pointer-events: none;
-  opacity: 1;
-  -webkit-transition: opacity 300ms;
-  -moz-transition: opacity 300ms;
-  -o-transition: opacity 300ms;
-  transition: opacity 300ms; }
-  #flash-message span {
-    display: none;
+  width: calc(100% - 40px); }
+  #flash-message-holder .flash-message {
     color: #fff;
-    float: left;
-    margin-right: 20px; }
-  #flash-message.success {
-    background-color: #0F6B05; }
-    #flash-message.success #icon-success {
-      display: block; }
-  #flash-message.notice {
-    background-color: #e9a351; }
-    #flash-message.notice #icon-notice {
-      display: block; }
-  #flash-message.error {
-    background-color: #650D1B; }
-    #flash-message.error #icon-error {
-      display: block; }
-  #flash-message.hidden {
-    opacity: 0; }
-  #flash-message::after {
-    content: attr(message);
-    font-weight: bold; }
+    border-radius: 10px;
+    padding: 20px;
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 8px #00000088;
+    pointer-events: none;
+    opacity: 1;
+    -webkit-transition: opacity 300ms;
+    -moz-transition: opacity 300ms;
+    -o-transition: opacity 300ms;
+    transition: opacity 300ms; }
+    #flash-message-holder .flash-message span {
+      display: none;
+      color: #fff;
+      float: left;
+      margin-right: 20px; }
+    #flash-message-holder .flash-message.success {
+      background-color: #0F6B05; }
+      #flash-message-holder .flash-message.success #icon-success {
+        display: block; }
+    #flash-message-holder .flash-message.notice {
+      background-color: #e9a351; }
+      #flash-message-holder .flash-message.notice #icon-notice {
+        display: block; }
+    #flash-message-holder .flash-message.error {
+      background-color: #650D1B; }
+      #flash-message-holder .flash-message.error #icon-error {
+        display: block; }
+    #flash-message-holder .flash-message.hidden {
+      opacity: 0; }
+    #flash-message-holder .flash-message::after {
+      content: attr(message);
+      font-weight: bold; }
 
 .header-button {
   height: 60px;
@@ -793,7 +796,7 @@ input[type="text"] {
     font-size: 30px;
     color: #fff;
     cursor: pointer;
-    transition: color 300ms, background-color 300ms, text-decoration 300ms;
+    transition: color 300ms, background-color 300ms, text-decoration 300ms, opacity 300ms;
     position: relative; }
     .active-team-list .team-button::before {
       content: '';
@@ -846,3 +849,37 @@ input[type="text"] {
     .active-team-list#right-list .team-button::after {
       left: initial;
       right: calc(100% + 5px); }
+
+#speaker-display {
+  color: #d9643e;
+  -webkit-transition: color 300ms, -webkit-transform 300ms;
+  -moz-transition: color 300ms, -moz-transform 300ms;
+  -o-transition: color 300ms, -o-transform 300ms;
+  transition: color 300ms, transform 300ms; }
+  #speaker-display.green {
+    color: #0F6B05;
+    -webkit-transform: scale(2);
+    -moz-transform: scale(2);
+    -ms-transform: scale(2);
+    -o-transform: scale(2);
+    transform: scale(2); }
+
+#team-display {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  overflow: scroll;
+  max-width: 380px;
+  width: 100%; }
+  #team-display .team-button {
+    width: 100%;
+    opacity: 0.5;
+    cursor: default;
+    margin: 10px 0; }
+  #team-display.active .team-button {
+    opacity: 1;
+    cursor: pointer; }

@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>EDF RDDI Stand Up Client</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/css/main.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <link rel="icon" type="image/x-icon" href="./favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="speaker-display">Loading...</h1>
+    </div>
+    <div class="container">
+      <div id="team-display" class="active-team-list"></div>
+    </div>
+
+    <div id="join-modal" class="modal">
+      <div class="container">
+        <h2>Join Meeting</h2>
+        <div id="join-editor">
+          <div class="input-holder">
+            <input type="text" id="meeting-code-input" name="meeting-code" placeholder="Meeting code"/>
+          </div>
+          <div class="input-holder">
+            <input type="text" id="client-name-input" name="client-name" placeholder="Your name"/>
+          </div>
+          <div id="join-button" class="button">Join</div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <script type="text/javascript" src="scripts/sound.js"></script>
+    <script type="text/javascript" src="scripts/memory.js"></script>
+    <script type="text/javascript" src="scripts/comms.js"></script>
+    <script type="text/javascript" src="scripts/team.js"></script>
+    <script type="text/javascript" src="scripts/page.js"></script>
+    <script type="text/javascript" src="scripts/client.js"></script>
+  </body>
+</html>

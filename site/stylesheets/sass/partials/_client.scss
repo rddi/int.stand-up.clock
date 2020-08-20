@@ -1,0 +1,29 @@
+#speaker-display {
+  color:$orange;
+  @include transition(color $transTime, transform $transTime);
+  &.green {
+    color:$green;
+    @include transform(scale(2));
+  }
+}
+
+#team-display {
+  position: absolute;
+  left: 50%;
+  @include transform(translateX(-50%));
+  overflow:scroll;
+  max-width:380px;
+  width:100%;
+  .team-button {
+    width:100%;
+    opacity:0.5;
+    cursor:default;
+    margin:10px 0;
+  }
+  &.active {
+    .team-button {
+      opacity:1;
+      cursor:pointer;
+    }
+  }
+}
