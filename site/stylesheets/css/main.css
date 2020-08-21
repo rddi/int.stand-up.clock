@@ -630,10 +630,13 @@ input[type="text"] {
   content: attr(code);
   padding: 10px;
   font-weight: bold;
-  background-color: #fff;
+  color: #fff;
   border-radius: 5px;
-  color: #335fa3;
+  background-color: #650D1B;
   margin-left: 20px; }
+
+#register-title.connected:after {
+  background-color: #0F6B05; }
 
 #register-display {
   margin-top: 20px;

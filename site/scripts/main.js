@@ -112,11 +112,15 @@ function checkSetButton() {
   let i = 0;
   let memSet = false;
 
-
-  for(i = 0;i < checked.length;i += 1) {
-
-    if (checked[i].id.match(/member-/g)) {
+  if(registrationOpen) {
+    if (register != {}) {
       memSet = true;
+    }
+  } else {
+    for(i = 0;i < checked.length;i += 1) {
+      if (checked[i].id.match(/member-/g)) {
+        memSet = true;
+      }
     }
   }
   
@@ -307,49 +311,56 @@ function setForm() {
       formData[results[i].getAttribute('name')] = results[i].value;
     }
 
-    team = 0;
-    let flipflop = false;
+    team = [];
+    
     const activeList = document.getElementsByClassName('active-team-list');
-
     activeList[0].innerHTML = '';
     activeList[1].innerHTML = '';
 
     let first = true;
+    let flipflop = false;
 
-    Object.keys(formData).forEach(function(item) {
-      let breakdown = item.split("-");
-
-      if (breakdown[0] === "team") {
-        team += 1;
-        target = 0;
-        if(flipflop) {
-          target = 1;
-        }
-        flipflop = !flipflop;
-
-        let extraClass = '';
-
-        if (first) {
-          extraClass = 'active';
-          first = false;
-        }
-
-        breakdown.shift();
-
-        const teamButton = `<div id="team-button-${breakdown.join("-")}" class="team-button ${extraClass}">${breakdown.join("-")}</div>`;
-
-        activeList[target].innerHTML = activeList[target].innerHTML + teamButton;
+    if (registrationOpen) {
+      for(let member in register) {
+        team.push(member);
       }
-    });
+    } else {
+      Object.keys(formData).forEach(function(item) {
+        let breakdown = item.split("-");
+
+        if (breakdown.shift() === "team") {
+          team.push(breakdown.join("-"));
+        }
+      });
+    }
+
+    for(i = 0;i < team.length;i += 1) {
+      target = 0;
+      if(flipflop) {
+        target = 1;
+      }
+      flipflop = !flipflop;
+
+      let extraClass = '';
+
+      if (first) {
+        extraClass = 'active';
+        first = false;
+      }
+
+      const teamButton = `<div id="team-button-${team[i]}" class="team-button ${extraClass}">${team[i]}</div>`;
+
+      activeList[target].innerHTML = activeList[target].innerHTML + teamButton;
+    }
 
     setUpTeamButtons();
 
-    teamRemaining = team;
+    teamRemaining = team.length;
 
     let duration = formData['duration'];
 
     if (options.pp) {
-      duration = duration * team;
+      duration = duration * team.length;
     }
 
     if (options.pausable) {
@@ -365,9 +376,10 @@ function setForm() {
     }
 
     timer.setTimer(duration);
-    subtimer.setTimer(duration / team);
+    subtimer.setTimer(duration / team.length);
     toggleTray(true);
     updateClients();
+    registrationOpen = false;
   });
 }
 
@@ -972,7 +984,7 @@ function update() {
 
   let currentTeamMember = "";
   if (timer.start != null) {
-    currentTeamMember = `${(team - teamRemaining) + 1} / ${team}`;
+    currentTeamMember = `${(team.length - teamRemaining) + 1} / ${team.length}`;
   }
   teamCount.innerHTML = currentTeamMember;
 
@@ -1219,6 +1231,7 @@ function updateRegister() {
   console.log(registerDisplay);
 
   registerDisplay.innerHTML = registerMembers.join('');
+  checkSetButton();
 }
 
 function updateClients() {
@@ -1257,6 +1270,7 @@ function sendMemberList() {
 
 function connectHandler() {
   Page.flashMessage(`Successfully serving meeting "${Comms.params.meetingCode}"`, 'success');
+  registerTitle.classList.add('connected');
 }
 
 document.addEventListener("DOMContentLoaded", function () {

@@ -53,13 +53,8 @@ const Comms = {
     }, reconnectTimeout);
   },
   onMessageArrived: function(message) {
-    console.log('message recieved:');
-    console.log(`TOPIC: ${message.destinationName}`,`PAYLOAD: ${message.payloadString}`);
     if(typeof handleReciept === 'function') {
-      console.log('handling Reciept');
       handleReciept(message);
-    } else {
-      console.log('NOT handling Reciept');
     }
   },
   broadcastMessage:function(_message) {

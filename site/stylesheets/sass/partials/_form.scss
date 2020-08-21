@@ -409,10 +409,15 @@ input[type="text"] {
     content:attr(code);
     padding:10px;
     font-weight:bold;
-    background-color:$white;
+    color:$white;
     border-radius:5px;
-    color:$blue;
+    background-color:$red;
     margin-left:20px;
+  }
+  &.connected {
+    &:after {
+      background-color:$green;
+    }
   }
 }
 
