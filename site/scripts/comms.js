@@ -8,7 +8,9 @@ const Comms = {
   params: {
     meetingCode: 'all',
     clientName: 'default',
-    channel: 'standup_all'
+    channel: 'standup_all',
+    registered: false,
+    uniqueCode: null
   },
   MQTTConnect: function(_meetingId = 'all') {
     console.log(`connecting to ${host}:${port}`);

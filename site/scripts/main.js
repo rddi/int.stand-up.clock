@@ -46,7 +46,13 @@ let timer,
   durationDisplay,
   saveButton,
   saveSettingsButton,
-  loadButton;
+  loadButton,
+  register = {},
+  registrationOpen = false,
+  tabButtons,
+  registerTitle,
+  registerDisplay,
+  openRegistraionButton;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -245,6 +251,44 @@ function setForm() {
   timeSlider = document.getElementById('time-slider');
   durationDisplay = document.getElementById('duration-display');
 
+  openRegistraionButton= document.getElementById('open-registration');
+  registerTitle = document.getElementById('register-title');
+  registerDisplay = document.getElementById('register-display');
+
+  // tabButtons = document.getElementsByClassName('tab-button');
+
+  const tabs = document.getElementsByClassName('tab');
+
+  let i;
+
+  document.addEventListener('click', function(e) {
+    if(!e.target.classList.contains('tab-button')) {
+      return;
+    }
+
+    const tab = e.target.getAttribute('data-tab');
+    let j;
+
+    for(j = 0;j < tabs.length;j += 1) {
+      tabs[j].classList.add('hidden');
+    }
+
+    tabs[tab].classList.remove('hidden');
+  });
+
+  openRegistraionButton.addEventListener('click', function(e) {
+    // Set meeting code
+    Comms.params.meetingCode = Page.generateCode(4, true);
+
+    // Add to code to page with clipboard button
+    registerTitle.setAttribute('code', Comms.params.meetingCode);
+
+    registrationOpen = true;
+    e.target.classList.add('hidden');
+
+    Comms.MQTTConnect(Comms.params.meetingCode);
+  });
+
   timeSlider.addEventListener('input', function(e) {
     updateDurationDisplay(e.target.value);
   });
@@ -292,7 +336,7 @@ function setForm() {
 
         breakdown.shift();
 
-        const teamButton = `<div class="team-button ${extraClass}">${breakdown.join("-")}</div>`;
+        const teamButton = `<div id="team-button-${breakdown.join("-")}" class="team-button ${extraClass}">${breakdown.join("-")}</div>`;
 
         activeList[target].innerHTML = activeList[target].innerHTML + teamButton;
       }
@@ -323,7 +367,7 @@ function setForm() {
     timer.setTimer(duration);
     subtimer.setTimer(duration / team);
     toggleTray(true);
-    sendUpdate();
+    updateClients();
   });
 }
 
@@ -488,7 +532,7 @@ function newSpeaker() {
   }
 
   nameWheel.innerHTML = nameElement;
-  sendUpdate();
+  updateClients();
 }
 
 function randomSelectMember() {
@@ -781,8 +825,7 @@ function setUpTeamButtons() {
 
         subtimerRebuild();
       }
-      // sendMemberList();
-      sendUpdate();
+      updateClients();
     });
   };
 }
@@ -1083,7 +1126,7 @@ function handleReciept(input) {
         handleNomination(message.client, message.body);
         break;
       case 'Register':
-        handleRegistration(message.body);
+        handleRegistration(message.client, message.body);
         break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
@@ -1098,21 +1141,88 @@ function handleReciept(input) {
 function handleNomination(sender, nomination) {
   const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
   if (sender == currentSpeaker) {
-    let target = document.getElementById(`team-${nomination}`);
+    let target = document.getElementById(`team-button-${nomination}`);
     target.click();
-  } else {
-    Page.flashMessage(`${sender} tried to nominate ${nomination}, but is not the current speaker`, 'notice');
+
+    Page.flashMessage(`${sender} nominated ${nomination}`, 'success');
   }
 }
 
 
-function handleRegistration(registration) {
-  sendUpdate();
+function handleRegistration(client, uniqueCode) {
+  if (register.hasOwnProperty(client)) {
+
+    if (register[client] == uniqueCode) {
+      Comms.sendEvent({
+        target: client,
+        status: 'success',
+        error: 'none'
+        }
+        ,'RegisterResponse');
+      return;
+    }
+
+    // If so, return an error
+    Comms.sendEvent({
+      target: client,
+      status: 'failure',
+      error: 'Name already exists in meeting'
+      }
+      ,'RegisterResponse');
+    return;
+  }
+
+  if (!registrationOpen) {
+    Comms.sendEvent({
+      target: client,
+      status: 'failure',
+      error: 'Registration for this meeting is not current open'
+    }, 'RegisterResponse');
+    return;
+  }
+
+  for(let person in register) {
+    if (register[person] == uniqueCode) {
+      delete register[person];
+    }
+  }
+
+  //If not, add to new team list
+  register[client] = uniqueCode;
+
+  //Send registration success
+  Comms.sendEvent({
+    target: client,
+    status: 'success',
+    error: 'none'
+  }
+    ,'RegisterResponse');
+
+  Page.flashMessage(`"${client}" has joined the meeting`, 'success')
+  updateRegister();
+  updateClients();
 }
 
-function sendUpdate() {
-  sendSpeaker();
+function updateRegister() {
+  console.log('UPDATING REGISTER');
+  console.log(register);
+  let registerMembers = [];
+  for(let member in register) {
+    console.log(member);
+    registerMembers.push(
+      `<div class="register-lozenge"><span class="fa fa-minus deregister remove" id="remove-${member}"></span>${member}</div>`
+    );
+  }
 
+  console.log(registerMembers.join(''));
+
+  console.log(registerDisplay);
+
+  registerDisplay.innerHTML = registerMembers.join('');
+}
+
+function updateClients() {
+  sendSpeaker();
 
   sendMemberList();
 }
@@ -1172,7 +1282,5 @@ document.addEventListener("DOMContentLoaded", function () {
   Page.setUpFlash();
 
   startUpdates();
-
-  Comms.MQTTConnect();
 });
 

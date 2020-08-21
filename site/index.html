@@ -40,9 +40,22 @@
       </div>
       <div class="container collapser closed">
         <form id="input-form">
-          <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
-            <div class="select-strip" id="team-members">
+          <div class="tab-holder">
+            <div class="tab-buttons">
+              <div class="tab-button" data-tab="0">1</div>
+              <div class="tab-button" data-tab="1">2</div>
             </div>
+            <div class="tab">
+              <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
+              <div class="select-strip" id="team-members"></div>
+            </div>
+            <div class="tab hidden">
+              <label id="register-title">Register</label>
+              <div class="select-strip" id="register-display">
+                <div id="open-registration" class="selection-button">Open Registration</div>
+              </div>
+            </div>
+          </div>
           <label>Duration</label>
           <div class="select-strip">
           <div>

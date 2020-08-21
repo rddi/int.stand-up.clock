@@ -14,12 +14,12 @@ const Page = {
       <span id="icon-notice" class="fa fa-exclamation-triangle"></span>
       <span id="icon-error" class="fa fa-times"></span>`;
 
-    document.addEventListener('click', function(e) {
-      if(!e.target.classList.contains('flash-message-close')) {
-        return;
-      }
+    // document.addEventListener('click', function(e) {
+    //   if(!e.target.classList.contains('flash-message-close')) {
+    //     return;
+    //   }
 
-    });
+    // });
   },
 
   flashMessage: function(message, type = 'notice') {
@@ -40,5 +40,40 @@ const Page = {
         },500);
       }, 3000);
     },200);
+  },
+
+  getQueryParams: function() {
+    let url = window.location.href.split('?');
+
+    if(url.length == 1) {
+      return {};
+    }
+
+    let paramArray = url[1].split('&');
+
+    let paramObject = {};
+
+    for(i = 0;i < paramArray.length;i += 1) {
+      let temp = paramArray[i].split('=');
+      paramObject[temp[0]] = temp[1];
+    }
+
+    return paramObject;
+  },
+
+  generateCode: function(length, capsOnly = false) {
+    let output = '',
+    characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+    i;
+
+    if (!capsOnly) {
+      characters = characters + 'abcdefghijklmnopqrstuvwxyz';
+    }
+  
+    for(i = 0;i < length;i += 1) {
+      output = output + (characters.charAt(Math.floor(Math.random() * characters.length)))
+    }
+  
+    return output;
   }
 }

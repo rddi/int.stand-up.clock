@@ -1,16 +1,38 @@
 let meetingCodeInput,
   clientNameInput,
   joinModal,
+  joinTitle,
   joinButton,
+  currentSpeaker,
   speakerDisplay,
   teamDisplay,
   memberList = {};
 
 function setUpForm() {
   joinModal = document.getElementById('join-modal');
+  joinTitle = document.getElementById('join-title');
   meetingCodeInput = document.getElementById('meeting-code-input');
   clientNameInput = document.getElementById('client-name-input');
   joinButton = document.getElementById('join-button');
+
+  let queryParams = Page.getQueryParams();
+
+  let memory = Memory.getObject('standup_client_settings');
+
+  if (queryParams.hasOwnProperty('meeting')) {
+    let code = queryParams.meeting.toUpperCase();
+    meetingCodeInput.value = code;
+    meetingCodeInput.parentElement.classList.add('hidden');
+    joinTitle.innerHTML = `Join Meeting "${code}"`;
+  } else if (memory != null && memory.hasOwnProperty('meetingCode')) {
+    meetingCodeInput.value = memory.meetingCode;
+  }
+
+  if (memory != null && memory.hasOwnProperty('clientName')) {
+    clientNameInput.value = memory.clientName;
+  }
+
+
 
   joinButton.addEventListener('click', function(e) {
     let ready = true;
@@ -29,6 +51,9 @@ function setUpForm() {
     }
     Comms.params.meetingCode = meetingCodeInput.value;
     Comms.params.clientName = clientNameInput.value;
+
+    Memory.setObject('standup_client_settings', Comms.params);
+
     Comms.MQTTConnect(Comms.params.meetingCode);
   });
 }
@@ -48,16 +73,26 @@ function handleReciept(input) {
     
     switch (message.type) {
       case 'Message':
+        if (!Comms.params.registered) {
+          return;
+        }
         console.log(message.body);
         break;
       case 'UpdateSpeaker':
-        console.log(message);
-        console.log(message.body);
+        if (!Comms.params.registered) {
+          return;
+        }
         handleUpdateSpeaker(message.body);
         break;
       case 'MemberList':
+        if (!Comms.params.registered) {
+          return;
+        }
         handleMemberList(message.body);
         break;
+      case 'RegisterResponse':
+          handleRegisterResponse(message.body);
+          break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
     }
@@ -68,19 +103,34 @@ function handleReciept(input) {
   
 }
 
-function handleUpdateSpeaker(speaker) {
+function handleRegisterResponse(response) {
+  if (response.target != Comms.params.clientName) {
+    return;
+  }
+  if (response.status == 'success') {
+    Page.flashMessage(`Registered in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
+    Comms.params.registered = true;
+    joinModal.classList.add("hidden");
+    setTimeout(function(e) {
+      speakerDisplay.classList.remove("hidden");
+    },1000);
+  } else if (response.status == 'failure') {
+    Page.flashMessage(`Could not register in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}": ${response.error}`, 'error');
+  }
+}
 
-  speakerDisplay.innerHTML = speaker;
+function handleUpdateSpeaker(speaker) {
+  currentSpeaker = speaker;
+
+  speakerDisplay.innerHTML = currentSpeaker;
+  speakerDisplay.classList.remove('waiting');
 
   speakerDisplay.classList.remove('green');
 
   teamDisplay.classList.remove('active');
 
-  console.log(Comms.params.clientName, speaker, speaker == Comms.params.clientName);
   if (speaker == Comms.params.clientName) {
-    // Give control
     speakerDisplay.classList.add('green');
-
     teamDisplay.classList.add('active');
   }
 }
@@ -97,7 +147,9 @@ function buildMemberElements() {
   let elements = [];
   let i;
   for(i = 0;i < memberList.length;i += 1) {
-    console.log(memberList[i]);
+    if (memberList[i].name == Comms.params.clientName) {
+      continue;
+    }
     let classes = [];
 
     if (memberList[i].done) {
@@ -115,7 +167,7 @@ function buildMemberElements() {
 
 function setUpTeamInteractions() {
   document.addEventListener('click', function (e) {
-    if (!e.target.classList.contains('team-member')) {
+    if (!e.target.classList.contains('team-button') || currentSpeaker != Comms.params.clientName || e.target.classList.contains('done') || e.target.classList.contains('active')) {
       return;
     }
 
@@ -124,17 +176,26 @@ function setUpTeamInteractions() {
 }
 
 function connectHandler() {
-  joinModal.classList.add("hidden");
+  joinModal.classList.add("busy");
 
   Comms.sendEvent(
-    '',
+    Comms.params.uniqueCode,
     'Register'
   );
 
-  Page.flashMessage(`Successfully connected to meeting "${Comms.params.meetingCode}"`, 'success');
+  Page.flashMessage(`Opened channel "${Comms.params.meetingCode}"`, 'notice');
+}
+
+function getUniqueCode() {
+  if (!Memory.exists('standup_client_uniquecode')) {
+    Memory.set('standup_client_uniquecode', Page.generateCode(16));
+  }
+
+  Comms.params.uniqueCode = Memory.get('standup_client_uniquecode');
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  getUniqueCode();
   setUpForm();
   setUpDisplay();
   setUpTeamInteractions();

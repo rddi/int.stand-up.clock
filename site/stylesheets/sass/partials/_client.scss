@@ -1,9 +1,33 @@
 #speaker-display {
   color:$orange;
-  @include transition(color $transTime, transform $transTime);
+  opacity:1;
+  @include transition(color $transTime, transform $transTime, opacity $transTime, font-size $transTime, padding $transTime);
+  margin:0;
+  padding:20px;
+  border:2px solid $orange;
+  border-radius:10px;
+  position:relative;
   &.green {
     color:$green;
-    @include transform(scale(2));
+    font-size:60px;
+    border-color:$green;
+    padding:10px 20px;
+  }
+  &.waiting {
+    color:$yellow;
+    border-color:$yellow;
+  }
+  &.hidden {
+    @include transform(translateY(-300px));
+  }
+  &:before {
+    content:"Current Speaker";
+    background-color:$white;
+    position:absolute;
+    padding:5px;
+    top: -17px;
+    font-size: 16px;
+    left: 10px;
   }
 }
 
@@ -16,14 +40,19 @@
   width:100%;
   .team-button {
     width:100%;
-    opacity:0.5;
-    cursor:default;
     margin:10px 0;
   }
-  &.active {
+  &:not(.active) {
     .team-button {
-      opacity:1;
-      cursor:pointer;
+      background-color:$grey;
+      cursor:default;
+      opacity:0.5;
     }
+  }
+}
+
+.input-holder {
+  &.hidden {
+    display:none;
   }
 }

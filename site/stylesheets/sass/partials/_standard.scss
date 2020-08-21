@@ -227,7 +227,7 @@ h1 {
 #flash-message-holder {
   position:fixed;
   left:50%;
-  top:100px;
+  bottom:10px;
   @include transform(translateX(-50%));
   max-width:$maxWidth;
   width:calc(100% - 40px);

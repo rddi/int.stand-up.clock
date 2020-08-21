@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="container">
-      <h1 id="speaker-display">Loading...</h1>
+      <h1 id="speaker-display" class="hidden waiting">Waiting...</h1>
     </div>
     <div class="container">
       <div id="team-display" class="active-team-list"></div>
@@ -20,7 +20,7 @@
 
     <div id="join-modal" class="modal">
       <div class="container">
-        <h2>Join Meeting</h2>
+        <h2 id="join-title" >Join Meeting</h2>
         <div id="join-editor">
           <div class="input-holder">
             <input type="text" id="meeting-code-input" name="meeting-code" placeholder="Meeting code"/>

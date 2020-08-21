@@ -395,3 +395,43 @@ input[type="text"] {
   background-color:$orange;
   color:$white;
 }
+
+.tab-holder {
+  .tab {
+    &.hidden {
+      display:none;
+    }
+  }
+}
+
+#register-title {
+  &:after {
+    content:attr(code);
+    padding:10px;
+    font-weight:bold;
+    background-color:$white;
+    border-radius:5px;
+    color:$blue;
+    margin-left:20px;
+  }
+}
+
+#register-display {
+  margin-top:20px;
+  border:2px solid $white;
+  border-radius:10px;
+  padding:20px;
+}
+
+.register-lozenge{
+  background-color:$orange;
+  display:inline-block;
+  padding:5px 15px;
+  border-radius:5px;
+  color:$white;
+  margin:5px;
+  cursor:pointer;
+  &.hidden {
+    display:none;
+  }
+}
