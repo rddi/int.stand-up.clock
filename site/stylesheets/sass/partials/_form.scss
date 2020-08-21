@@ -157,13 +157,16 @@ label {
   label {
     padding:5px;
     display:inline-block;
-    width:70px;
+    width:auto;
     height:70px;
     font-weight:normal;
     @include transition(font-size $transTime, font-weight $transTime, transform $transTime);
     text-align:center;
     line-height:70px;
     position:relative;
+    &.lock-width {
+      width:70px;
+    }
     &.extra {
       width:140px;
     }
@@ -397,6 +400,18 @@ input[type="text"] {
 }
 
 .tab-holder {
+  .tab-buttons {
+    .tab-button {
+      float:left;
+      padding:5px;
+      background-color:$blue;
+      color:$orange;
+      border-radius:5px;
+      cursor: pointer;
+      width:40px;
+      text-align:center;
+    }
+  }
   .tab {
     &.hidden {
       display:none;
@@ -411,12 +426,19 @@ input[type="text"] {
     font-weight:bold;
     color:$white;
     border-radius:5px;
-    background-color:$red;
+    background-color:$grey;
     margin-left:20px;
   }
   &.connected {
     &:after {
-      background-color:$green;
+      background-color:$blue;
+    }
+    &+.register-holder {
+      #register-display {
+        &.open{
+          border-color:$blue;
+        }
+      }
     }
   }
 }
@@ -426,9 +448,10 @@ input[type="text"] {
   border:2px solid $white;
   border-radius:10px;
   padding:20px;
+  @include transition(border-color $transTime);
 }
 
-.register-lozenge{
+.register-lozenge {
   background-color:$orange;
   display:inline-block;
   padding:5px 15px;
@@ -438,5 +461,18 @@ input[type="text"] {
   cursor:pointer;
   &.hidden {
     display:none;
+  }
+}
+
+.register-holder {
+  position:relative;
+  .selection-button {
+    position: absolute;
+    right: 30px;
+    bottom: -18px;
+    &#close-registration {
+      background-color:$red;
+      color:$white;
+    }
   }
 }

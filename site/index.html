@@ -41,18 +41,21 @@
       <div class="container collapser closed">
         <form id="input-form">
           <div class="tab-holder">
-            <div class="tab-buttons">
-              <div class="tab-button" data-tab="0">1</div>
-              <div class="tab-button" data-tab="1">2</div>
+            <div class="select-strip">
+              <input id="useRegister" type="checkbox" name="useRegister" class="option-checkbox option-control" func="setRegister"/>
+              <label for="useRegister" data-info="Do you want the team to use the client app?">Use Register</label>
             </div>
             <div class="tab">
               <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
               <div class="select-strip" id="team-members"></div>
             </div>
             <div class="tab hidden">
+              
               <label id="register-title">Register</label>
-              <div class="select-strip" id="register-display">
+              <div class="register-holder">
                 <div id="open-registration" class="selection-button">Open Registration</div>
+                <div id="close-registration" class="selection-button hidden">Close Registration</div>
+                <div class="select-strip" id="register-display"></div>
               </div>
             </div>
           </div>
@@ -62,7 +65,7 @@
             <input id="time-slider" type="range" name="duration" value="1" class="set-check" min="1" max="60"/>
 
             <input id="pp" type="checkbox" name="pp" class="option-checkbox option-control"/>
-            <label for="pp" data-info="Do you want the time to be per person?">pp</label>
+            <label for="pp" class="lock-width" data-info="Do you want the time to be per person?">pp</label>
           </div>
         
             <div id="duration-display"></div>

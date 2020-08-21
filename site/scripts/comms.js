@@ -6,9 +6,9 @@ let mqtt,
 
 const Comms = {
   params: {
-    meetingCode: 'all',
-    clientName: 'default',
-    channel: 'standup_all',
+    meetingCode: null,
+    clientName: null,
+    channel: null,
     registered: false,
     uniqueCode: null
   },
@@ -56,6 +56,13 @@ const Comms = {
     if(typeof handleReciept === 'function') {
       handleReciept(message);
     }
+  },
+  disconnect: function() {
+    mqtt.disconnect();
+    Comms.params.channel = null;
+    Comms.params.registered = false;
+    Page.flashMessage(`Disconnected from meeting "${Comms.params.meetingCode}"`, 'error');
+    Comms.params.meetingCode = null;
   },
   broadcastMessage:function(_message) {
     let message = new Paho.MQTT.Message(_message);

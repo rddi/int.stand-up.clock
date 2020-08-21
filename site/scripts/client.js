@@ -49,7 +49,7 @@ function setUpForm() {
     if(!ready) {
       return;
     }
-    Comms.params.meetingCode = meetingCodeInput.value;
+    Comms.params.meetingCode = meetingCodeInput.value.toUpperCase();
     Comms.params.clientName = clientNameInput.value;
 
     Memory.setObject('standup_client_settings', Comms.params);
@@ -90,9 +90,26 @@ function handleReciept(input) {
         }
         handleMemberList(message.body);
         break;
+      case 'Deregister':
+        if (!Comms.params.registered) {
+          return;
+        }
+        if (message.body.deregister != Comms.params.uniqueCode) {
+          return;
+          
+        }
+        Comms.params.registered = false;
+
+        speakerDisplay.innerHTML = "Disconnected";
+
+        Comms.disconnect();
+        
+        Page.flashMessage('You have been removed from the meeting', 'notice');
+
+        break;
       case 'RegisterResponse':
-          handleRegisterResponse(message.body);
-          break;
+        handleRegisterResponse(message.body);
+        break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
     }

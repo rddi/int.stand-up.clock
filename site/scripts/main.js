@@ -47,12 +47,14 @@ let timer,
   saveButton,
   saveSettingsButton,
   loadButton,
+  // useRegister = false,
   register = {},
   registrationOpen = false,
-  tabButtons,
   registerTitle,
   registerDisplay,
-  openRegistraionButton;
+  openRegistrationButton,
+  closeRegistrationButton,
+  tabs;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -112,7 +114,7 @@ function checkSetButton() {
   let i = 0;
   let memSet = false;
 
-  if(registrationOpen) {
+  if(options.useRegister) {
     if (register != {}) {
       memSet = true;
     }
@@ -246,7 +248,21 @@ function updateDurationDisplay(_value = null) {
   durationDisplay.innerHTML = `<span>${value}m</span>${perperson}`;
 }
 
-function setForm() {
+function setRegisterOpen(_open = true) {
+  registrationOpen = _open;
+
+  if (!_open){
+    openRegistrationButton.classList.remove("hidden");
+    closeRegistrationButton.classList.add("hidden");
+    registerDisplay.classList.remove("open");
+  } else {
+    openRegistrationButton.classList.add("hidden");
+    closeRegistrationButton.classList.remove("hidden");
+    registerDisplay.classList.add("open");
+  }
+}
+
+function setUpForm() {
   form = document.getElementById("input-form");
   muteInput = document.getElementById("mute-input");
 
@@ -255,42 +271,76 @@ function setForm() {
   timeSlider = document.getElementById('time-slider');
   durationDisplay = document.getElementById('duration-display');
 
-  openRegistraionButton= document.getElementById('open-registration');
+  openRegistrationButton = document.getElementById('open-registration');
+  closeRegistrationButton = document.getElementById('close-registration');
   registerTitle = document.getElementById('register-title');
   registerDisplay = document.getElementById('register-display');
 
   // tabButtons = document.getElementsByClassName('tab-button');
 
-  const tabs = document.getElementsByClassName('tab');
+  tabs = document.getElementsByClassName('tab');
 
-  let i;
+  // let i;
 
-  document.addEventListener('click', function(e) {
-    if(!e.target.classList.contains('tab-button')) {
+  // document.addEventListener('click', function(e) {
+  //   if(!e.target.classList.contains('tab-button')) {
+  //     return;
+  //   }
+
+  //   const tab = e.target.getAttribute('data-tab');
+  //   let j;
+
+  //   for(j = 0;j < tabs.length;j += 1) {
+  //     tabs[j].classList.add('hidden');
+  //   }
+
+  //   tabs[tab].classList.remove('hidden');
+
+  //   let _useRegister = false;
+
+  //   if (tab == '1') {
+  //     _useRegister = true;
+  //   }
+
+  //   useRegister = _useRegister;
+  // });
+
+  document.addEventListener('click', function(e){
+    if (!e.target.classList.contains('deregister')) {
       return;
     }
 
-    const tab = e.target.getAttribute('data-tab');
-    let j;
+    const removee = e.target.id.split('deregister-')[1];
+    // TeamMembers.remove(removee);
 
-    for(j = 0;j < tabs.length;j += 1) {
-      tabs[j].classList.add('hidden');
-    }
+    // delete register[removee];
 
-    tabs[tab].classList.remove('hidden');
+    
+
+    sendDeregister(removee);
   });
 
-  openRegistraionButton.addEventListener('click', function(e) {
-    // Set meeting code
-    Comms.params.meetingCode = Page.generateCode(4, true);
+  openRegistrationButton.addEventListener('click', function(e) {
+    setRegisterOpen(true);
 
-    // Add to code to page with clipboard button
-    registerTitle.setAttribute('code', Comms.params.meetingCode);
+    console.log(Comms.params.meetingCode);
 
-    registrationOpen = true;
-    e.target.classList.add('hidden');
+    if(Comms.params.meetingCode == null) { 
+      // Set meeting code
+      Comms.params.meetingCode = Page.generateCode(4, true);
 
-    Comms.MQTTConnect(Comms.params.meetingCode);
+      // Add to code to page with clipboard button
+      registerTitle.setAttribute('code', Comms.params.meetingCode);
+
+      Comms.MQTTConnect(Comms.params.meetingCode);
+    }
+
+    // registrationOpen = true;
+  });
+
+  closeRegistrationButton.addEventListener('click', function(e) {
+    setRegisterOpen(false);
+    // registrationOpen = false;
   });
 
   timeSlider.addEventListener('input', function(e) {
@@ -320,7 +370,7 @@ function setForm() {
     let first = true;
     let flipflop = false;
 
-    if (registrationOpen) {
+    if (options.useRegister) {
       for(let member in register) {
         team.push(member);
       }
@@ -379,7 +429,7 @@ function setForm() {
     subtimer.setTimer(duration / team.length);
     toggleTray(true);
     updateClients();
-    registrationOpen = false;
+    setRegisterOpen(false);
   });
 }
 
@@ -683,7 +733,7 @@ function setUpTeamEdit() {
       return;
     }
 
-    flashMessage(`Team member \"${teamModalInput.value}\" added to team`, 'success');
+    Page.flashMessage(`Team member \"${teamModalInput.value}\" added to team`, 'success');
 
     teamModalInput.value = '';
 
@@ -706,7 +756,7 @@ function setUpTeamEdit() {
     const removee = e.target.id.split('remove-')[1];
     TeamMembers.remove(removee);
 
-    flashMessage(`Team member \"${removee}\" removed from team`, 'success');
+    Page.flashMessage(`Team member \"${removee}\" removed from team`, 'success');
 
     buildTeamSections(true);
   });
@@ -737,7 +787,7 @@ function setUpSaveLoad() {
 
   saveSettingsButton.addEventListener('click', function(e) {
     if(saveInput.value == '') { // More robust 
-      flashMessage(`Please provide a name for the meeting profile`, 'notice');
+      Page.flashMessage(`Please provide a name for the meeting profile`, 'notice');
       return;
     }
 
@@ -764,7 +814,7 @@ function setUpSaveLoad() {
     
     Memory.setObject(`save-${name}`, fullOptions);
 
-    flashMessage(message, 'success');
+    Page.flashMessage(message, 'success');
 
     saveInput.value = '';
 
@@ -780,7 +830,7 @@ function setUpSaveLoad() {
 
     setOptions(false, loadname);
 
-    flashMessage(`Meeting profile \"${e.target.innerHTML}\" loaded successfully`, 'success');
+    Page.flashMessage(`Meeting profile \"${e.target.innerHTML}\" loaded successfully`, 'success');
 
     checkSetButton();
     closeLoadModal();
@@ -795,7 +845,7 @@ function setUpSaveLoad() {
     
     Memory.remove(removee);
 
-    flashMessage(`Meeting profile \"${e.target.parentNode.getElementsByClassName('load-selection')[0].innerHTML}\" successfully removed`,'success');
+    Page.flashMessage(`Meeting profile \"${e.target.parentNode.getElementsByClassName('load-selection')[0].innerHTML}\" successfully removed`,'success');
 
     e.target.parentNode.parentNode.removeChild(e.target.parentNode);
   });
@@ -1073,6 +1123,7 @@ function setOptions (save = false, memorySlot = 'standup_options') {
   for(let option in options) {
     if (optionInputs.hasOwnProperty(option)) {
       optionInputs[option].checked = options[option];
+      checkFunc(optionInputs[option]);
     }
   }
 
@@ -1113,11 +1164,31 @@ function getMemory() {
     optionInputs[optionElements[i].getAttribute('name')] = optionElements[i];
     optionElements[i].addEventListener("input", function(e) {
       options[e.target.getAttribute('name')] = e.target.checked;
+      
+      checkFunc(e.target);
+
       setOptions(true);
     });
   }
 
   setOptions();
+}
+
+function checkFunc(element) {
+  if (element.getAttribute('func')) {
+    console.log('FUNCING');
+    window[element.getAttribute('func')](element.checked);
+  }
+}
+
+function setRegister(value) {
+  if(value) {
+    tabs[0].classList.add("hidden");
+    tabs[1].classList.remove("hidden");
+    return;
+  }
+  tabs[0].classList.remove("hidden");
+  tabs[1].classList.add("hidden");
 }
 
 
@@ -1222,13 +1293,9 @@ function updateRegister() {
   for(let member in register) {
     console.log(member);
     registerMembers.push(
-      `<div class="register-lozenge"><span class="fa fa-minus deregister remove" id="remove-${member}"></span>${member}</div>`
+      `<div class="register-lozenge"><span class="fa fa-minus deregister remove" id="deregister-${member}"></span>${member}</div>`
     );
   }
-
-  console.log(registerMembers.join(''));
-
-  console.log(registerDisplay);
 
   registerDisplay.innerHTML = registerMembers.join('');
   checkSetButton();
@@ -1268,6 +1335,19 @@ function sendMemberList() {
   }, 'MemberList');
 }
 
+function sendDeregister(removee) {
+  Comms.sendEvent({
+    deregister: register[removee],
+  }, 'Deregister');
+
+  delete register[removee];
+
+  Page.flashMessage(`Team member \"${removee}\" removed from register`, 'success');
+
+  updateRegister();
+  checkSetButton();
+}
+
 function connectHandler() {
   Page.flashMessage(`Successfully serving meeting "${Comms.params.meetingCode}"`, 'success');
   registerTitle.classList.add('connected');
@@ -1278,9 +1358,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setCollapser();
   setCollapseButton();
-  setForm();
+  setUpForm();
 
   getMemory();
+
 
   setUpSaveLoad();
 

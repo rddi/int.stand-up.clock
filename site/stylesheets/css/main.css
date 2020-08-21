@@ -415,7 +415,7 @@ label {
   .select-strip label {
     padding: 5px;
     display: inline-block;
-    width: 70px;
+    width: auto;
     height: 70px;
     font-weight: normal;
     -webkit-transition: font-size 300ms, font-weight 300ms, -webkit-transform 300ms;
@@ -425,6 +425,8 @@ label {
     text-align: center;
     line-height: 70px;
     position: relative; }
+    .select-strip label.lock-width {
+      width: 70px; }
     .select-strip label.extra {
       width: 140px; }
     .select-strip label[data-info]::after {
@@ -623,6 +625,16 @@ input[type="text"] {
   background-color: #d9643e;
   color: #fff; }
 
+.tab-holder .tab-buttons .tab-button {
+  float: left;
+  padding: 5px;
+  background-color: #335fa3;
+  color: #d9643e;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 40px;
+  text-align: center; }
+
 .tab-holder .tab.hidden {
   display: none; }
 
@@ -632,17 +644,24 @@ input[type="text"] {
   font-weight: bold;
   color: #fff;
   border-radius: 5px;
-  background-color: #650D1B;
+  background-color: #888;
   margin-left: 20px; }
 
 #register-title.connected:after {
-  background-color: #0F6B05; }
+  background-color: #335fa3; }
+
+#register-title.connected + .register-holder #register-display.open {
+  border-color: #335fa3; }
 
 #register-display {
   margin-top: 20px;
   border: 2px solid #fff;
   border-radius: 10px;
-  padding: 20px; }
+  padding: 20px;
+  -webkit-transition: border-color 300ms;
+  -moz-transition: border-color 300ms;
+  -o-transition: border-color 300ms;
+  transition: border-color 300ms; }
 
 .register-lozenge {
   background-color: #d9643e;
@@ -654,6 +673,16 @@ input[type="text"] {
   cursor: pointer; }
   .register-lozenge.hidden {
     display: none; }
+
+.register-holder {
+  position: relative; }
+  .register-holder .selection-button {
+    position: absolute;
+    right: 30px;
+    bottom: -18px; }
+    .register-holder .selection-button#close-registration {
+      background-color: #650D1B;
+      color: #fff; }
 
 .timer {
   border-radius: 50%;
