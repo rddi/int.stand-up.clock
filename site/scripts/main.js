@@ -1296,6 +1296,11 @@ function sendSpeaker() {
   Comms.sendEvent(currentSpeaker.innerHTML, 'UpdateSpeaker');
 }
 
+// Create post message to say that the meeting exists
+function sendMeetingInfo() {
+  Comms.sendEvent('exists','MeetingInfo', true);
+}
+
 function sendMemberList() {
   let currentMemberList = document.getElementsByClassName('team-button');
   let membersObject = [];
@@ -1335,6 +1340,7 @@ function connectHandler() {
   Page.flashMessage(`Successfully set up meeting "${Comms.params.meetingCode}"`, 'success');
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
   registerDisplay.classList.add('connected');
+  sendMeetingInfo();
   setRegisterOpen(true);
 }
 

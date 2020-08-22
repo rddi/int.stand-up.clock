@@ -83,6 +83,9 @@ function handleReciept(input) {
         }
         console.log(message.body);
         break;
+      case 'MeetingInfo':
+          handleMeetingInfo(message.body);
+          break;
       case 'UpdateSpeaker':
         if (!Comms.params.registered) {
           return;
@@ -219,6 +222,16 @@ function handleMemberList(_memberList) {
   buildMemberElements();
 }
 
+function handleMeetingInfo(state) {
+  if(state == 'exists') {
+    Page.flashMessage('Meeting Found','success');
+
+    Comms.params.meetingExists = true;
+
+    sendRegistration();
+  }
+}
+
 function buildMemberElements() {
   console.log("buildMemberElements");
   console.log(memberList);
@@ -252,16 +265,20 @@ function setUpTeamInteractions() {
     Comms.sendEvent(e.target.getAttribute('data-name'), 'Nomination');
   });
 }
-
-function connectHandler() {
+function sendRegistration() {
   setMainDisplay("Registering", 1, `Meeting: ${Comms.params.meetingCode}`)
 
   Comms.sendEvent(
     Comms.params.uniqueCode,
     'Register'
   );
+}
 
-  Page.flashMessage(`Opened channel "${Comms.params.meetingCode}"`, 'notice');
+function connectHandler() {
+
+  setMainDisplay("Finding Meeting", 2, 'Connection Status');
+
+  Page.flashMessage(`Opened channel`, 'notice');
 }
 
 function getUniqueCode() {

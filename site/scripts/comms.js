@@ -12,6 +12,7 @@ const Comms = {
     registered: false,
     uniqueCode: null,
     connected: false,
+    meetingExists: false
   },
   MQTTConnect: function(_meetingId = 'all') {
     console.log(`connecting to ${host}:${port}`);
@@ -76,11 +77,12 @@ const Comms = {
     message.destinationName = Comms.params.channel;
     mqtt.send(message);
   },
-  sendEvent:function(_body, _type="Message") {
+  sendEvent:function(_body, _type="Message", retain = false) {
     let output = {
       type: _type,
       client: Comms.params.clientName,
-      body: _body
+      body: _body,
+      retained: retain
     };
 
     Comms.broadcastMessage(JSON.stringify(output));
