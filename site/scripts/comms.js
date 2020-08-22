@@ -10,7 +10,8 @@ const Comms = {
     clientName: null,
     channel: null,
     registered: false,
-    uniqueCode: null
+    uniqueCode: null,
+    connected: false,
   },
   MQTTConnect: function(_meetingId = 'all') {
     console.log(`connecting to ${host}:${port}`);
@@ -27,7 +28,7 @@ const Comms = {
 
     mqtt.onMessageArrived = Comms.onMessageArrived;
 
-    Page.flashMessage(`Attempting to connect to meeting "${_meetingId}"`, 'notice');
+    Page.flashMessage(`Attempting to connect to meeting`, 'notice');
 
     mqtt.connect(options);
   },
@@ -37,6 +38,8 @@ const Comms = {
 
     console.log(`Channel: ${Comms.params.channel}`);
 
+    Comms.params.connected = true;
+
     if(connectHandler) {
       connectHandler();
     }
@@ -45,10 +48,10 @@ const Comms = {
     console.log('error!');
     console.log(err);
 
-    Page.flashMessage(`Failed to connect to meeting "${Comms.params.meetingCode}"`, 'error');
+    Page.flashMessage(`Failed to connect to meeting`, 'error');
 
     setTimeout(function(){
-      Page.flashMessage(`Retrying connection to meeting "${Comms.params.meetingCode}"`, 'notice');
+      Page.flashMessage(`Retrying connection to meeting`, 'notice');
       Comms.MQTTConnect(Comms.params.meetingCode);
     }, reconnectTimeout);
   },
@@ -57,12 +60,16 @@ const Comms = {
       handleReciept(message);
     }
   },
+  isConnected: function() {
+    return Comms.params.connected;
+  },
   disconnect: function() {
     mqtt.disconnect();
     Comms.params.channel = null;
     Comms.params.registered = false;
     Page.flashMessage(`Disconnected from meeting "${Comms.params.meetingCode}"`, 'error');
     Comms.params.meetingCode = null;
+    Comms.params.connected = false;
   },
   broadcastMessage:function(_message) {
     let message = new Paho.MQTT.Message(_message);

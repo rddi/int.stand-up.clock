@@ -50,11 +50,12 @@ let timer,
   // useRegister = false,
   register = {},
   registrationOpen = false,
-  registerTitle,
+  // registerTitle,
   registerDisplay,
   openRegistrationButton,
   closeRegistrationButton,
-  tabs;
+  tabs,
+  finishSent = false;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -115,7 +116,7 @@ function checkSetButton() {
   let memSet = false;
 
   if(options.useRegister) {
-    if (register != {}) {
+    if (Object.keys(register).length > 0) {
       memSet = true;
     }
   } else {
@@ -241,11 +242,11 @@ function closeLoadModal() {
 function updateDurationDisplay(_value = null) {
   value = timeSlider.value;
   
-  let perperson = ` in total`;
+  let perperson = `in total`;
   if (options.pp) {
-    perperson = ` per person`;
+    perperson = `per person`;
   }
-  durationDisplay.innerHTML = `<span>${value}m</span>${perperson}`;
+  durationDisplay.innerHTML = `<span>${value}m</span> ${perperson}`;
 }
 
 function setRegisterOpen(_open = true) {
@@ -255,10 +256,14 @@ function setRegisterOpen(_open = true) {
     openRegistrationButton.classList.remove("hidden");
     closeRegistrationButton.classList.add("hidden");
     registerDisplay.classList.remove("open");
+    Page.flashMessage('Registration closed','notice');
   } else {
     openRegistrationButton.classList.add("hidden");
     closeRegistrationButton.classList.remove("hidden");
     registerDisplay.classList.add("open");
+    if (Comms.isConnected()) {
+      Page.flashMessage('Registration open','success');
+    }
   }
 }
 
@@ -273,37 +278,10 @@ function setUpForm() {
 
   openRegistrationButton = document.getElementById('open-registration');
   closeRegistrationButton = document.getElementById('close-registration');
-  registerTitle = document.getElementById('register-title');
+
   registerDisplay = document.getElementById('register-display');
 
-  // tabButtons = document.getElementsByClassName('tab-button');
-
   tabs = document.getElementsByClassName('tab');
-
-  // let i;
-
-  // document.addEventListener('click', function(e) {
-  //   if(!e.target.classList.contains('tab-button')) {
-  //     return;
-  //   }
-
-  //   const tab = e.target.getAttribute('data-tab');
-  //   let j;
-
-  //   for(j = 0;j < tabs.length;j += 1) {
-  //     tabs[j].classList.add('hidden');
-  //   }
-
-  //   tabs[tab].classList.remove('hidden');
-
-  //   let _useRegister = false;
-
-  //   if (tab == '1') {
-  //     _useRegister = true;
-  //   }
-
-  //   useRegister = _useRegister;
-  // });
 
   document.addEventListener('click', function(e){
     if (!e.target.classList.contains('deregister')) {
@@ -311,36 +289,28 @@ function setUpForm() {
     }
 
     const removee = e.target.id.split('deregister-')[1];
-    // TeamMembers.remove(removee);
-
-    // delete register[removee];
-
-    
-
+  
     sendDeregister(removee);
   });
 
   openRegistrationButton.addEventListener('click', function(e) {
-    setRegisterOpen(true);
-
-    console.log(Comms.params.meetingCode);
-
     if(Comms.params.meetingCode == null) { 
       // Set meeting code
       Comms.params.meetingCode = Page.generateCode(4, true);
 
+      registerDisplay.classList.add('lozenge');
+
       // Add to code to page with clipboard button
-      registerTitle.setAttribute('code', Comms.params.meetingCode);
+      registerDisplay.setAttribute('code', 'Connecting...');
 
       Comms.MQTTConnect(Comms.params.meetingCode);
     }
 
-    // registrationOpen = true;
+    setRegisterOpen(true);
   });
 
   closeRegistrationButton.addEventListener('click', function(e) {
     setRegisterOpen(false);
-    // registrationOpen = false;
   });
 
   timeSlider.addEventListener('input', function(e) {
@@ -945,6 +915,11 @@ function setFinish() {
   fadeTimer();
   checkTimes();
   showEndScreen();
+
+  if (!finishSent) {
+    sendFinished();
+    finishSent = true;
+  }
 }
 
 function manageSelectionButtons() {
@@ -1080,7 +1055,7 @@ function update() {
 
   checkNameWheel();
 
-  if (timer.isFinished()) {
+  if (timer.isFinished(true)) {
     setFinish();
   }
 }
@@ -1176,7 +1151,6 @@ function getMemory() {
 
 function checkFunc(element) {
   if (element.getAttribute('func')) {
-    console.log('FUNCING');
     window[element.getAttribute('func')](element.checked);
   }
 }
@@ -1308,7 +1282,12 @@ function updateClients() {
 }
 
 function sendSpeaker() {
-  const currentSpeaker = document.querySelector('.team-button.active');
+  if (timer.isReady()) {
+    Comms.sendEvent('READY', 'UpdateSpeaker');
+    return;
+  }
+
+  let currentSpeaker = document.querySelector('.team-button.active');
 
   if (currentSpeaker == null) {
     return;
@@ -1348,9 +1327,15 @@ function sendDeregister(removee) {
   checkSetButton();
 }
 
+function sendFinished() {
+  Comms.sendEvent({}, 'TimerFinish');
+}
+
 function connectHandler() {
-  Page.flashMessage(`Successfully serving meeting "${Comms.params.meetingCode}"`, 'success');
-  registerTitle.classList.add('connected');
+  Page.flashMessage(`Successfully set up meeting "${Comms.params.meetingCode}"`, 'success');
+  registerDisplay.setAttribute('code', Comms.params.meetingCode);
+  registerDisplay.classList.add('connected');
+  setRegisterOpen(true);
 }
 
 document.addEventListener("DOMContentLoaded", function () {

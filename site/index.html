@@ -43,7 +43,7 @@
           <div class="tab-holder">
             <div class="select-strip">
               <input id="useRegister" type="checkbox" name="useRegister" class="option-checkbox option-control" func="setRegister"/>
-              <label for="useRegister" data-info="Do you want the team to use the client app?">Use Register</label>
+              <label id="use-register" for="useRegister" data-info="Do you want the team to use the client app?">Use Register</label>
             </div>
             <div class="tab">
               <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
@@ -53,9 +53,9 @@
               
               <label id="register-title">Register</label>
               <div class="register-holder">
+                <div class="select-strip" id="register-display"></div>
                 <div id="open-registration" class="selection-button">Open Registration</div>
                 <div id="close-registration" class="selection-button hidden">Close Registration</div>
-                <div class="select-strip" id="register-display"></div>
               </div>
             </div>
           </div>

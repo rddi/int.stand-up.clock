@@ -6,23 +6,16 @@ body {
 * {
   box-sizing:border-box;
   font-family: "Roboto";
+  &:focus {
+    outline: none;
+  }
 }
 
 header {
-  background:url('../../images/pattern.png');
+  background: linear-gradient($fade, $fade), url('../../images/pattern.png');
   color:$white;
   overflow:hidden;
   position:relative;
-
-  &::before {
-    content:'';
-    background-color:$fade;
-    height:100%;
-    width:100%;
-    position:absolute;
-    top:0;
-    left:0;
-  }
 }
 
 .container {

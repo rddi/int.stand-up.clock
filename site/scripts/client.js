@@ -4,7 +4,7 @@ let meetingCodeInput,
   joinTitle,
   joinButton,
   currentSpeaker,
-  speakerDisplay,
+  mainDisplay,
   teamDisplay,
   memberList = {};
 
@@ -55,11 +55,16 @@ function setUpForm() {
     Memory.setObject('standup_client_settings', Comms.params);
 
     Comms.MQTTConnect(Comms.params.meetingCode);
+    joinModal.classList.add('hidden');
+    setMainDisplay("Connecting", 4, 'Connection Status');
+    setTimeout(function(e) {
+      mainDisplay.classList.remove("hidden");
+    },1000);
   });
 }
 
 function setUpDisplay() {
-  speakerDisplay = document.getElementById('speaker-display');
+  mainDisplay = document.getElementById('main-display');
   teamDisplay = document.getElementById('team-display');
 }
 
@@ -98,15 +103,24 @@ function handleReciept(input) {
           return;
           
         }
-        Comms.params.registered = false;
-
-        speakerDisplay.innerHTML = "Disconnected";
-
+        
         Comms.disconnect();
         
+        Comms.params.registered = false;
+        setMainDisplay("Disconnected", 0, 'Connection Status');
         Page.flashMessage('You have been removed from the meeting', 'notice');
 
         break;
+        case 'TimerFinish':
+          if (!Comms.params.registered) {
+            return;
+          }
+  
+          setMainDisplay("Finished", 1, `Meeting: ${Comms.params.meetingCode}`);
+        
+          Page.flashMessage('The timer has ended', 'notice');
+  
+          break;
       case 'RegisterResponse':
         handleRegisterResponse(message.body);
         break;
@@ -120,17 +134,58 @@ function handleReciept(input) {
   
 }
 
+function setMainDisplay(content, state = null, newLabel = null) {
+  let html = `<span>${content}</span>`;
+  if (mainDisplay.innerHTML == html && mainDisplay.getAttribute('label') == newLabel) {
+    return;
+  }
+
+  mainDisplay.classList.add('change');
+
+  if (newLabel != null && mainDisplay.getAttribute('label') != newLabel) {
+    mainDisplay.classList.add('change-label');
+  }
+
+  setTimeout(function() {
+
+    mainDisplay.innerHTML = html;
+
+    if (state) {
+      let states = [
+        'red',
+        'blue',
+        'orange',
+        'green',
+        'yellow',
+      ];
+
+      mainDisplay.classList.remove(...states);
+
+      mainDisplay.classList.add(states[state]);
+    }
+
+    if (newLabel) {
+      mainDisplay.setAttribute('label', newLabel);
+    }
+
+    mainDisplay.classList.remove('change')
+    mainDisplay.classList.add('reset');
+
+    setTimeout(function() {
+      mainDisplay.classList.remove('reset');
+      mainDisplay.classList.remove('change-label');
+    }, 10);
+  }, 500);
+}
+
 function handleRegisterResponse(response) {
   if (response.target != Comms.params.clientName) {
     return;
   }
   if (response.status == 'success') {
+    setMainDisplay("Registered", 1);
     Page.flashMessage(`Registered in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
     Comms.params.registered = true;
-    joinModal.classList.add("hidden");
-    setTimeout(function(e) {
-      speakerDisplay.classList.remove("hidden");
-    },1000);
   } else if (response.status == 'failure') {
     Page.flashMessage(`Could not register in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}": ${response.error}`, 'error');
   }
@@ -139,17 +194,23 @@ function handleRegisterResponse(response) {
 function handleUpdateSpeaker(speaker) {
   currentSpeaker = speaker;
 
-  speakerDisplay.innerHTML = currentSpeaker;
-  speakerDisplay.classList.remove('waiting');
-
-  speakerDisplay.classList.remove('green');
-
   teamDisplay.classList.remove('active');
 
+  console.log(currentSpeaker);
+
+  if (currentSpeaker == 'READY') {
+    setMainDisplay('Ready', 1);  
+    return;
+  }
+
+  let state = 2;
+
   if (speaker == Comms.params.clientName) {
-    speakerDisplay.classList.add('green');
+    state = 3;
     teamDisplay.classList.add('active');
   }
+
+  setMainDisplay(currentSpeaker, state, 'Current Speaker');
 }
 
 function handleMemberList(_memberList) {
@@ -193,7 +254,7 @@ function setUpTeamInteractions() {
 }
 
 function connectHandler() {
-  joinModal.classList.add("busy");
+  setMainDisplay("Registering", 1, `Meeting: ${Comms.params.meetingCode}`)
 
   Comms.sendEvent(
     Comms.params.uniqueCode,

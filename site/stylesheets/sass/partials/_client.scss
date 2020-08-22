@@ -1,7 +1,7 @@
-#speaker-display {
+#main-display {
   color:$orange;
   opacity:1;
-  @include transition(color $transTime, transform $transTime, opacity $transTime, font-size $transTime, padding $transTime);
+  @include transition(color $transTime, transform $transTime, opacity $transTime, font-size $transTime, padding $transTime, border-color $transTime);
   margin:0;
   padding:20px;
   border:2px solid $orange;
@@ -13,22 +13,60 @@
     border-color:$green;
     padding:10px 20px;
   }
-  &.waiting {
+  &.yellow {
     color:$yellow;
     border-color:$yellow;
+  }
+  &.red {
+    color:$red;
+    border-color:$red;
+  }
+  &.orange {
+    color:$orange;
+    border-color:$orange;
+  }
+  &.blue {
+    color:$blue;
+    border-color:$blue;
   }
   &.hidden {
     @include transform(translateY(-300px));
   }
+  span {
+    display:block;
+    @include transition(transform $slowTransTime);
+  }
   &:before {
-    content:"Current Speaker";
+    content:attr(label);
     background-color:$white;
     position:absolute;
     padding:5px;
     top: -17px;
     font-size: 16px;
     left: 10px;
+    overflow:hidden;
+    max-width:250px;
+    white-space: nowrap;
+    @include transition(color $transTime, max-width $transTime, padding $transTime);
   }
+  &.change {
+    span {
+      @include transform(translateX(100vw));
+    }
+  }
+  &.reset {
+    span {
+      @include transition(transform 0);
+      @include transform(translateX(-100vw));
+    }
+  }
+  &.change-label {
+    &:before {
+      max-width:0;
+      color:$white;
+    }
+  }
+  
 }
 
 #team-display {
@@ -54,5 +92,50 @@
 .input-holder {
   &.hidden {
     display:none;
+  }
+}
+
+
+#join-modal {
+  &:before {
+    background-color:$slightFade;
+  }
+  .container {
+    background: linear-gradient($fade, $fade), url('../../images/pattern.png');
+    color:$white;
+
+    input[type="text"] {
+      background-color:transparent;
+      border:2px solid $grey;
+      text-align:center;
+      color:$grey;
+      font-weight:bold;
+      font-size:30px;
+      padding:10px;
+      @include transition(border-color $transTime, color $transTime);
+      @include input-placeholder {
+        font-weight:normal;
+        text-transform:capitalize;
+        @include transition(color $transTime);
+      }
+      &:focus {
+        border-color:$lightgrey;
+        color:$lightgrey;
+        @include input-placeholder {
+          color:$lightgrey;
+        }
+      }
+      &:valid {
+        border-color:$white;
+        color:$white;
+      }
+      &#meeting-code-input {
+        text-transform:uppercase;
+      }
+    }
+
+    .button {
+      background-color:$orange;
+    }
   }
 }

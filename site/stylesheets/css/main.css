@@ -4,20 +4,14 @@ body {
 * {
   box-sizing: border-box;
   font-family: "Roboto"; }
+  *:focus {
+    outline: none; }
 
 header {
-  background: url("../../images/pattern.png");
+  background: linear-gradient(#000000CC, #000000CC), url("../../images/pattern.png");
   color: #fff;
   overflow: hidden;
   position: relative; }
-  header::before {
-    content: '';
-    background-color: #000000CC;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0; }
 
 .container {
   margin: 0 auto;
@@ -445,7 +439,8 @@ label {
       -moz-transition: opacity 300ms;
       -o-transition: opacity 300ms;
       transition: opacity 300ms;
-      font-size: 12px; }
+      font-size: 12px;
+      z-index: 100; }
       .select-strip label[data-info]::after:empty {
         display: none; }
     .select-strip label[data-info]:hover::after {
@@ -638,30 +633,35 @@ input[type="text"] {
 .tab-holder .tab.hidden {
   display: none; }
 
-#register-title:after {
-  content: attr(code);
-  padding: 10px;
-  font-weight: bold;
-  color: #fff;
-  border-radius: 5px;
-  background-color: #888;
-  margin-left: 20px; }
-
-#register-title.connected:after {
-  background-color: #335fa3; }
-
-#register-title.connected + .register-holder #register-display.open {
-  border-color: #335fa3; }
-
 #register-display {
   margin-top: 20px;
-  border: 2px solid #fff;
+  border: 2px solid #888;
   border-radius: 10px;
   padding: 20px;
   -webkit-transition: border-color 300ms;
   -moz-transition: border-color 300ms;
   -o-transition: border-color 300ms;
   transition: border-color 300ms; }
+  #register-display.lozenge:after {
+    content: attr(code);
+    padding: 10px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 5px;
+    background-color: #888;
+    position: absolute;
+    left: 30px;
+    top: -18px; }
+    #register-display.lozenge:after:empty {
+      display: none; }
+  #register-display:not(.connected) ~ #close-registration {
+    display: none; }
+  #register-display.connected {
+    border-color: #fff; }
+    #register-display.connected:after {
+      background-color: #335fa3; }
+    #register-display.connected.open {
+      border-color: #335fa3; }
 
 .register-lozenge {
   background-color: #d9643e;
@@ -669,8 +669,7 @@ input[type="text"] {
   padding: 5px 15px;
   border-radius: 5px;
   color: #fff;
-  margin: 5px;
-  cursor: pointer; }
+  margin: 5px; }
   .register-lozenge.hidden {
     display: none; }
 
@@ -679,10 +678,14 @@ input[type="text"] {
   .register-holder .selection-button {
     position: absolute;
     right: 30px;
-    bottom: -18px; }
+    bottom: -18px;
+    color: #fff; }
     .register-holder .selection-button#close-registration {
-      background-color: #650D1B;
-      color: #fff; }
+      background-color: #650D1B; }
+
+#use-register {
+  position: absolute;
+  right: 20px; }
 
 .timer {
   border-radius: 50%;
@@ -911,40 +914,81 @@ input[type="text"] {
       left: initial;
       right: calc(100% + 5px); }
 
-#speaker-display {
+#main-display {
   color: #d9643e;
   opacity: 1;
-  -webkit-transition: color 300ms, -webkit-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms;
-  -moz-transition: color 300ms, -moz-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms;
-  -o-transition: color 300ms, -o-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms;
-  transition: color 300ms, transform 300ms, opacity 300ms, font-size 300ms, padding 300ms;
+  -webkit-transition: color 300ms, -webkit-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms, border-color 300ms;
+  -moz-transition: color 300ms, -moz-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms, border-color 300ms;
+  -o-transition: color 300ms, -o-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms, border-color 300ms;
+  transition: color 300ms, transform 300ms, opacity 300ms, font-size 300ms, padding 300ms, border-color 300ms;
   margin: 0;
   padding: 20px;
   border: 2px solid #d9643e;
   border-radius: 10px;
   position: relative; }
-  #speaker-display.green {
+  #main-display.green {
     color: #0F6B05;
     font-size: 60px;
     border-color: #0F6B05;
     padding: 10px 20px; }
-  #speaker-display.waiting {
+  #main-display.yellow {
     color: #e9a351;
     border-color: #e9a351; }
-  #speaker-display.hidden {
+  #main-display.red {
+    color: #650D1B;
+    border-color: #650D1B; }
+  #main-display.orange {
+    color: #d9643e;
+    border-color: #d9643e; }
+  #main-display.blue {
+    color: #335fa3;
+    border-color: #335fa3; }
+  #main-display.hidden {
     -webkit-transform: translateY(-300px);
     -moz-transform: translateY(-300px);
     -ms-transform: translateY(-300px);
     -o-transform: translateY(-300px);
     transform: translateY(-300px); }
-  #speaker-display:before {
-    content: "Current Speaker";
+  #main-display span {
+    display: block;
+    -webkit-transition: -webkit-transform 500ms;
+    -moz-transition: -moz-transform 500ms;
+    -o-transition: -o-transform 500ms;
+    transition: transform 500ms; }
+  #main-display:before {
+    content: attr(label);
     background-color: #fff;
     position: absolute;
     padding: 5px;
     top: -17px;
     font-size: 16px;
-    left: 10px; }
+    left: 10px;
+    overflow: hidden;
+    max-width: 250px;
+    white-space: nowrap;
+    -webkit-transition: color 300ms, max-width 300ms, padding 300ms;
+    -moz-transition: color 300ms, max-width 300ms, padding 300ms;
+    -o-transition: color 300ms, max-width 300ms, padding 300ms;
+    transition: color 300ms, max-width 300ms, padding 300ms; }
+  #main-display.change span {
+    -webkit-transform: translateX(100vw);
+    -moz-transform: translateX(100vw);
+    -ms-transform: translateX(100vw);
+    -o-transform: translateX(100vw);
+    transform: translateX(100vw); }
+  #main-display.reset span {
+    -webkit-transition: -webkit-transform 0;
+    -moz-transition: -moz-transform 0;
+    -o-transition: -o-transform 0;
+    transition: transform 0;
+    -webkit-transform: translateX(-100vw);
+    -moz-transform: translateX(-100vw);
+    -ms-transform: translateX(-100vw);
+    -o-transform: translateX(-100vw);
+    transform: translateX(-100vw); }
+  #main-display.change-label:before {
+    max-width: 0;
+    color: #fff; }
 
 #team-display {
   position: absolute;
@@ -967,3 +1011,68 @@ input[type="text"] {
 
 .input-holder.hidden {
   display: none; }
+
+#join-modal:before {
+  background-color: #00000055; }
+
+#join-modal .container {
+  background: linear-gradient(#000000CC, #000000CC), url("../../images/pattern.png");
+  color: #fff; }
+  #join-modal .container input[type="text"] {
+    background-color: transparent;
+    border: 2px solid #888;
+    text-align: center;
+    color: #888;
+    font-weight: bold;
+    font-size: 30px;
+    padding: 10px;
+    -webkit-transition: border-color 300ms, color 300ms;
+    -moz-transition: border-color 300ms, color 300ms;
+    -o-transition: border-color 300ms, color 300ms;
+    transition: border-color 300ms, color 300ms; }
+    #join-modal .container input[type="text"]:-ms-input-placeholder {
+      font-weight: normal;
+      text-transform: capitalize;
+      -webkit-transition: color 300ms;
+      -moz-transition: color 300ms;
+      -o-transition: color 300ms;
+      transition: color 300ms; }
+    #join-modal .container input[type="text"]:-moz-placeholder {
+      font-weight: normal;
+      text-transform: capitalize;
+      -webkit-transition: color 300ms;
+      -moz-transition: color 300ms;
+      -o-transition: color 300ms;
+      transition: color 300ms; }
+    #join-modal .container input[type="text"]::-moz-placeholder {
+      font-weight: normal;
+      text-transform: capitalize;
+      -webkit-transition: color 300ms;
+      -moz-transition: color 300ms;
+      -o-transition: color 300ms;
+      transition: color 300ms; }
+    #join-modal .container input[type="text"]::-webkit-input-placeholder {
+      font-weight: normal;
+      text-transform: capitalize;
+      -webkit-transition: color 300ms;
+      -moz-transition: color 300ms;
+      -o-transition: color 300ms;
+      transition: color 300ms; }
+    #join-modal .container input[type="text"]:focus {
+      border-color: #bbb;
+      color: #bbb; }
+      #join-modal .container input[type="text"]:focus:-ms-input-placeholder {
+        color: #bbb; }
+      #join-modal .container input[type="text"]:focus:-moz-placeholder {
+        color: #bbb; }
+      #join-modal .container input[type="text"]:focus::-moz-placeholder {
+        color: #bbb; }
+      #join-modal .container input[type="text"]:focus::-webkit-input-placeholder {
+        color: #bbb; }
+    #join-modal .container input[type="text"]:valid {
+      border-color: #fff;
+      color: #fff; }
+    #join-modal .container input[type="text"]#meeting-code-input {
+      text-transform: uppercase; }
+  #join-modal .container .button {
+    background-color: #d9643e; }
