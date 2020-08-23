@@ -1076,3 +1076,9 @@ input[type="text"] {
       text-transform: uppercase; }
   #join-modal .container .button {
     background-color: #d9643e; }
+
+#button-holder .button {
+  float: left; }
+
+#button-holder:not(.active) .button {
+  display: none; }

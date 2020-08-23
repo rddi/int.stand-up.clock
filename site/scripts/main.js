@@ -1284,6 +1284,7 @@ function updateClients() {
 function sendSpeaker() {
   if (timer.isReady()) {
     Comms.sendEvent('READY', 'UpdateSpeaker');
+    console.log(`~~~~~~~~~~~~~ SENDING: READY`);
     return;
   }
 
@@ -1292,6 +1293,8 @@ function sendSpeaker() {
   if (currentSpeaker == null) {
     return;
   }
+
+  console.log(`~~~~~~~~~~~~~ SENDING: ${currentSpeaker.innerHTML}`)
 
   Comms.sendEvent(currentSpeaker.innerHTML, 'UpdateSpeaker');
 }
@@ -1310,6 +1313,10 @@ function sendMemberList() {
   }
 
   Comms.sendEvent({
+    buttons: {
+      skip: options.skip,
+      pause: options.pause
+    },
     members: membersObject
   }, 'MemberList');
 }
