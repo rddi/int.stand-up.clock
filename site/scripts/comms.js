@@ -1,7 +1,7 @@
 let mqtt,
     reconnectTimeout = 2000,
     host = 'test.mosquitto.org',
-    port = 8080; //MQTT over WebSockets, unencrypted
+    port = 8081; //MQTT over WebSockets, encrypted
 
 
 const Comms = {
