@@ -1077,8 +1077,17 @@ input[type="text"] {
   #join-modal .container .button {
     background-color: #335fa3; }
 
-#button-holder .button {
-  float: left; }
-
-#button-holder:not(.active) .button {
-  display: none; }
+#button-holder {
+  height: 110px; }
+  #button-holder .button-center {
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%); }
+    #button-holder .button-center .button {
+      float: left; }
+  #button-holder:not(.active) .button-center .button {
+    display: none; }

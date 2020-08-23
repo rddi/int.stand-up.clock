@@ -141,13 +141,21 @@
 }
 
 #button-holder {
-  .button {
-    float:left;
+  height:110px;
+  .button-center {
+    position:absolute;
+    left:50%;
+    @include transform(translateX(-50%));
+    .button {
+      float:left;
 
+    }
   }
   &:not(.active) {
-    .button {
-      display:none;
+    .button-center {
+      .button {
+        display:none;
+      }
     }
   }
 }

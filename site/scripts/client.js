@@ -87,6 +87,8 @@ function setUpButtons() {
 
     let control = e.target.parentElement.getAttribute("action");
 
+    buttonHolder.classList.remove('active');
+
     Comms.sendEvent(control,
       'Master.ControlAction');
   });
@@ -146,6 +148,7 @@ function handleReciept(input) {
         setMainDisplay("Finished", 1, `Meeting: ${Comms.params.meetingCode}`);
 
         buttonHolder.classList.remove('active');
+        teamDisplay.classList.remove('active');
       
         Page.flashMessage('The timer has ended', 'notice');
 
@@ -245,7 +248,6 @@ function handleUpdateSpeaker(speaker) {
 function handleMemberList(_memberList) {
   memberList = _memberList.members;
 
-  console.log("HERE!", _memberList);
   buildButtons(_memberList.buttons);
 
   buildMemberElements();
@@ -255,36 +257,25 @@ function buildButtons(buttons) {
   let i;
   let doneCount = 0;
 
-  console.log('RETROBULBA 1!');
-
   for(i = 0;i < memberList.length;i += 1) {
     if (memberList[i].done) {
       doneCount += 1;
     }
   }
 
-  console.log('RETROBULBA 2!');
-
   let showStop = (doneCount == memberList.length - 1);
 
-  console.log('RETROBULBA 3!');
-
-  if (showStop) {
+  if (showStop && !buttons.play) {
     stopButton.classList.remove('hidden');
   } else {
     stopButton.classList.add('hidden');
   }
 
-  console.log('RETROBULBA 4!');
-
-  if (buttons.skip && !showStop) {
+  if (buttons.skip && !showStop && !buttons.play) {
     skipButton.classList.remove('hidden');
   } else {
     skipButton.classList.add('hidden');
   }
-
-  console.log('RETROBULBA 5!');
-
 
   if (buttons.pause) {
     pauseButton.classList.remove('hidden');
@@ -292,15 +283,11 @@ function buildButtons(buttons) {
     pauseButton.classList.add('hidden');
   }
 
-  console.log('RETROBULBA 6!');
-
   if (buttons.play) {
     playButton.classList.remove('hidden');
   } else {
     playButton.classList.add('hidden');
   }
-
-  console.log('RETROBULBA 7!');
 
 }
 
@@ -308,30 +295,19 @@ function buildMemberElements() {
   let elements = [];
   let i;
 
-  console.log("BUILDING TEAM");
-  console.log("memberList: ", memberList);
   for(i = 0;i < memberList.length;i += 1) {
-    console.log("IN " + i);
-    console.log('BLOUNCHE 1!');
     let classes = [];
 
     if (memberList[i].done) {
-      console.log('BLOUNCHE 2!');
       classes.push('done');
     }
     if (memberList[i].active) {
-      console.log('BLOUNCHE 3!');
       classes.push('active');
     }
-
-    console.log('BLOUNCHE 4!');
  
     if (memberList[i].name == Comms.params.clientName) {
-      console.log('BLOUNCHE 5!');
       continue;
     }
-
-    console.log('BLOUNCHE 6!');
 
     elements.push(`<div class="team-button ${classes.join(' ')}" data-name="${memberList[i].name}">${memberList[i].name}</div>`);
   }
@@ -351,6 +327,8 @@ function setUpTeamInteractions() {
 
 function connectHandler() {
   setMainDisplay("Registering", 1, `Meeting: ${Comms.params.meetingCode}`)
+
+
 
   Comms.sendEvent(
     Comms.params.uniqueCode,

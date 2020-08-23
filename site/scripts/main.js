@@ -185,7 +185,7 @@ function mintosentence(time) {
 
 function showEndScreen() {
   let endTime = mintosentence(timer.getElapsedTimer());
-  let avgTime  = mintosentence(mstomin(timer.getElapsedMilliseconds() / team));
+  let avgTime  = mintosentence(mstomin(timer.getElapsedMilliseconds() / team.length));
   document.getElementById('end-time').innerHTML = endTime;
   document.getElementById('avg-time').innerHTML = `${avgTime}s`;
   endScreen.classList.remove("hidden");
@@ -491,6 +491,7 @@ function setupTimers() {
       pause.classList.add('paused');
       nameWheelPause(true);
     }
+    sendSpeaker();
     sendMemberList();
   });
 
@@ -514,7 +515,7 @@ function setupTimers() {
     pep.classList.add("spinning");
     pepDisplay.classList.remove("green");
     spinPep(100);
-  })
+  });
 }
 
 function subtimerRebuild() {
@@ -1358,14 +1359,18 @@ function sendMemberList() {
     });
   }
 
+  // console.log("TWELSK 1");
+
   Comms.sendEvent({
     buttons: {
       play: timer.isPaused(),
-      pause: options.pause && !timer.isPaused(),
-      skip: options.skip,
+      pause: options.pausable && !timer.isPaused(),
+      skip: options.skipable,
     },
     members: membersObject
   }, 'Client.MemberList');
+
+  // console.log("TWELSK 2");
 }
 
 function sendDeregister(removee) {
