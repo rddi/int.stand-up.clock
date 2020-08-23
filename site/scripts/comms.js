@@ -24,6 +24,7 @@ const Comms = {
       timeout: 5,
       onSuccess:Comms.onConnect,
       onFailure:Comms.onError,
+      useSSL: true,
     };
 
     mqtt.onMessageArrived = Comms.onMessageArrived;
