@@ -4,6 +4,7 @@ let mqtt,
     port = 8081; //MQTT over WebSockets, encrypted
 
 
+
 const Comms = {
   params: {
     meetingCode: null,

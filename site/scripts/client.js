@@ -6,7 +6,12 @@ let meetingCodeInput,
   currentSpeaker,
   mainDisplay,
   teamDisplay,
-  memberList = {};
+  memberList = {},
+  buttonHolder,
+  playButton,
+  pauseButton,
+  skipButton,
+  stopButton;
 
 function setUpForm() {
   joinModal = document.getElementById('join-modal');
@@ -68,15 +73,37 @@ function setUpDisplay() {
   teamDisplay = document.getElementById('team-display');
 }
 
-function handleReciept(input) {
-  console.log(input, input._getPayloadString());
+function setUpButtons() {
+  buttonHolder = document.getElementById('button-holder');
+  playButton = document.getElementById('resume-button');
+  pauseButton = document.getElementById('pause-button');
+  skipButton = document.getElementById('skip-button');
+  stopButton = document.getElementById('stop-button');
 
+  document.addEventListener('click', function(e) {
+    if (!e.target.parentElement.classList.contains('control-button')) {
+      return;
+    }
+
+    let control = e.target.parentElement.getAttribute("action");
+
+    Comms.sendEvent(control,
+      'Master.ControlAction');
+  });
+}
+
+function handleReciept(input) {
   let message = input._getPayloadString();
 
   try{
     message = JSON.parse(message);
+
+    let type = message.split('.');
+    if (type[0] !== 'Client') {
+      return;
+    }
     
-    switch (message.type) {
+    switch (type[1]) {
       case 'Message':
         if (!Comms.params.registered) {
           return;
@@ -111,16 +138,18 @@ function handleReciept(input) {
         Page.flashMessage('You have been removed from the meeting', 'notice');
 
         break;
-        case 'TimerFinish':
-          if (!Comms.params.registered) {
-            return;
-          }
-  
-          setMainDisplay("Finished", 1, `Meeting: ${Comms.params.meetingCode}`);
-        
-          Page.flashMessage('The timer has ended', 'notice');
-  
-          break;
+      case 'TimerFinish':
+        if (!Comms.params.registered) {
+          return;
+        }
+
+        setMainDisplay("Finished", 1, `Meeting: ${Comms.params.meetingCode}`);
+
+        buttonHolder.classList.remove('active');
+      
+        Page.flashMessage('The timer has ended', 'notice');
+
+        break;
       case 'RegisterResponse':
         handleRegisterResponse(message.body);
         break;
@@ -195,8 +224,7 @@ function handleUpdateSpeaker(speaker) {
   currentSpeaker = speaker;
 
   teamDisplay.classList.remove('active');
-
-  console.log(currentSpeaker);
+  buttonHolder.classList.remove('active');
 
   if (currentSpeaker == 'READY') {
     setMainDisplay('Ready', 1);  
@@ -208,6 +236,7 @@ function handleUpdateSpeaker(speaker) {
   if (speaker == Comms.params.clientName) {
     state = 3;
     teamDisplay.classList.add('active');
+    buttonHolder.classList.add('active');
   }
 
   setMainDisplay(currentSpeaker, state, 'Current Speaker');
@@ -216,27 +245,80 @@ function handleUpdateSpeaker(speaker) {
 function handleMemberList(_memberList) {
   memberList = _memberList.members;
 
+
+  buildButtons(_memberList.buttons);
+
   buildMemberElements();
 }
 
+function buildButtons(buttons) {
+  let i;
+  let doneCount = 0;
+
+  for(i = 0;i < memberList.length;i += 1) {
+    if (memberList[i].done) {
+      doneCount += 1;
+    }
+  }
+
+  let showStop = (doneCount == memberList.length - 1);
+
+  if (showStop) {
+    stopButton.classList.remove('hidden');
+  } else {
+    stopButton.classList.add('hidden');
+  }
+
+  if (buttons.skip && !showStop) {
+    skipButton.classList.remove('hidden');
+  } else {
+    skipButton.classList.add('hidden');
+  }
+
+
+  if (buttons.pause) {
+    pauseButton.classList.remove('hidden');
+  } else {
+    pauseButton.classList.add('hidden');
+  }
+
+  if (buttons.play) {
+    playButton.classList.remove('hidden');
+  } else {
+    playButton.classList.add('hidden');
+  }
+
+}
+
 function buildMemberElements() {
-  console.log("buildMemberElements");
-  console.log(memberList);
   let elements = [];
   let i;
+
+  console.log("BUILDING TEAM");
+  console.log("memberList: ", memberList);
   for(i = 0;i < memberList.length;i += 1) {
-    if (memberList[i].name == Comms.params.clientName) {
-      continue;
-    }
+    console.log("IN " + i);
+    console.log('BLOUNCHE 1!');
     let classes = [];
 
     if (memberList[i].done) {
+      console.log('BLOUNCHE 2!');
       classes.push('done');
     }
     if (memberList[i].active) {
+      console.log('BLOUNCHE 3!');
       classes.push('active');
     }
+
+    console.log('BLOUNCHE 4!');
  
+    if (memberList[i].name == Comms.params.clientName) {
+      console.log('BLOUNCHE 5!');
+      continue;
+    }
+
+    console.log('BLOUNCHE 6!');
+
     elements.push(`<div class="team-button ${classes.join(' ')}" data-name="${memberList[i].name}">${memberList[i].name}</div>`);
   }
 
@@ -249,7 +331,7 @@ function setUpTeamInteractions() {
       return;
     }
 
-    Comms.sendEvent(e.target.getAttribute('data-name'), 'Nomination');
+    Comms.sendEvent(e.target.getAttribute('data-name'), 'Master.Nomination');
   });
 }
 
@@ -258,7 +340,7 @@ function connectHandler() {
 
   Comms.sendEvent(
     Comms.params.uniqueCode,
-    'Register'
+    'Master.Register'
   );
 
   Page.flashMessage(`Opened channel "${Comms.params.meetingCode}"`, 'notice');
@@ -276,6 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
   getUniqueCode();
   setUpForm();
   setUpDisplay();
+  setUpButtons();
   setUpTeamInteractions();
 
   Page.setUpFlash();

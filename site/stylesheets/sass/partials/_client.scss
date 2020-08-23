@@ -135,7 +135,19 @@
     }
 
     .button {
-      background-color:$orange;
+      background-color:$blue;
+    }
+  }
+}
+
+#button-holder {
+  .button {
+    float:left;
+
+  }
+  &:not(.active) {
+    .button {
+      display:none;
     }
   }
 }
