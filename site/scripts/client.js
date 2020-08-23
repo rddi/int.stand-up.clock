@@ -98,7 +98,7 @@ function handleReciept(input) {
   try{
     message = JSON.parse(message);
 
-    let type = message.split('.');
+    let type = message.type.split('.');
     if (type[0] !== 'Client') {
       return;
     }
@@ -245,7 +245,7 @@ function handleUpdateSpeaker(speaker) {
 function handleMemberList(_memberList) {
   memberList = _memberList.members;
 
-
+  console.log("HERE!", _memberList);
   buildButtons(_memberList.buttons);
 
   buildMemberElements();
@@ -255,13 +255,19 @@ function buildButtons(buttons) {
   let i;
   let doneCount = 0;
 
+  console.log('RETROBULBA 1!');
+
   for(i = 0;i < memberList.length;i += 1) {
     if (memberList[i].done) {
       doneCount += 1;
     }
   }
 
+  console.log('RETROBULBA 2!');
+
   let showStop = (doneCount == memberList.length - 1);
+
+  console.log('RETROBULBA 3!');
 
   if (showStop) {
     stopButton.classList.remove('hidden');
@@ -269,11 +275,15 @@ function buildButtons(buttons) {
     stopButton.classList.add('hidden');
   }
 
+  console.log('RETROBULBA 4!');
+
   if (buttons.skip && !showStop) {
     skipButton.classList.remove('hidden');
   } else {
     skipButton.classList.add('hidden');
   }
+
+  console.log('RETROBULBA 5!');
 
 
   if (buttons.pause) {
@@ -282,11 +292,15 @@ function buildButtons(buttons) {
     pauseButton.classList.add('hidden');
   }
 
+  console.log('RETROBULBA 6!');
+
   if (buttons.play) {
     playButton.classList.remove('hidden');
   } else {
     playButton.classList.add('hidden');
   }
+
+  console.log('RETROBULBA 7!');
 
 }
 

@@ -1177,8 +1177,11 @@ function handleReciept(input) {
   try{
     message = JSON.parse(message);
 
-    let type = message.split('.');
-    if (type[0] !== 'Master') {
+    let type = message.type.split('.');
+
+    console.log(type);
+    console.log(type[0] == 'Master');
+    if (type[0] != 'Master') {
       return;
     }
     
@@ -1362,7 +1365,7 @@ function sendMemberList() {
       skip: options.skip,
     },
     members: membersObject
-  }, 'MemberList');
+  }, 'Client.MemberList');
 }
 
 function sendDeregister(removee) {
