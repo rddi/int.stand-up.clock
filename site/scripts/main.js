@@ -491,11 +491,13 @@ function setupTimers() {
       pause.classList.add('paused');
       nameWheelPause(true);
     }
+    sendMemberList();
   });
 
   end.addEventListener("click", function(e) {
     timer.stopTimer();
     subtimer.stopTimer();
+    sendMemberList();
   });
 
   next.addEventListener("click", function(e) {
@@ -1174,8 +1176,13 @@ function handleReciept(input) {
 
   try{
     message = JSON.parse(message);
+
+    let type = message.split('.');
+    if (type[0] !== 'Master') {
+      return;
+    }
     
-    switch (message.type) {
+    switch (type[1]) {
       case 'Message':
         console.log(message.body);
         break;
@@ -1184,6 +1191,9 @@ function handleReciept(input) {
         break;
       case 'Register':
         handleRegistration(message.client, message.body);
+        break;
+      case 'ControlAction':
+        handleControlAction(message.client, message.body);
         break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
@@ -1197,12 +1207,48 @@ function handleReciept(input) {
 
 function handleNomination(sender, nomination) {
   const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
-  if (sender == currentSpeaker) {
-    let target = document.getElementById(`team-button-${nomination}`);
-    target.click();
-
-    Page.flashMessage(`${sender} nominated ${nomination}`, 'success');
+  if (sender != currentSpeaker) {
+    return;
   }
+  let target = document.getElementById(`team-button-${nomination}`);
+  target.click();
+
+  Page.flashMessage(`${sender} nominated ${nomination}`, 'success');
+}
+
+function handleControlAction(sender, action) {
+  const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
+  if (sender != currentSpeaker) {
+    return;
+  }
+  let targetId;
+
+  switch(action) {
+    case 'play':
+      targetId = 'pause-button';
+      break;
+    case 'pause':
+      targetId = 'pause-button';
+      break;
+    case 'skip':
+      targetId = 'next-button';
+      break;
+    case 'stop':
+      targetId = 'end-button';
+      break;
+  }
+
+  let target = document.getElementById(targetId);
+
+  if (target.classList.contains('hidden')) {
+    return;
+  }
+
+  if ((action == 'play' && !timer.isPaused()) || (action == 'pause' && timer.isPaused())) {
+    return;
+  }
+
+  target.click();
 }
 
 
@@ -1215,7 +1261,7 @@ function handleRegistration(client, uniqueCode) {
         status: 'success',
         error: 'none'
         }
-        ,'RegisterResponse');
+        ,'Client.RegisterResponse');
       return;
     }
 
@@ -1225,7 +1271,7 @@ function handleRegistration(client, uniqueCode) {
       status: 'failure',
       error: 'Name already exists in meeting'
       }
-      ,'RegisterResponse');
+      ,'Client.RegisterResponse');
     return;
   }
 
@@ -1234,7 +1280,7 @@ function handleRegistration(client, uniqueCode) {
       target: client,
       status: 'failure',
       error: 'Registration for this meeting is not current open'
-    }, 'RegisterResponse');
+    }, 'Client.RegisterResponse');
     return;
   }
 
@@ -1253,7 +1299,7 @@ function handleRegistration(client, uniqueCode) {
     status: 'success',
     error: 'none'
   }
-    ,'RegisterResponse');
+    ,'Client.RegisterResponse');
 
   Page.flashMessage(`"${client}" has joined the meeting`, 'success')
   updateRegister();
@@ -1283,8 +1329,7 @@ function updateClients() {
 
 function sendSpeaker() {
   if (timer.isReady()) {
-    Comms.sendEvent('READY', 'UpdateSpeaker');
-    console.log(`~~~~~~~~~~~~~ SENDING: READY`);
+    Comms.sendEvent('READY', 'Client.UpdateSpeaker');
     return;
   }
 
@@ -1294,9 +1339,7 @@ function sendSpeaker() {
     return;
   }
 
-  console.log(`~~~~~~~~~~~~~ SENDING: ${currentSpeaker.innerHTML}`)
-
-  Comms.sendEvent(currentSpeaker.innerHTML, 'UpdateSpeaker');
+  Comms.sendEvent(currentSpeaker.innerHTML, 'Client.UpdateSpeaker');
 }
 
 function sendMemberList() {
@@ -1314,8 +1357,9 @@ function sendMemberList() {
 
   Comms.sendEvent({
     buttons: {
+      play: timer.isPaused(),
+      pause: options.pause && !timer.isPaused(),
       skip: options.skip,
-      pause: options.pause
     },
     members: membersObject
   }, 'MemberList');
@@ -1324,7 +1368,7 @@ function sendMemberList() {
 function sendDeregister(removee) {
   Comms.sendEvent({
     deregister: register[removee],
-  }, 'Deregister');
+  }, 'Client.Deregister');
 
   delete register[removee];
 
@@ -1335,7 +1379,7 @@ function sendDeregister(removee) {
 }
 
 function sendFinished() {
-  Comms.sendEvent({}, 'TimerFinish');
+  Comms.sendEvent({}, 'Client.TimerFinish');
 }
 
 function connectHandler() {
