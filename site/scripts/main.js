@@ -1253,6 +1253,7 @@ function handleControlAction(sender, action) {
   }
 
   target.click();
+  updateClients();
 }
 
 

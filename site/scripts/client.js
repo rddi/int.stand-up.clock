@@ -87,7 +87,7 @@ function setUpButtons() {
 
     let control = e.target.parentElement.getAttribute("action");
 
-    buttonHolder.classList.remove('active');
+    // buttonHolder.classList.remove('active');
 
     Comms.sendEvent(control,
       'Master.ControlAction');
