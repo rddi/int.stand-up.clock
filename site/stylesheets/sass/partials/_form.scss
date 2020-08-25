@@ -420,28 +420,40 @@ input[type="text"] {
   }
 }
 
+#meeting-code {
+  padding:10px;
+  font-weight:bold;
+  color:$white;
+  border-radius:5px;
+  background-color:$grey;
+  position:absolute;
+  left:30px;
+  top:-18px;
+  opacity:1;
+  @include transition(background-color $transTime, opacity $transTime);
+  &:empty {
+    opacity:0;
+    pointer-events: none;
+  }
+  &.connected {
+    background-color:$blue;
+    // cursor: pointer;
+  }
+  .copy-code {
+    margin-left:10px;
+    cursor: pointer;
+    &:hover {
+      color:$orange;
+    }
+  }
+}
+
 #register-display {
   margin-top:20px;
   border:2px solid $grey;
   border-radius:10px;
   padding:20px;
   @include transition(border-color $transTime);
-  &.lozenge{
-    &:after {
-      content:attr(code);
-      padding:10px;
-      font-weight:bold;
-      color:$white;
-      border-radius:5px;
-      background-color:$grey;
-      position:absolute;
-      left:30px;
-      top:-18px;
-      &:empty {
-        display:none;
-      }
-    }
-  }
   
   &:not(.connected){
     &~#close-registration {
@@ -450,9 +462,6 @@ input[type="text"] {
   }
   &.connected {
     border-color:$white;
-    &:after {
-      background-color:$blue;
-    }
     &.open{
       border-color:$blue;
     }

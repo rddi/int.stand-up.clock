@@ -633,6 +633,31 @@ input[type="text"] {
 .tab-holder .tab.hidden {
   display: none; }
 
+#meeting-code {
+  padding: 10px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #888;
+  position: absolute;
+  left: 30px;
+  top: -18px;
+  opacity: 1;
+  -webkit-transition: background-color 300ms, opacity 300ms;
+  -moz-transition: background-color 300ms, opacity 300ms;
+  -o-transition: background-color 300ms, opacity 300ms;
+  transition: background-color 300ms, opacity 300ms; }
+  #meeting-code:empty {
+    opacity: 0;
+    pointer-events: none; }
+  #meeting-code.connected {
+    background-color: #335fa3; }
+  #meeting-code .copy-code {
+    margin-left: 10px;
+    cursor: pointer; }
+    #meeting-code .copy-code:hover {
+      color: #d9643e; }
+
 #register-display {
   margin-top: 20px;
   border: 2px solid #888;
@@ -642,24 +667,10 @@ input[type="text"] {
   -moz-transition: border-color 300ms;
   -o-transition: border-color 300ms;
   transition: border-color 300ms; }
-  #register-display.lozenge:after {
-    content: attr(code);
-    padding: 10px;
-    font-weight: bold;
-    color: #fff;
-    border-radius: 5px;
-    background-color: #888;
-    position: absolute;
-    left: 30px;
-    top: -18px; }
-    #register-display.lozenge:after:empty {
-      display: none; }
   #register-display:not(.connected) ~ #close-registration {
     display: none; }
   #register-display.connected {
     border-color: #fff; }
-    #register-display.connected:after {
-      background-color: #335fa3; }
     #register-display.connected.open {
       border-color: #335fa3; }
 

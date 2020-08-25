@@ -55,7 +55,8 @@ let timer,
   openRegistrationButton,
   closeRegistrationButton,
   tabs,
-  finishSent = false;
+  finishSent = false,
+  meetingCodeDisplay;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -280,6 +281,7 @@ function setUpForm() {
   closeRegistrationButton = document.getElementById('close-registration');
 
   registerDisplay = document.getElementById('register-display');
+  meetingCodeDisplay = document.getElementById('meeting-code');
 
   tabs = document.getElementsByClassName('tab');
 
@@ -293,15 +295,40 @@ function setUpForm() {
     sendDeregister(removee);
   });
 
+  meetingCodeDisplay.addEventListener('click', function(e) {
+    if(!e.target.classList.contains('copy-code')) {
+      return;
+    }
+    let clientURL = `${window.location.href}/client?meeting=${Comms.params.meetingCode}`;
+
+    var clipboard = document.createElement("textarea");
+    clipboard.value = clientURL;
+    
+    // Avoid scrolling to bottom
+    clipboard.style.top = "0";
+    clipboard.style.left = "0";
+    clipboard.style.position = "fixed";
+  
+    document.body.appendChild(clipboard);
+    clipboard.focus();
+    clipboard.select();
+    
+    document.execCommand('copy');
+
+    document.body.removeChild(clipboard);
+
+    Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`,'success');
+  });
+
   openRegistrationButton.addEventListener('click', function(e) {
     if(Comms.params.meetingCode == null) { 
       // Set meeting code
       Comms.params.meetingCode = Page.generateCode(4, true, true);
 
-      registerDisplay.classList.add('lozenge');
+      // registerDisplay.classList.add('lozenge');
 
       // Add to code to page with clipboard button
-      registerDisplay.setAttribute('code', 'Connecting...');
+      meetingCodeDisplay.innerHTML = 'Connecting...';
 
       Comms.MQTTConnect(Comms.params.meetingCode);
     }
@@ -1394,6 +1421,8 @@ function sendFinished() {
 function connectHandler() {
   Page.flashMessage(`Successfully created meeting "${Comms.params.meetingCode}"`, 'success');
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
+  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<span class="fa fa-clipboard copy-code"></span>`;
+  meetingCodeDisplay.classList.add('connected');
   registerDisplay.classList.add('connected');
   setRegisterOpen(true);
 }
