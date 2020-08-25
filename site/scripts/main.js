@@ -299,7 +299,7 @@ function setUpForm() {
     if(!e.target.classList.contains('copy-code')) {
       return;
     }
-    let clientURL = `${window.location.href}/client?meeting=${Comms.params.meetingCode}`;
+    let clientURL = `${window.location.href}client?meeting=${Comms.params.meetingCode}`;
 
     var clipboard = document.createElement("textarea");
     clipboard.value = clientURL;
