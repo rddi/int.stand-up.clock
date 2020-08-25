@@ -1,7 +1,9 @@
 let mqtt,
     reconnectTimeout = 2000,
-    host = 'test.mosquitto.org',
-    port = 8081; //MQTT over WebSockets, encrypted
+    host = 'mqtt.edflabs.net',
+    port = 8081, //MQTT over WebSockets, encrypted
+    mqtt_username = 'standup',
+    mqtt_password = '7h31&0n1yrddi!'; 
 
 
 
@@ -26,11 +28,15 @@ const Comms = {
       onSuccess:Comms.onConnect,
       onFailure:Comms.onError,
       useSSL: true,
+      userName: mqtt_username,
+      password: mqtt_password,
     };
+
+    // mqtt.username_pw_set(mqtt_username, mqtt_password);
 
     mqtt.onMessageArrived = Comms.onMessageArrived;
 
-    Page.flashMessage(`Attempting to connect to meeting`, 'notice');
+    Page.flashMessage(`Attempting to connect to channel`, 'notice');
 
     mqtt.connect(options);
   },
@@ -39,6 +45,8 @@ const Comms = {
     mqtt.subscribe(Comms.params.channel);
 
     console.log(`Channel: ${Comms.params.channel}`);
+
+    Page.flashMessage(`Connection to channel established`, 'success');
 
     Comms.params.connected = true;
 
@@ -50,10 +58,10 @@ const Comms = {
     console.log('error!');
     console.log(err);
 
-    Page.flashMessage(`Failed to connect to meeting`, 'error');
+    Page.flashMessage(`Failed to connect to channel`, 'error');
 
     setTimeout(function(){
-      Page.flashMessage(`Retrying connection to meeting`, 'notice');
+      Page.flashMessage(`Retrying connection to channel`, 'notice');
       Comms.MQTTConnect(Comms.params.meetingCode);
     }, reconnectTimeout);
   },

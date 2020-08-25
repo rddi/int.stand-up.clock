@@ -61,13 +61,21 @@ const Page = {
     return paramObject;
   },
 
-  generateCode: function(length, capsOnly = false) {
+  generateCode: function(length, capsOnly = false, nonAmbiguous = false) {
     let output = '',
     characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
     i;
 
     if (!capsOnly) {
       characters = characters + 'abcdefghijklmnopqrstuvwxyz';
+    }
+
+    if (nonAmbiguous) {
+      let ambgiuous = ['o','O','i','I','l','L','0','1'];
+
+      for(i = 0;i < ambgiuous.length;i += 1) {
+        characters = characters.split(ambgiuous[i]).join('');
+      }
     }
   
     for(i = 0;i < length;i += 1) {

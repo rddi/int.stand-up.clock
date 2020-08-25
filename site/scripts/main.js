@@ -296,7 +296,7 @@ function setUpForm() {
   openRegistrationButton.addEventListener('click', function(e) {
     if(Comms.params.meetingCode == null) { 
       // Set meeting code
-      Comms.params.meetingCode = Page.generateCode(4, true);
+      Comms.params.meetingCode = Page.generateCode(4, true, true);
 
       registerDisplay.classList.add('lozenge');
 
@@ -1284,7 +1284,7 @@ function handleRegistration(client, uniqueCode) {
     Comms.sendEvent({
       target: client,
       status: 'failure',
-      error: 'Registration for this meeting is not current open'
+      error: 'Registration for this meeting is not currently open'
     }, 'Client.RegisterResponse');
     return;
   }
@@ -1392,7 +1392,7 @@ function sendFinished() {
 }
 
 function connectHandler() {
-  Page.flashMessage(`Successfully set up meeting "${Comms.params.meetingCode}"`, 'success');
+  Page.flashMessage(`Successfully created meeting "${Comms.params.meetingCode}"`, 'success');
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
   registerDisplay.classList.add('connected');
   setRegisterOpen(true);

@@ -215,7 +215,7 @@ function handleRegisterResponse(response) {
     return;
   }
   if (response.status == 'success') {
-    setMainDisplay("Registered", 1);
+    setMainDisplay("Waiting for others", 1);
     Page.flashMessage(`Registered in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
     Comms.params.registered = true;
   } else if (response.status == 'failure') {
