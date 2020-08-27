@@ -58,7 +58,8 @@ let timer,
   finishSent = false,
   meetingCodeDisplay,
   qrCodeModal,
-  qrCode;
+  qrCode,
+  restrictedNames = ['READY'];
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -328,7 +329,7 @@ function setUpForm() {
 
       Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`,'success');  
     } else if (e.target.classList.contains('qr-code-button')) {
-      qrCode.setAttribute('src', `https://api.qrserver.com/v1/create-qr-code/?size=400x400&color=335fa3&data=${clientURL}`)
+      qrCode.setAttribute('src', `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${clientURL}`);
       qrCodeModal.classList.remove('hidden');
     }
     
@@ -1231,6 +1232,9 @@ function handleReciept(input) {
       case 'Message':
         console.log(message.body);
         break;
+      case 'Check':
+        handleCheck(message.client, message.body);
+        break;
       case 'Nomination':
         handleNomination(message.client, message.body);
         break;
@@ -1248,6 +1252,14 @@ function handleReciept(input) {
     console.log('FAIL!', error);
   }
   
+}
+
+function handleCheck(sender, body) {
+  sendEvent({
+    target: sender,
+    status: 'exists'
+  }
+  ,'Client.CheckResponse');
 }
 
 function handleNomination(sender, nomination) {
@@ -1308,6 +1320,10 @@ function handleRegistration(client, uniqueCode) {
         error: 'none'
         }
         ,'Client.RegisterResponse');
+
+      if (timer.hasStarted) {
+        updateClients();
+      }
       return;
     }
 
@@ -1326,6 +1342,15 @@ function handleRegistration(client, uniqueCode) {
       target: client,
       status: 'failure',
       error: 'Registration for this meeting is not currently open'
+    }, 'Client.RegisterResponse');
+    return;
+  }
+
+  if (restrictedNames.includes(client)) {
+    sendEvent({
+      target: client,
+      status: 'failure',
+      error: `"${client}" is a restricted name`
     }, 'Client.RegisterResponse');
     return;
   }

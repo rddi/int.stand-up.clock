@@ -15,6 +15,7 @@ const Comms = {
     registered: false,
     uniqueCode: null,
     connected: false,
+    meetingFound: false,
   },
   MQTTConnect: function(_meetingId = 'all') {
     console.log(`connecting to ${host}:${port}`);
@@ -77,7 +78,7 @@ const Comms = {
     mqtt.disconnect();
     Comms.params.channel = null;
     Comms.params.registered = false;
-    Page.flashMessage(`Disconnected from meeting "${Comms.params.meetingCode}"`, 'error');
+    Page.flashMessage(`You have been disconnected`, 'error');
     Comms.params.meetingCode = null;
     Comms.params.connected = false;
   },

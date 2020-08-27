@@ -11,7 +11,9 @@ let meetingCodeInput,
   playButton,
   pauseButton,
   skipButton,
-  stopButton;
+  stopButton,
+  meetingSearch,
+  searchTimeout = 10000;
 
 function setUpForm() {
   joinModal = document.getElementById('join-modal');
@@ -37,7 +39,9 @@ function setUpForm() {
     clientNameInput.value = memory.clientName;
   }
 
-
+  clientNameInput.addEventListener('input', function(e) {
+    e.target.value = e.target.value.split(' ').join('');
+  });
 
   joinButton.addEventListener('click', function(e) {
     let ready = true;
@@ -158,6 +162,9 @@ function handleReciept(input) {
         Page.flashMessage('The timer has ended', 'notice');
 
         break;
+      case 'CheckResponse':
+        handleCheckResponse(message.body);
+        break;
       case 'RegisterResponse':
         handleRegisterResponse(message.body);
         break;
@@ -187,7 +194,7 @@ function setMainDisplay(content, state = null, newLabel = null) {
 
     mainDisplay.innerHTML = html;
 
-    if (state) {
+    if (state != null) {
       let states = [
         'red',
         'blue',
@@ -215,6 +222,26 @@ function setMainDisplay(content, state = null, newLabel = null) {
   }, 500);
 }
 
+function handleCheckResponse(response) {
+  if (response.target != Comms.params.clientName) {
+    return;
+  }
+  if (response.status == 'exists') {
+
+    clearTimeout(meetingSearch);
+
+    setMainDisplay("Registering", 1, `Meeting: ${Comms.params.meetingCode}`)
+
+    Comms.sendEvent(
+      Comms.params.uniqueCode,
+      'Master.Register'
+    );
+  } else if (response.status == 'failure') {
+    setMainDisplay("No Meeting Found", 0, `Meeting: Not Found`);
+    Page.flashMessage(`Could not find meeting "${Comms.params.meetingCode}"`, 'error');
+  }
+}
+
 function handleRegisterResponse(response) {
   if (response.target != Comms.params.clientName) {
     return;
@@ -224,6 +251,7 @@ function handleRegisterResponse(response) {
     Page.flashMessage(`Registered in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
     Comms.params.registered = true;
   } else if (response.status == 'failure') {
+    setMainDisplay("Unable to register", 0);
     Page.flashMessage(`Could not register in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}": ${response.error}`, 'error');
   }
 }
@@ -331,14 +359,18 @@ function setUpTeamInteractions() {
 }
 
 function connectHandler() {
-  setMainDisplay("Registering", 1, `Meeting: ${Comms.params.meetingCode}`)
-
-
+  setMainDisplay("Looking for meeting", 1, `Meeting: ${Comms.params.meetingCode}`)
 
   Comms.sendEvent(
     Comms.params.uniqueCode,
-    'Master.Register'
+    'Master.Check'
   );
+
+  meetingSearch = setTimeout(function() {
+    setMainDisplay("No Meeting Found", 0, `Meeting: Not Found`)
+    Page.flashMessage(`Could not find meeting "${Comms.params.meetingCode}"`, 'error');
+    Comms.disconnect();
+  }, searchTimeout);
 
   Page.flashMessage(`Opened channel "${Comms.params.meetingCode}"`, 'notice');
 }

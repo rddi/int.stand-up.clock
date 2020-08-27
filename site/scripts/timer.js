@@ -118,6 +118,10 @@ class Timer {
     return this.state == 0 && this.full != 0;
   }
 
+  hasStarted() {
+    return this.state >= 1;
+  }
+
   isFinished() {
     return this.state == 2;
   }
