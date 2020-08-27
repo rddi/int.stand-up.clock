@@ -652,10 +652,10 @@ input[type="text"] {
     pointer-events: none; }
   #meeting-code.connected {
     background-color: #335fa3; }
-  #meeting-code .copy-code {
+  #meeting-code span {
     margin-left: 10px;
     cursor: pointer; }
-    #meeting-code .copy-code:hover {
+    #meeting-code span:hover {
       color: #d9643e; }
 
 #register-display {

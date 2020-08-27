@@ -148,7 +148,12 @@ function handleReciept(input) {
         setMainDisplay("Finished", 1, `Meeting: ${Comms.params.meetingCode}`);
 
         buttonHolder.classList.remove('active');
+
+        buildMemberElements(true);
+
         teamDisplay.classList.remove('active');
+
+          
       
         Page.flashMessage('The timer has ended', 'notice');
 
@@ -291,14 +296,14 @@ function buildButtons(buttons) {
 
 }
 
-function buildMemberElements() {
+function buildMemberElements(forceDone = false) {
   let elements = [];
   let i;
 
   for(i = 0;i < memberList.length;i += 1) {
     let classes = [];
 
-    if (memberList[i].done) {
+    if (memberList[i].done || forceDone) {
       classes.push('done');
     }
     if (memberList[i].active) {

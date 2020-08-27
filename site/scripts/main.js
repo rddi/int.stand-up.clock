@@ -56,7 +56,9 @@ let timer,
   closeRegistrationButton,
   tabs,
   finishSent = false,
-  meetingCodeDisplay;
+  meetingCodeDisplay,
+  qrCodeModal,
+  qrCode;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0]; 
@@ -227,16 +229,16 @@ function openTeamModal() {
 
 function closeTeamModal() {
   setTeamName(teamInput.value);
-  teamModal.classList.add('hidden');
+  // teamModal.classList.add('hidden');
 }
 
 function closeSaveModal() {
-  saveModal.classList.add('hidden');
+  // saveModal.classList.add('hidden');
   checkSetButton();
 }
 
 function closeLoadModal() {
-  loadModal.classList.add('hidden');
+  // loadModal.classList.add('hidden');
   checkSetButton();
 }
 
@@ -251,13 +253,19 @@ function updateDurationDisplay(_value = null) {
 }
 
 function setRegisterOpen(_open = true) {
+  let wasOpen = false;
+  if (registrationOpen) {
+    wasOpen = true;
+  }
   registrationOpen = _open;
 
   if (!_open){
     openRegistrationButton.classList.remove("hidden");
     closeRegistrationButton.classList.add("hidden");
     registerDisplay.classList.remove("open");
-    Page.flashMessage('Registration closed','notice');
+    if (wasOpen) {
+      Page.flashMessage('Registration closed','notice');
+    }
   } else {
     openRegistrationButton.classList.add("hidden");
     closeRegistrationButton.classList.remove("hidden");
@@ -283,6 +291,9 @@ function setUpForm() {
   registerDisplay = document.getElementById('register-display');
   meetingCodeDisplay = document.getElementById('meeting-code');
 
+  qrCodeModal = document.getElementById('qr-code-modal');
+  qrCode = document.getElementById('qr-code');
+
   tabs = document.getElementsByClassName('tab');
 
   document.addEventListener('click', function(e){
@@ -296,28 +307,31 @@ function setUpForm() {
   });
 
   meetingCodeDisplay.addEventListener('click', function(e) {
-    if(!e.target.classList.contains('copy-code')) {
-      return;
-    }
     let clientURL = `${window.location.href}client?meeting=${Comms.params.meetingCode}`;
+    if(e.target.classList.contains('copy-code')) {
 
-    var clipboard = document.createElement("textarea");
-    clipboard.value = clientURL;
+      var clipboard = document.createElement("textarea");
+      clipboard.value = clientURL;
+      
+      // Avoid scrolling to bottom
+      clipboard.style.top = "0";
+      clipboard.style.left = "0";
+      clipboard.style.position = "fixed";
     
-    // Avoid scrolling to bottom
-    clipboard.style.top = "0";
-    clipboard.style.left = "0";
-    clipboard.style.position = "fixed";
-  
-    document.body.appendChild(clipboard);
-    clipboard.focus();
-    clipboard.select();
+      document.body.appendChild(clipboard);
+      clipboard.focus();
+      clipboard.select();
+      
+      document.execCommand('copy');
+
+      document.body.removeChild(clipboard);
+
+      Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`,'success');  
+    } else if (e.target.classList.contains('qr-code-button')) {
+      qrCode.setAttribute('src', `https://api.qrserver.com/v1/create-qr-code/?size=400x400&color=335fa3&data=${clientURL}`)
+      qrCodeModal.classList.remove('hidden');
+    }
     
-    document.execCommand('copy');
-
-    document.body.removeChild(clipboard);
-
-    Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`,'success');
   });
 
   openRegistrationButton.addEventListener('click', function(e) {
@@ -1288,7 +1302,7 @@ function handleRegistration(client, uniqueCode) {
   if (register.hasOwnProperty(client)) {
 
     if (register[client] == uniqueCode) {
-      Comms.sendEvent({
+      sendEvent({
         target: client,
         status: 'success',
         error: 'none'
@@ -1298,7 +1312,7 @@ function handleRegistration(client, uniqueCode) {
     }
 
     // If so, return an error
-    Comms.sendEvent({
+    sendEvent({
       target: client,
       status: 'failure',
       error: 'Name already exists in meeting'
@@ -1308,7 +1322,7 @@ function handleRegistration(client, uniqueCode) {
   }
 
   if (!registrationOpen) {
-    Comms.sendEvent({
+    sendEvent({
       target: client,
       status: 'failure',
       error: 'Registration for this meeting is not currently open'
@@ -1326,7 +1340,7 @@ function handleRegistration(client, uniqueCode) {
   register[client] = uniqueCode;
 
   //Send registration success
-  Comms.sendEvent({
+  sendEvent({
     target: client,
     status: 'success',
     error: 'none'
@@ -1361,7 +1375,7 @@ function updateClients() {
 
 function sendSpeaker() {
   if (timer.isReady()) {
-    Comms.sendEvent('READY', 'Client.UpdateSpeaker');
+    sendEvent('READY', 'Client.UpdateSpeaker');
     return;
   }
 
@@ -1371,7 +1385,7 @@ function sendSpeaker() {
     return;
   }
 
-  Comms.sendEvent(currentSpeaker.innerHTML, 'Client.UpdateSpeaker');
+  sendEvent(currentSpeaker.innerHTML, 'Client.UpdateSpeaker');
 }
 
 function sendMemberList() {
@@ -1389,7 +1403,7 @@ function sendMemberList() {
 
   // console.log("TWELSK 1");
 
-  Comms.sendEvent({
+  sendEvent({
     buttons: {
       play: timer.isPaused(),
       pause: options.pausable && !timer.isPaused(),
@@ -1402,7 +1416,7 @@ function sendMemberList() {
 }
 
 function sendDeregister(removee) {
-  Comms.sendEvent({
+  sendEvent({
     deregister: register[removee],
   }, 'Client.Deregister');
 
@@ -1415,16 +1429,24 @@ function sendDeregister(removee) {
 }
 
 function sendFinished() {
-  Comms.sendEvent({}, 'Client.TimerFinish');
+  sendEvent({}, 'Client.TimerFinish');
 }
 
 function connectHandler() {
   Page.flashMessage(`Successfully created meeting "${Comms.params.meetingCode}"`, 'success');
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
-  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<span class="fa fa-clipboard copy-code"></span>`;
+  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}</span><span class="fa fa-qrcode qr-code-button"></span><span class="fa fa-clipboard copy-code">`;
   meetingCodeDisplay.classList.add('connected');
   registerDisplay.classList.add('connected');
   setRegisterOpen(true);
+}
+
+function sendEvent(_body, _type="Message") {
+  if(!options.useRegister) {
+    return;
+  }
+   
+  Comms.sendEvent(_body, _type);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -1436,7 +1458,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   getMemory();
 
-
   setUpSaveLoad();
 
   setupSounds();
@@ -1447,6 +1468,8 @@ document.addEventListener("DOMContentLoaded", function () {
   setSpeaker();
 
   setSetButton();
+
+  Page.setUpModals();
 
   Page.setUpFlash();
 

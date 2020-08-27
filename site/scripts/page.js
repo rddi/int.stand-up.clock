@@ -42,6 +42,16 @@ const Page = {
     },200);
   },
 
+  setUpModals: function () {
+    document.addEventListener('click', function (e) {
+      if (!e.target.classList.contains('modal-close')) {
+        return;
+      }
+
+      e.target.parentNode.parentNode.classList.add('hidden');
+    });
+  },
+
   getQueryParams: function() {
     let url = window.location.href.split('?');
 

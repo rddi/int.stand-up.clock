@@ -437,9 +437,8 @@ input[type="text"] {
   }
   &.connected {
     background-color:$blue;
-    // cursor: pointer;
   }
-  .copy-code {
+  span {
     margin-left:10px;
     cursor: pointer;
     &:hover {

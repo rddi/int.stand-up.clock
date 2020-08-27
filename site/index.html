@@ -146,7 +146,7 @@
     <div id="team-modal" class="modal hidden">
       
       <div class="container">
-        <span id="team-modal-close" class="fa fa-times"></span>
+        <span id="team-modal-close" class="fa fa-times modal-close"></span>
         <h2>Manage Team</h2>
         <input type="text" id="meeting-name-input" name="meeting-name" placeholder="Team name"/>
         <div id="team-editor">
@@ -163,7 +163,7 @@
 
     <div id="save-modal" class="modal hidden">
       <div class="container">
-        <span id="save-modal-close" class="fa fa-times"></span>
+        <span id="save-modal-close" class="fa fa-times modal-close"></span>
         <h2>Save Meeting</h2>
         <div id="save-editor">
           <div class="save-name-input">
@@ -177,13 +177,21 @@
 
     <div id="load-modal" class="modal hidden">
       <div class="container">
-        <span id="load-modal-close" class="fa fa-times"></span>
+        <span id="load-modal-close" class="fa fa-times modal-close"></span>
         <h2>Load Meeting</h2>
         <div id="load-editor">
           <div id="load-editor-list">
 
           </div>
         </div>
+      </div>
+    </div>
+
+    <div id="qr-code-modal" class="modal hidden">
+      <div class="container">
+        <span id="qr-code-modal-close" class="fa fa-times modal-close"></span>
+        <h2>Client QR</h2>
+        <img id="qr-code"/>
       </div>
     </div>
 
