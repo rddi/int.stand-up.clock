@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no maximum-scale=1 minimum-scale=1">
+    <title>EDF RDDI Stand Up Client</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="stylesheets/css/main.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <link rel="icon" type="image/x-icon" href="./favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="main-display" class="hidden" label="Connection Status">
+        <span></span>
+      </h1>
+    </div>
+    <div id="button-holder" class="container clear-fix">
+      <div class="button-center">
+        <div id="resume-button" class="button symbol control-button" action="play"><span class="fa fa-play pos-main"></span></div>
+        <div id="pause-button" class="button symbol control-button" action="pause"><span class="fa fa-pause pos-main"></span></div>
+        <div id="skip-button" class="button symbol control-button" action="skip"><span class="fa fa-step-forward pos-main"></span></div>
+        <div id="stop-button" class="button symbol control-button" action="stop"><span class="fa fa-stop pos-main"></span></div>
+      </div>
+    </div>
+    <div class="container">
+      <div id="team-display" class="active-team-list"></div>
+    </div>
+
+    <div id="join-modal" class="modal"> 
+      <div class="container">
+        <h2 id="join-title" >Join Meeting</h2>
+        <div id="join-editor">
+          <div class="input-holder">
+            <input type="text" id="meeting-code-input" name="meeting-code" placeholder="Meeting code" required="required" minlength="4" maxlength="4"/>
+          </div>
+          <div class="input-holder">
+            <input type="text" id="client-name-input" name="client-name" placeholder="Your name" required="required"/>
+          </div>
+          <div id="join-button" class="button">Join</div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <script type="text/javascript" src="scripts/sound.js"></script>
+    <script type="text/javascript" src="scripts/memory.js"></script>
+    <script type="text/javascript" src="scripts/comms.js"></script>
+    <script type="text/javascript" src="scripts/team.js"></script>
+    <script type="text/javascript" src="scripts/page.js"></script>
+    <script type="text/javascript" src="scripts/client.js"></script>
+  </body>
+</html>

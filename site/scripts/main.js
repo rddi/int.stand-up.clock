@@ -47,10 +47,22 @@ let timer,
   saveButton,
   saveSettingsButton,
   loadButton,
-  flash;
+  // useRegister = false,
+  register = {},
+  registrationOpen = false,
+  // registerTitle,
+  registerDisplay,
+  openRegistrationButton,
+  closeRegistrationButton,
+  tabs,
+  finishSent = false,
+  meetingCodeDisplay,
+  qrCodeModal,
+  qrCode,
+  restrictedNames = ['READY'];
 
 function setCollapser() {
-  collapser = document.getElementsByClassName("collapser")[0]; 
+  collapser = document.getElementsByClassName("collapser")[0];
   title = document.getElementById("title");
 }
 
@@ -63,7 +75,7 @@ function openLoadModal() {
 
   let list = [];
 
-  for(let index in loads) {
+  for (let index in loads) {
     let name = decodeURI(index.slice(5));
 
     list.push(`<div class="load-option"><span class="fa fa-minus remove-save remove" id="remove-${index}"></span><div class='load-selection selection-button' data-loadname="${index}">${name}</div></div>`);
@@ -79,20 +91,20 @@ function setSetButton() {
   saveButton = document.getElementById("save-button");
   loadButton = document.getElementById("load-button");
 
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     if (e.target.classList.contains('set-check')) {
       checkSetButton();
     }
   });
 
-  saveButton.addEventListener('click', function(e) {
+  saveButton.addEventListener('click', function (e) {
     if (e.target.classList.contains('disabled')) {
       return;
     }
     openSaveModal();
   });
 
-  loadButton.addEventListener('click', function(e) {
+  loadButton.addEventListener('click', function (e) {
     if (e.target.classList.contains('disabled')) {
       return;
     }
@@ -107,14 +119,18 @@ function checkSetButton() {
   let i = 0;
   let memSet = false;
 
-
-  for(i = 0;i < checked.length;i += 1) {
-
-    if (checked[i].id.match(/member-/g)) {
+  if (options.useRegister) {
+    if (Object.keys(register).length > 0) {
       memSet = true;
     }
+  } else {
+    for (i = 0; i < checked.length; i += 1) {
+      if (checked[i].id.match(/member-/g)) {
+        memSet = true;
+      }
+    }
   }
-  
+
   if (memSet) {
     setButton.classList.remove('disabled');
     saveButton.classList.remove('disabled');
@@ -143,7 +159,7 @@ function toggleTray(close = false) {
 
 function setCollapseButton() {
   settings = document.getElementById("settings-button");
-  settings.addEventListener("click", function(e) {
+  settings.addEventListener("click", function (e) {
     e.preventDefault();
     toggleTray(timer.start != null);
   });
@@ -161,7 +177,7 @@ function setSpeaker() {
 function mintosentence(time) {
   let quantifier = 'minute';
 
-  if (stringtoms(time) <  60000) {
+  if (stringtoms(time) < 60000) {
     time = time.split(':')[1];
     quantifier = 'second';
   }
@@ -173,7 +189,7 @@ function mintosentence(time) {
 
 function showEndScreen() {
   let endTime = mintosentence(timer.getElapsedTimer());
-  let avgTime  = mintosentence(mstomin(timer.getElapsedMilliseconds() / team));
+  let avgTime = mintosentence(mstomin(timer.getElapsedMilliseconds() / team.length));
   document.getElementById('end-time').innerHTML = endTime;
   document.getElementById('avg-time').innerHTML = `${avgTime}s`;
   endScreen.classList.remove("hidden");
@@ -184,25 +200,25 @@ function setSelectionButtons() {
   deselectAll = document.getElementById("deselect-all");
   edit = document.getElementById("edit-team");
 
-  selectAll.addEventListener("click", function(e) {
+  selectAll.addEventListener("click", function (e) {
     const allMembers = document.getElementsByClassName("team-member");
     let i = 0;
 
-    for(i = 0;i < allMembers.length;i += 1) {
+    for (i = 0; i < allMembers.length; i += 1) {
       allMembers[i].checked = true;
     }
   });
 
-  deselectAll.addEventListener("click", function(e) {
+  deselectAll.addEventListener("click", function (e) {
     const allMembers = document.getElementsByClassName("team-member");
     let i = 0;
 
-    for(i = 0;i < allMembers.length;i += 1) {
+    for (i = 0; i < allMembers.length; i += 1) {
       allMembers[i].checked = false;
     }
   });
 
-  edit.addEventListener("click", function(e) {
+  edit.addEventListener("click", function (e) {
     openTeamModal();
   });
 }
@@ -214,30 +230,54 @@ function openTeamModal() {
 
 function closeTeamModal() {
   setTeamName(teamInput.value);
-  teamModal.classList.add('hidden');
+  // teamModal.classList.add('hidden');
 }
 
 function closeSaveModal() {
-  saveModal.classList.add('hidden');
+  // saveModal.classList.add('hidden');
   checkSetButton();
 }
 
 function closeLoadModal() {
-  loadModal.classList.add('hidden');
+  // loadModal.classList.add('hidden');
   checkSetButton();
 }
 
 function updateDurationDisplay(_value = null) {
   value = timeSlider.value;
-  
-  let perperson = ` in total`;
+
+  let perperson = `in total`;
   if (options.pp) {
-    perperson = ` per person`;
+    perperson = `per person`;
   }
-  durationDisplay.innerHTML = `<span>${value}m</span>${perperson}`;
+  durationDisplay.innerHTML = `<span>${value}m</span> ${perperson}`;
 }
 
-function setForm() {
+function setRegisterOpen(_open = true) {
+  let wasOpen = false;
+  if (registrationOpen) {
+    wasOpen = true;
+  }
+  registrationOpen = _open;
+
+  if (!_open) {
+    openRegistrationButton.classList.remove("hidden");
+    closeRegistrationButton.classList.add("hidden");
+    registerDisplay.classList.remove("open");
+    if (wasOpen) {
+      Page.flashMessage('Registration closed', 'notice');
+    }
+  } else {
+    openRegistrationButton.classList.add("hidden");
+    closeRegistrationButton.classList.remove("hidden");
+    registerDisplay.classList.add("open");
+    if (Comms.isConnected()) {
+      Page.flashMessage('Registration open', 'success');
+    }
+  }
+}
+
+function setUpForm() {
   form = document.getElementById("input-form");
   muteInput = document.getElementById("mute-input");
 
@@ -246,11 +286,80 @@ function setForm() {
   timeSlider = document.getElementById('time-slider');
   durationDisplay = document.getElementById('duration-display');
 
-  timeSlider.addEventListener('input', function(e) {
+  openRegistrationButton = document.getElementById('open-registration');
+  closeRegistrationButton = document.getElementById('close-registration');
+
+  registerDisplay = document.getElementById('register-display');
+  meetingCodeDisplay = document.getElementById('meeting-code');
+
+  qrCodeModal = document.getElementById('qr-code-modal');
+  qrCode = document.getElementById('qr-code');
+
+  tabs = document.getElementsByClassName('tab');
+
+  document.addEventListener('click', function (e) {
+    if (!e.target.classList.contains('deregister')) {
+      return;
+    }
+
+    const removee = e.target.id.split('deregister-')[1];
+
+    sendDeregister(removee);
+  });
+
+  meetingCodeDisplay.addEventListener('click', function (e) {
+    let clientURL = `${window.location.href}client?meeting=${Comms.params.meetingCode}`;
+    if (e.target.classList.contains('copy-code')) {
+
+      var clipboard = document.createElement("textarea");
+      clipboard.value = clientURL;
+
+      // Avoid scrolling to bottom
+      clipboard.style.top = "0";
+      clipboard.style.left = "0";
+      clipboard.style.position = "fixed";
+
+      document.body.appendChild(clipboard);
+      clipboard.focus();
+      clipboard.select();
+
+      document.execCommand('copy');
+
+      document.body.removeChild(clipboard);
+
+      Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`, 'success');
+    } else if (e.target.classList.contains('qr-code-button')) {
+      qrCode.setAttribute('src', `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${clientURL}`);
+      qrCodeModal.classList.remove('hidden');
+    }
+
+  });
+
+  openRegistrationButton.addEventListener('click', function (e) {
+    if (Comms.params.meetingCode == null) {
+      // Set meeting code
+      Comms.params.meetingCode = Page.generateCode(4, true, true);
+
+      // registerDisplay.classList.add('lozenge');
+
+      // Add to code to page with clipboard button
+      meetingCodeDisplay.innerHTML = 'Connecting...';
+
+      Comms.MQTTConnect(Comms.params.meetingCode);
+    }
+
+    setRegisterOpen(true);
+  });
+
+  closeRegistrationButton.addEventListener('click', function (e) {
+    setRegisterOpen(false);
+  });
+
+  timeSlider.addEventListener('input', function (e) {
     updateDurationDisplay(e.target.value);
   });
 
-  form.addEventListener("submit", function(e) {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (setButton.classList.contains('disabled')) {
       return;
@@ -260,53 +369,60 @@ function setForm() {
       duration: timeSlider.value
     };
 
-    for (let i = 0;i < results.length;i++) {                                                                                                                               
+    for (let i = 0; i < results.length; i++) {
       formData[results[i].getAttribute('name')] = results[i].value;
     }
 
-    team = 0;
-    let flipflop = false;
-    const activeList = document.getElementsByClassName('active-team-list');
+    team = [];
 
+    const activeList = document.getElementsByClassName('active-team-list');
     activeList[0].innerHTML = '';
     activeList[1].innerHTML = '';
 
     let first = true;
+    let flipflop = false;
 
-    Object.keys(formData).forEach(function(item) {
-      let breakdown = item.split("-");
-
-      if (breakdown[0] === "team") {
-        team += 1;
-        target = 0;
-        if(flipflop) {
-          target = 1;
-        }
-        flipflop = !flipflop;
-
-        let extraClass = '';
-
-        if (first) {
-          extraClass = 'active';
-          first = false;
-        }
-
-        breakdown.shift();
-
-        const teamButton = `<div class="team-button ${extraClass}">${breakdown.join("-")}</div>`;
-
-        activeList[target].innerHTML = activeList[target].innerHTML + teamButton;
+    if (options.useRegister) {
+      for (let member in register) {
+        team.push(member);
       }
-    });
+    } else {
+      Object.keys(formData).forEach(function (item) {
+        let breakdown = item.split("-");
+
+        if (breakdown.shift() === "team") {
+          team.push(breakdown.join("-"));
+        }
+      });
+    }
+
+    for (i = 0; i < team.length; i += 1) {
+      target = 0;
+      if (flipflop) {
+        target = 1;
+      }
+      flipflop = !flipflop;
+
+      let extraClass = '';
+
+      if (first) {
+        extraClass = 'active';
+        first = false;
+      }
+
+      const teamButton = `<div id="team-button-${team[i]}" class="team-button ${extraClass}">${team[i]}</div>`;
+
+      activeList[target].innerHTML = activeList[target].innerHTML + teamButton;
+    }
 
     setUpTeamButtons();
 
-    teamRemaining = team;
+    teamRemaining = team.length;
 
     let duration = formData['duration'];
 
     if (options.pp) {
-      duration = duration * team;
+      duration = duration * team.length;
     }
 
     if (options.pausable) {
@@ -322,8 +438,10 @@ function setForm() {
     }
 
     timer.setTimer(duration);
-    subtimer.setTimer(duration / team);
+    subtimer.setTimer(duration / team.length);
     toggleTray(true);
+    updateClients();
+    setRegisterOpen(false);
   });
 }
 
@@ -341,10 +459,10 @@ function mintoms(min) {
 
 function mstomin(ms) {
   let minutes = Math.floor(ms / 1000 / 60);
-  let paddingM = (minutes < 10)?"0":"";
+  let paddingM = (minutes < 10) ? "0" : "";
   let seconds = Math.floor((ms / 1000) % 60);
-  let paddingS = (seconds < 10)?"0":"";
-  
+  let paddingS = (seconds < 10) ? "0" : "";
+
   return `${paddingM}${minutes}:${paddingS}${seconds}`;
 }
 
@@ -387,7 +505,7 @@ function setupTimers() {
   pepDisplay = document.getElementById("pep-display");
   teamCount = document.getElementById("team-remaining");
 
-  pause.addEventListener("click", function(e) {
+  pause.addEventListener("click", function (e) {
     let symbols = pause.getElementsByClassName('fa');
     let i = 0;
     if (timer.isPaused() || timer.isReady()) {
@@ -399,7 +517,7 @@ function setupTimers() {
         subtimer.startTimer();
         playSound('next');
       }
-      for(i=0;i<symbols.length;i += 1) {
+      for (i = 0; i < symbols.length; i += 1) {
         symbols[i].classList.remove('fa-play');
         symbols[i].classList.add('fa-pause');
       }
@@ -408,26 +526,29 @@ function setupTimers() {
     } else {
       timer.pauseTimer();
       subtimer.pauseTimer();
-      for(i=0;i<symbols.length;i += 1) {
+      for (i = 0; i < symbols.length; i += 1) {
         symbols[i].classList.remove('fa-pause');
         symbols[i].classList.add('fa-play');
       }
       pause.classList.add('paused');
       nameWheelPause(true);
     }
+    sendSpeaker();
+    sendMemberList();
   });
 
-  end.addEventListener("click", function(e) {
+  end.addEventListener("click", function (e) {
     timer.stopTimer();
     subtimer.stopTimer();
+    sendMemberList();
   });
 
-  next.addEventListener("click", function(e) {
+  next.addEventListener("click", function (e) {
     randomSelectMember();
     subtimerRebuild();
   });
 
-  reset.addEventListener("click", function(e) {
+  reset.addEventListener("click", function (e) {
     timer.resetTimer();
     subtimer.resetTimer();
   });
@@ -436,7 +557,7 @@ function setupTimers() {
     pep.classList.add("spinning");
     pepDisplay.classList.remove("green");
     spinPep(100);
-  })
+  });
 }
 
 function subtimerRebuild() {
@@ -466,8 +587,21 @@ function newSpeaker() {
 
   nameWheel.innerHTML = '';
 
-  const name = currentSpeaker.split('');
+  let name = currentSpeaker.split('');
+
+  const regex = '(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32-\ude3a]|[\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])';
+
   let i = 0;
+
+  let matched = [...currentSpeaker.matchAll(regex)];
+
+  for(i = matched.length - 1;i >= 0;i -= 1) {
+    let index = matched[i].index;
+    name[index] = matched[i][0];
+    name.splice(index+1,1);
+  }
+
+  
 
   let nameElement = '';
   let type = 'even';
@@ -482,12 +616,13 @@ function newSpeaker() {
   offset = 0 - offset; //-3
 
 
-  for(i = 0;i < name.length;i += 1) {
+  for (i = 0; i < name.length; i += 1) {
     nameElement += `<div class="letter" id="${type}${offset}">${name[i]}</div>`;
     offset += 1;
   }
 
   nameWheel.innerHTML = nameElement;
+  updateClients();
 }
 
 function randomSelectMember() {
@@ -495,7 +630,7 @@ function randomSelectMember() {
   let i = 0;
   let remaining = [];
 
-  for (i = 0;i < members.length;i += 1) {
+  for (i = 0; i < members.length; i += 1) {
     if (members[i].classList.contains('done')) {
       continue;
     }
@@ -561,7 +696,7 @@ function spinPep(time, stop = false) {
     playSound('found');
   } else {
     playSound('spin');
-    setTimeout(function(e) {
+    setTimeout(function (e) {
       spinPep(time + (time * 0.1), time > 500);
     }, time);
   }
@@ -569,15 +704,15 @@ function spinPep(time, stop = false) {
 function setUpTeamMembers(maintainOrder = false) {
   let randomOrder = randomiseArray(TeamMembers.getList());
   let i = 0;
-  
+
   if (maintainOrder && localTeamMembers != []) {
-    for(i = localTeamMembers.length - 1;i>=0;i-=1) {
+    for (i = localTeamMembers.length - 1; i >= 0; i -= 1) {
       if (!randomOrder.includes(localTeamMembers[i])) {
         localTeamMembers.splice(i, 1);
       }
     }
 
-    for(i = 0;i < randomOrder.length;i += 1) {
+    for (i = 0; i < randomOrder.length; i += 1) {
       if (!localTeamMembers.includes(randomOrder[i])) {
         localTeamMembers.push(randomOrder[i]);
       }
@@ -587,11 +722,11 @@ function setUpTeamMembers(maintainOrder = false) {
   } else {
     localTeamMembers = randomOrder;
   }
-  
+
   let memberList = [];
   let editList = [];
-  
-  for (i = 0;i < randomOrder.length;i += 1){
+
+  for (i = 0; i < randomOrder.length; i += 1) {
     memberList.push(`<input id="member-${i}" type="checkbox" class="team-member set-check" name="team-${randomOrder[i]}" />
     <label for="member-${i}">${randomOrder[i]}</label>`);
     editList.push(`<div class="edit-team-member"><span class="fa fa-minus remove-member remove" id="remove-${randomOrder[i]}"></span>${randomOrder[i]}</div>`);
@@ -619,18 +754,18 @@ function setUpTeamEdit() {
   teamModalList = document.getElementById('team-editor-list');
   teamModalInput = document.getElementById('member-name-input');
 
-  teamModalInput.addEventListener('keypress', function(e) {
+  teamModalInput.addEventListener('keypress', function (e) {
     let value = teamModalInput.value;
 
-    if(!['Enter', ' '].includes(e.key)) {
+    if (!['Enter', ' '].includes(e.key)) {
       return;
     }
 
-    flashMessage(`Team member \"${teamModalInput.value}\" added to team`, 'success');
+    Page.flashMessage(`Team member \"${teamModalInput.value}\" added to team`, 'success');
 
     teamModalInput.value = '';
 
-    if (['',' '].includes(value)) {
+    if (['', ' '].includes(value)) {
       return;
     }
 
@@ -641,7 +776,7 @@ function setUpTeamEdit() {
     buildTeamSections(true);
   });
 
-  document.addEventListener('click', function(e){
+  document.addEventListener('click', function (e) {
     if (!e.target.classList.contains('remove-member')) {
       return;
     }
@@ -649,14 +784,14 @@ function setUpTeamEdit() {
     const removee = e.target.id.split('remove-')[1];
     TeamMembers.remove(removee);
 
-    flashMessage(`Team member \"${removee}\" removed from team`, 'success');
+    Page.flashMessage(`Team member \"${removee}\" removed from team`, 'success');
 
     buildTeamSections(true);
   });
 
   let close = document.getElementById('team-modal-close');
 
-  close.addEventListener('click', function(e) {
+  close.addEventListener('click', function (e) {
     closeTeamModal();
   });
 }
@@ -671,50 +806,50 @@ function setUpSaveLoad() {
   let saveClose = document.getElementById('save-modal-close');
   let loadClose = document.getElementById('load-modal-close');
 
-  saveClose.addEventListener('click', function(e) {
+  saveClose.addEventListener('click', function (e) {
     closeSaveModal();
   });
-  loadClose.addEventListener('click', function(e) {
+  loadClose.addEventListener('click', function (e) {
     closeLoadModal();
   });
 
-  saveSettingsButton.addEventListener('click', function(e) {
-    if(saveInput.value == '') { // More robust 
-      flashMessage(`Please provide a name for the meeting profile`, 'notice');
+  saveSettingsButton.addEventListener('click', function (e) {
+    if (saveInput.value == '') { // More robust 
+      Page.flashMessage(`Please provide a name for the meeting profile`, 'notice');
       return;
     }
 
-    let name =  encodeURI(saveInput.value)
+    let name = encodeURI(saveInput.value)
 
     let fullOptions = options;
 
     fullOptions.duration = timeSlider.value;
-    
+
     const selected = document.querySelectorAll('#team-members input:checked');
     let i = 0;
 
     fullOptions.team = [];
 
-    for(i = 0;i < selected.length;i += 1) {
+    for (i = 0; i < selected.length; i += 1) {
       fullOptions.team.push(selected[i].name);
     }
 
     let message = `Meeting profile saved as \"${saveInput.value}\"`;
 
-    if(Memory.exists(`save-${name}`)) {
+    if (Memory.exists(`save-${name}`)) {
       message = `Meeting profile replaced existing \"${saveInput.value}\"`;
     }
-    
+
     Memory.setObject(`save-${name}`, fullOptions);
 
-    flashMessage(message, 'success');
+    Page.flashMessage(message, 'success');
 
     saveInput.value = '';
 
     closeSaveModal();
   });
 
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     if (!e.target.classList.contains('load-selection')) {
       return;
     }
@@ -723,47 +858,29 @@ function setUpSaveLoad() {
 
     setOptions(false, loadname);
 
-    flashMessage(`Meeting profile \"${e.target.innerHTML}\" loaded successfully`, 'success');
+    Page.flashMessage(`Meeting profile \"${e.target.innerHTML}\" loaded successfully`, 'success');
 
     checkSetButton();
     closeLoadModal();
   });
 
-  document.addEventListener('click', function(e){
+  document.addEventListener('click', function (e) {
     if (!e.target.classList.contains('remove-save')) {
       return;
     }
 
     const removee = e.target.id.split('remove-')[1];
-    
+
     Memory.remove(removee);
 
-    flashMessage(`Meeting profile \"${e.target.parentNode.getElementsByClassName('load-selection')[0].innerHTML}\" successfully removed`,'success');
+    Page.flashMessage(`Meeting profile \"${e.target.parentNode.getElementsByClassName('load-selection')[0].innerHTML}\" successfully removed`, 'success');
 
     e.target.parentNode.parentNode.removeChild(e.target.parentNode);
   });
 }
 
 function recordTime(element) {
-    element.setAttribute('data-time', subtimer.getElapsedTimer());
-}
-
-function setUpFlash() {
-  flash = document.getElementById('flash-message');
-}
-
-function flashMessage(message, type = 'notice') {
-  flash.classList.remove('success', 'notice', 'error');
-  flash.classList.remove('hidden');
-
-  flash.classList.add(type);
-
-  flash.setAttribute('message', message);
-
-  setTimeout(function(e) {
-    flash.classList.add('hidden');
-    flash.setAttribute('message', '');
-  },3000);
+  element.setAttribute('data-time', subtimer.getElapsedTimer());
 }
 
 function setUpTeamButtons() {
@@ -771,20 +888,20 @@ function setUpTeamButtons() {
   let i = 0;
   let j = 0;
 
-    for(i=0;i<teamButtons.length;i+=1) {
-      
-    teamButtons[i].addEventListener("click", function(e) {
+  for (i = 0; i < teamButtons.length; i += 1) {
+
+    teamButtons[i].addEventListener("click", function (e) {
       if (timer.isPaused() || event.target.classList.contains('active') || event.target.classList.contains('done')) {
         return;
       }
 
       if (timer.start === null) {
-        for(j = 0;j < teamButtons.length;j += 1) {
+        for (j = 0; j < teamButtons.length; j += 1) {
           teamButtons[j].classList.remove('active');
         };
       } else {
-        for(j = 0;j < teamButtons.length;j += 1) {
-          if(teamButtons[j].classList.contains('active')) {
+        for (j = 0; j < teamButtons.length; j += 1) {
+          if (teamButtons[j].classList.contains('active')) {
             recordTime(teamButtons[j]);
             teamButtons[j].classList.add('done');
             teamButtons[j].classList.remove('active');
@@ -798,13 +915,14 @@ function setUpTeamButtons() {
 
         subtimerRebuild();
       }
+      updateClients();
     });
   };
 }
 
 function checkTimes() {
   const teamMembers = document.getElementsByClassName("team-button");
-  
+
   let i = 0;
   let fastest = stringtoms(teamMembers[i].getAttribute('data-time'));
   let slowest = stringtoms(teamMembers[i].getAttribute('data-time'));
@@ -812,7 +930,7 @@ function checkTimes() {
   let lowScores = [];
 
 
-  for (i = 0;i < teamMembers.length;i += 1) {
+  for (i = 0; i < teamMembers.length; i += 1) {
     const thisTime = stringtoms(teamMembers[i].getAttribute('data-time'));
 
     if (thisTime === fastest) {
@@ -830,16 +948,16 @@ function checkTimes() {
     }
   }
 
-  for (i = 0;i < highScores.length;i += 1) {
+  for (i = 0; i < highScores.length; i += 1) {
     teamMembers[highScores[i]].classList.add('time-green');
   }
 
-  for (i = 0;i < lowScores.length;i += 1) {
+  for (i = 0; i < lowScores.length; i += 1) {
     teamMembers[lowScores[i]].classList.add('time-red');
   }
 }
 
-function fadeTimer(){
+function fadeTimer() {
   subtimer.fade();
   timer.fade();
 }
@@ -855,6 +973,11 @@ function setFinish() {
   fadeTimer();
   checkTimes();
   showEndScreen();
+
+  if (!finishSent) {
+    sendFinished();
+    finishSent = true;
+  }
 }
 
 function manageSelectionButtons() {
@@ -862,8 +985,8 @@ function manageSelectionButtons() {
   let i = 0;
   let all = true;
 
-  for(i = 0;i < allMembers.length;i += 1) {
-    if(!allMembers[i].checked) {
+  for (i = 0; i < allMembers.length; i += 1) {
+    if (!allMembers[i].checked) {
       all = false;
     }
   }
@@ -888,7 +1011,7 @@ function setStage(stage, finish = false) {
 
 function getNextRotation() {
   wheelRot += 120;
-  return wheelRot -120;
+  return wheelRot - 120;
 }
 
 function checkNameWheel() {
@@ -906,22 +1029,22 @@ function checkNameWheel() {
   let currentName = '';
 
   if (members.length > 0) {
-    currentName= members[0].innerHTML;
+    currentName = members[0].innerHTML;
   }
 
   let name = '';
   let i = 0;
-  
-  for(i = 0;i < letters.length;i += 1) {
+
+  for (i = 0; i < letters.length; i += 1) {
     name += letters[i].innerHTML;
   }
 
   if (!nameWheel.classList.contains('stage-0') && name != currentName) {
     setStage(0);
-    setTimeout(function() {
+    setTimeout(function () {
       setStage(1);
       newSpeaker();
-      setTimeout(function() {
+      setTimeout(function () {
         nameWheel.style.transitionDuration = `${(Math.floor(subtimer.full / 1000))}s`;
         setStage(2);
       }, 250);
@@ -944,13 +1067,13 @@ function update() {
 
   let currentTeamMember = "";
   if (timer.start != null) {
-    currentTeamMember = `${(team - teamRemaining) + 1} / ${team}`;
+    currentTeamMember = `${(team.length - teamRemaining) + 1} / ${team.length}`;
   }
   teamCount.innerHTML = currentTeamMember;
 
   if (timer.start != null) {
     settings.classList.add("lock");
-    if(timer.isFinished()) {
+    if (timer.isFinished()) {
       end.classList.add("hidden");
       subtimer.element.classList.remove("end");
       next.classList.add("hidden");
@@ -990,14 +1113,14 @@ function update() {
 
   checkNameWheel();
 
-  if (timer.isFinished()) {
+  if (timer.isFinished(true)) {
     setFinish();
   }
 }
 
 function startUpdates() {
-  setInterval(function() {
-    update(); 
+  setInterval(function () {
+    update();
   }, updateSpeed);
 }
 
@@ -1007,9 +1130,9 @@ function buildTeamSections(maintainOrder = false) {
   setSelectionButtons();
 }
 
-function setTeamName (name = null) {
-  if(!name) {
-    if(Memory.exists('standup_teamname')) {
+function setTeamName(name = null) {
+  if (!name) {
+    if (Memory.exists('standup_teamname')) {
       teamname = Memory.get('standup_teamname');
     } else {
       teamname = "Super Awesome Team"
@@ -1019,20 +1142,21 @@ function setTeamName (name = null) {
     Memory.set('standup_teamname', teamname);
   }
 
-  title.innerHTML = teamname + ' - Stand Up';
+  title.innerHTML = teamname;
 }
 
-function setOptions (save = false, memorySlot = 'standup_options') {
-  if(!save) {
-    if(Memory.exists(memorySlot)) {
+function setOptions(save = false, memorySlot = 'standup_options') {
+  if (!save) {
+    if (Memory.exists(memorySlot)) {
       options = Memory.getObject(memorySlot);
     }
   } else {
     Memory.setObject(memorySlot, options);
   }
-  for(let option in options) {
+  for (let option in options) {
     if (optionInputs.hasOwnProperty(option)) {
       optionInputs[option].checked = options[option];
+      checkFunc(optionInputs[option]);
     }
   }
 
@@ -1044,7 +1168,7 @@ function setOptions (save = false, memorySlot = 'standup_options') {
     const teamInputs = document.querySelectorAll('#team-members input');
     let i = 0;
 
-    for(i = 0;i < teamInputs.length;i += 1) {
+    for (i = 0; i < teamInputs.length; i += 1) {
       let value = false;
 
       console.log(options);
@@ -1069,10 +1193,13 @@ function getMemory() {
 
   optionInputs = {};
 
-  for(i = 0;i < optionElements.length;i+=1) {
+  for (i = 0; i < optionElements.length; i += 1) {
     optionInputs[optionElements[i].getAttribute('name')] = optionElements[i];
-    optionElements[i].addEventListener("input", function(e) {
+    optionElements[i].addEventListener("input", function (e) {
       options[e.target.getAttribute('name')] = e.target.checked;
+
+      checkFunc(e.target);
+
       setOptions(true);
     });
   }
@@ -1080,12 +1207,292 @@ function getMemory() {
   setOptions();
 }
 
+function checkFunc(element) {
+  if (element.getAttribute('func')) {
+    window[element.getAttribute('func')](element.checked);
+  }
+}
+
+function setRegister(value) {
+  if (value) {
+    tabs[0].classList.add("hidden");
+    tabs[1].classList.remove("hidden");
+    return;
+  }
+  tabs[0].classList.remove("hidden");
+  tabs[1].classList.add("hidden");
+}
+
+
+
+function handleReciept(input) {
+  console.log(input, input._getPayloadString());
+
+  let message = input._getPayloadString();
+
+  try {
+    message = JSON.parse(message);
+
+    let type = message.type.split('.');
+
+    console.log(type);
+    console.log(type[0] == 'Master');
+    if (type[0] != 'Master') {
+      return;
+    }
+
+    switch (type[1]) {
+      case 'Message':
+        console.log(message.body);
+        break;
+      case 'Check':
+        handleCheck(message.client, message.body);
+        break;
+      case 'Nomination':
+        handleNomination(message.client, message.body);
+        break;
+      case 'Register':
+        handleRegistration(message.client, message.body);
+        break;
+      case 'ControlAction':
+        handleControlAction(message.client, message.body);
+        break;
+      default:
+        console.log(`Could not handle message type: "${message.type}"`);
+    }
+  }
+  catch (err) {
+    console.log('FAIL!', error);
+  }
+
+}
+
+function handleCheck(sender, body) {
+  sendEvent({
+    target: sender,
+    status: 'exists'
+  }
+    , 'Client.CheckResponse');
+}
+
+function handleNomination(sender, nomination) {
+  const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
+  if (sender != currentSpeaker) {
+    return;
+  }
+  let target = document.getElementById(`team-button-${nomination}`);
+  target.click();
+
+  Page.flashMessage(`${sender} nominated ${nomination}`, 'success');
+}
+
+function handleControlAction(sender, action) {
+  const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
+  if (sender != currentSpeaker) {
+    return;
+  }
+  let targetId;
+
+  switch (action) {
+    case 'play':
+      targetId = 'pause-button';
+      break;
+    case 'pause':
+      targetId = 'pause-button';
+      break;
+    case 'skip':
+      targetId = 'next-button';
+      break;
+    case 'stop':
+      targetId = 'end-button';
+      break;
+  }
+
+  let target = document.getElementById(targetId);
+
+  if (target.classList.contains('hidden')) {
+    return;
+  }
+
+  if ((action == 'play' && !timer.isPaused()) || (action == 'pause' && timer.isPaused())) {
+    return;
+  }
+
+  target.click();
+  updateClients();
+}
+
+
+function handleRegistration(client, uniqueCode) {
+  if (register.hasOwnProperty(client)) {
+
+    if (register[client] == uniqueCode) {
+      sendEvent({
+        target: client,
+        status: 'success',
+        error: 'none'
+      }
+        , 'Client.RegisterResponse');
+
+      if (timer.hasStarted) {
+        updateClients();
+      }
+      return;
+    }
+
+    // If so, return an error
+    sendEvent({
+      target: client,
+      status: 'failure',
+      error: 'Name already exists in meeting'
+    }
+      , 'Client.RegisterResponse');
+    return;
+  }
+
+  if (!registrationOpen) {
+    sendEvent({
+      target: client,
+      status: 'failure',
+      error: 'Registration for this meeting is not currently open'
+    }, 'Client.RegisterResponse');
+    return;
+  }
+
+  if (restrictedNames.includes(client)) {
+    sendEvent({
+      target: client,
+      status: 'failure',
+      error: `"${client}" is a restricted name`
+    }, 'Client.RegisterResponse');
+    return;
+  }
+
+  for (let person in register) {
+    if (register[person] == uniqueCode) {
+      delete register[person];
+    }
+  }
+
+  //If not, add to new team list
+  register[client] = uniqueCode;
+
+  //Send registration success
+  sendEvent({
+    target: client,
+    status: 'success',
+    error: 'none'
+  }
+    , 'Client.RegisterResponse');
+
+  Page.flashMessage(`"${client}" has joined the meeting`, 'success')
+  updateRegister();
+  updateClients();
+}
+
+function updateRegister() {
+  console.log('UPDATING REGISTER');
+  console.log(register);
+  let registerMembers = [];
+  for (let member in register) {
+    console.log(member);
+    registerMembers.push(
+      `<div class="register-lozenge"><span class="fa fa-minus deregister remove" id="deregister-${member}"></span>${member}</div>`
+    );
+  }
+
+  registerDisplay.innerHTML = registerMembers.join('');
+  checkSetButton();
+}
+
+function updateClients() {
+  sendSpeaker();
+
+  sendMemberList();
+}
+
+function sendSpeaker() {
+  if (timer.isReady()) {
+    sendEvent('READY', 'Client.UpdateSpeaker');
+    return;
+  }
+
+  let currentSpeaker = document.querySelector('.team-button.active');
+
+  if (currentSpeaker == null) {
+    return;
+  }
+
+  sendEvent(currentSpeaker.innerHTML, 'Client.UpdateSpeaker');
+}
+
+function sendMemberList() {
+  let currentMemberList = document.getElementsByClassName('team-button');
+  let membersObject = [];
+  let i;
+
+  for (i = 0; i < currentMemberList.length; i += 1) {
+    membersObject.push({
+      name: currentMemberList[i].innerHTML,
+      active: currentMemberList[i].classList.contains('active'),
+      done: currentMemberList[i].classList.contains('done')
+    });
+  }
+
+  // console.log("TWELSK 1");
+
+  sendEvent({
+    buttons: {
+      play: timer.isPaused(),
+      pause: options.pausable && !timer.isPaused(),
+      skip: options.skipable,
+    },
+    members: membersObject
+  }, 'Client.MemberList');
+
+  // console.log("TWELSK 2");
+}
+
+function sendDeregister(removee) {
+  sendEvent({
+    deregister: register[removee],
+  }, 'Client.Deregister');
+
+  delete register[removee];
+
+  Page.flashMessage(`Team member \"${removee}\" removed from register`, 'success');
+
+  updateRegister();
+  checkSetButton();
+}
+
+function sendFinished() {
+  sendEvent({}, 'Client.TimerFinish');
+}
+
+function connectHandler() {
+  Page.flashMessage(`Successfully created meeting "${Comms.params.meetingCode}"`, 'success');
+  registerDisplay.setAttribute('code', Comms.params.meetingCode);
+  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}</span><span class="fa fa-qrcode qr-code-button"></span><span class="fa fa-clipboard copy-code">`;
+  meetingCodeDisplay.classList.add('connected');
+  registerDisplay.classList.add('connected');
+  setRegisterOpen(true);
+}
+
+function sendEvent(_body, _type = "Message") {
+  if (!options.useRegister) {
+    return;
+  }
+
+  Comms.sendEvent(_body, _type);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   buildTeamSections();
 
   setCollapser();
   setCollapseButton();
-  setForm();
+  setUpForm();
 
   getMemory();
 
@@ -1100,7 +1507,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setSetButton();
 
-  setUpFlash();
+  Page.setUpModals();
+
+  Page.setUpFlash();
 
   startUpdates();
 });

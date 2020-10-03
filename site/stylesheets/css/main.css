@@ -4,20 +4,14 @@ body {
 * {
   box-sizing: border-box;
   font-family: "Roboto"; }
+  *:focus {
+    outline: none; }
 
 header {
-  background: url("../../images/pattern.png");
+  background: linear-gradient(#000000CC, #000000CC), url("../../images/pattern.png");
   color: #fff;
   overflow: hidden;
   position: relative; }
-  header::before {
-    content: '';
-    background-color: #000000CC;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0; }
 
 .container {
   margin: 0 auto;
@@ -238,50 +232,53 @@ h1 {
   border: 330px solid transparent;
   border-bottom-color: #fff; }
 
-#flash-message {
-  color: #fff;
+#flash-message-holder {
   position: fixed;
   left: 50%;
-  top: 100px;
+  bottom: 10px;
   -webkit-transform: translateX(-50%);
   -moz-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
   -o-transform: translateX(-50%);
   transform: translateX(-50%);
-  border-radius: 10px;
-  padding: 20px;
-  display: block;
   max-width: 1080px;
-  width: calc(100% - 40px);
-  box-shadow: 0px 5px 8px #00000088;
-  pointer-events: none;
-  opacity: 1;
-  -webkit-transition: opacity 300ms;
-  -moz-transition: opacity 300ms;
-  -o-transition: opacity 300ms;
-  transition: opacity 300ms; }
-  #flash-message span {
-    display: none;
+  width: calc(100% - 40px); }
+  #flash-message-holder .flash-message {
     color: #fff;
-    float: left;
-    margin-right: 20px; }
-  #flash-message.success {
-    background-color: #0F6B05; }
-    #flash-message.success #icon-success {
-      display: block; }
-  #flash-message.notice {
-    background-color: #e9a351; }
-    #flash-message.notice #icon-notice {
-      display: block; }
-  #flash-message.error {
-    background-color: #650D1B; }
-    #flash-message.error #icon-error {
-      display: block; }
-  #flash-message.hidden {
-    opacity: 0; }
-  #flash-message::after {
-    content: attr(message);
-    font-weight: bold; }
+    border-radius: 10px;
+    padding: 20px;
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 8px #00000088;
+    pointer-events: none;
+    opacity: 1;
+    -webkit-transition: opacity 300ms;
+    -moz-transition: opacity 300ms;
+    -o-transition: opacity 300ms;
+    transition: opacity 300ms; }
+    #flash-message-holder .flash-message span {
+      display: none;
+      color: #fff;
+      float: left;
+      margin-right: 20px; }
+    #flash-message-holder .flash-message.success {
+      background-color: #0F6B05; }
+      #flash-message-holder .flash-message.success #icon-success {
+        display: block; }
+    #flash-message-holder .flash-message.notice {
+      background-color: #e9a351; }
+      #flash-message-holder .flash-message.notice #icon-notice {
+        display: block; }
+    #flash-message-holder .flash-message.error {
+      background-color: #650D1B; }
+      #flash-message-holder .flash-message.error #icon-error {
+        display: block; }
+    #flash-message-holder .flash-message.hidden {
+      opacity: 0; }
+    #flash-message-holder .flash-message::after {
+      content: attr(message);
+      font-weight: bold; }
 
 .header-button {
   height: 60px;
@@ -412,7 +409,7 @@ label {
   .select-strip label {
     padding: 5px;
     display: inline-block;
-    width: 70px;
+    width: auto;
     height: 70px;
     font-weight: normal;
     -webkit-transition: font-size 300ms, font-weight 300ms, -webkit-transform 300ms;
@@ -422,6 +419,8 @@ label {
     text-align: center;
     line-height: 70px;
     position: relative; }
+    .select-strip label.lock-width {
+      width: 70px; }
     .select-strip label.extra {
       width: 140px; }
     .select-strip label[data-info]::after {
@@ -440,7 +439,8 @@ label {
       -moz-transition: opacity 300ms;
       -o-transition: opacity 300ms;
       transition: opacity 300ms;
-      font-size: 12px; }
+      font-size: 12px;
+      z-index: 100; }
       .select-strip label[data-info]::after:empty {
         display: none; }
     .select-strip label[data-info]:hover::after {
@@ -620,6 +620,84 @@ input[type="text"] {
   background-color: #d9643e;
   color: #fff; }
 
+.tab-holder .tab-buttons .tab-button {
+  float: left;
+  padding: 5px;
+  background-color: #335fa3;
+  color: #d9643e;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 40px;
+  text-align: center; }
+
+.tab-holder .tab.hidden {
+  display: none; }
+
+#meeting-code {
+  padding: 10px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #888;
+  position: absolute;
+  left: 30px;
+  top: -18px;
+  opacity: 1;
+  -webkit-transition: background-color 300ms, opacity 300ms;
+  -moz-transition: background-color 300ms, opacity 300ms;
+  -o-transition: background-color 300ms, opacity 300ms;
+  transition: background-color 300ms, opacity 300ms; }
+  #meeting-code:empty {
+    opacity: 0;
+    pointer-events: none; }
+  #meeting-code.connected {
+    background-color: #335fa3; }
+  #meeting-code span {
+    margin-left: 10px;
+    cursor: pointer; }
+    #meeting-code span:hover {
+      color: #d9643e; }
+
+#register-display {
+  margin-top: 20px;
+  border: 2px solid #888;
+  border-radius: 10px;
+  padding: 20px;
+  -webkit-transition: border-color 300ms;
+  -moz-transition: border-color 300ms;
+  -o-transition: border-color 300ms;
+  transition: border-color 300ms; }
+  #register-display:not(.connected) ~ #close-registration {
+    display: none; }
+  #register-display.connected {
+    border-color: #fff; }
+    #register-display.connected.open {
+      border-color: #335fa3; }
+
+.register-lozenge {
+  background-color: #d9643e;
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 5px;
+  color: #fff;
+  margin: 5px; }
+  .register-lozenge.hidden {
+    display: none; }
+
+.register-holder {
+  position: relative; }
+  .register-holder .selection-button {
+    position: absolute;
+    right: 30px;
+    bottom: -18px;
+    color: #fff; }
+    .register-holder .selection-button#close-registration {
+      background-color: #650D1B; }
+
+#use-register {
+  position: absolute;
+  right: 20px; }
+
 .timer {
   border-radius: 50%;
   width: 500px;
@@ -793,7 +871,7 @@ input[type="text"] {
     font-size: 30px;
     color: #fff;
     cursor: pointer;
-    transition: color 300ms, background-color 300ms, text-decoration 300ms;
+    transition: color 300ms, background-color 300ms, text-decoration 300ms, opacity 300ms;
     position: relative; }
     .active-team-list .team-button::before {
       content: '';
@@ -846,3 +924,181 @@ input[type="text"] {
     .active-team-list#right-list .team-button::after {
       left: initial;
       right: calc(100% + 5px); }
+
+#main-display {
+  color: #d9643e;
+  opacity: 1;
+  -webkit-transition: color 300ms, -webkit-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms, border-color 300ms;
+  -moz-transition: color 300ms, -moz-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms, border-color 300ms;
+  -o-transition: color 300ms, -o-transform 300ms, opacity 300ms, font-size 300ms, padding 300ms, border-color 300ms;
+  transition: color 300ms, transform 300ms, opacity 300ms, font-size 300ms, padding 300ms, border-color 300ms;
+  margin: 0;
+  padding: 20px;
+  border: 2px solid #d9643e;
+  border-radius: 10px;
+  position: relative; }
+  #main-display.green {
+    color: #0F6B05;
+    font-size: 60px;
+    border-color: #0F6B05;
+    padding: 10px 20px; }
+  #main-display.yellow {
+    color: #e9a351;
+    border-color: #e9a351; }
+  #main-display.red {
+    color: #650D1B;
+    border-color: #650D1B; }
+  #main-display.orange {
+    color: #d9643e;
+    border-color: #d9643e; }
+  #main-display.blue {
+    color: #335fa3;
+    border-color: #335fa3; }
+  #main-display.hidden {
+    -webkit-transform: translateY(-300px);
+    -moz-transform: translateY(-300px);
+    -ms-transform: translateY(-300px);
+    -o-transform: translateY(-300px);
+    transform: translateY(-300px); }
+  #main-display span {
+    display: block;
+    -webkit-transition: -webkit-transform 500ms;
+    -moz-transition: -moz-transform 500ms;
+    -o-transition: -o-transform 500ms;
+    transition: transform 500ms; }
+  #main-display:before {
+    content: attr(label);
+    background-color: #fff;
+    position: absolute;
+    padding: 5px;
+    top: -17px;
+    font-size: 16px;
+    left: 10px;
+    overflow: hidden;
+    max-width: 250px;
+    white-space: nowrap;
+    -webkit-transition: color 300ms, max-width 300ms, padding 300ms;
+    -moz-transition: color 300ms, max-width 300ms, padding 300ms;
+    -o-transition: color 300ms, max-width 300ms, padding 300ms;
+    transition: color 300ms, max-width 300ms, padding 300ms; }
+  #main-display.change span {
+    -webkit-transform: translateX(100vw);
+    -moz-transform: translateX(100vw);
+    -ms-transform: translateX(100vw);
+    -o-transform: translateX(100vw);
+    transform: translateX(100vw); }
+  #main-display.reset span {
+    -webkit-transition: -webkit-transform 0;
+    -moz-transition: -moz-transform 0;
+    -o-transition: -o-transform 0;
+    transition: transform 0;
+    -webkit-transform: translateX(-100vw);
+    -moz-transform: translateX(-100vw);
+    -ms-transform: translateX(-100vw);
+    -o-transform: translateX(-100vw);
+    transform: translateX(-100vw); }
+  #main-display.change-label:before {
+    max-width: 0;
+    color: #fff; }
+
+#team-display {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  overflow: scroll;
+  max-width: 380px;
+  width: 100%; }
+  #team-display .team-button {
+    width: 100%;
+    margin: 10px 0; }
+  #team-display:not(.active) .team-button {
+    background-color: #888;
+    cursor: default;
+    opacity: 0.5; }
+
+.input-holder.hidden {
+  display: none; }
+
+#join-modal:before {
+  background-color: #00000055; }
+
+#join-modal .container {
+  background: linear-gradient(#000000CC, #000000CC), url("../../images/pattern.png");
+  color: #fff; }
+  #join-modal .container input[type="text"] {
+    background-color: transparent;
+    border: 2px solid #888;
+    text-align: center;
+    color: #888;
+    font-weight: bold;
+    font-size: 30px;
+    padding: 10px;
+    -webkit-transition: border-color 300ms, color 300ms;
+    -moz-transition: border-color 300ms, color 300ms;
+    -o-transition: border-color 300ms, color 300ms;
+    transition: border-color 300ms, color 300ms; }
+    #join-modal .container input[type="text"]:-ms-input-placeholder {
+      font-weight: normal;
+      text-transform: capitalize;
+      -webkit-transition: color 300ms;
+      -moz-transition: color 300ms;
+      -o-transition: color 300ms;
+      transition: color 300ms; }
+    #join-modal .container input[type="text"]:-moz-placeholder {
+      font-weight: normal;
+      text-transform: capitalize;
+      -webkit-transition: color 300ms;
+      -moz-transition: color 300ms;
+      -o-transition: color 300ms;
+      transition: color 300ms; }
+    #join-modal .container input[type="text"]::-moz-placeholder {
+      font-weight: normal;
+      text-transform: capitalize;
+      -webkit-transition: color 300ms;
+      -moz-transition: color 300ms;
+      -o-transition: color 300ms;
+      transition: color 300ms; }
+    #join-modal .container input[type="text"]::-webkit-input-placeholder {
+      font-weight: normal;
+      text-transform: capitalize;
+      -webkit-transition: color 300ms;
+      -moz-transition: color 300ms;
+      -o-transition: color 300ms;
+      transition: color 300ms; }
+    #join-modal .container input[type="text"]:focus {
+      border-color: #bbb;
+      color: #bbb; }
+      #join-modal .container input[type="text"]:focus:-ms-input-placeholder {
+        color: #bbb; }
+      #join-modal .container input[type="text"]:focus:-moz-placeholder {
+        color: #bbb; }
+      #join-modal .container input[type="text"]:focus::-moz-placeholder {
+        color: #bbb; }
+      #join-modal .container input[type="text"]:focus::-webkit-input-placeholder {
+        color: #bbb; }
+    #join-modal .container input[type="text"]:valid {
+      border-color: #fff;
+      color: #fff; }
+    #join-modal .container input[type="text"]#meeting-code-input {
+      text-transform: uppercase; }
+  #join-modal .container .button {
+    background-color: #335fa3; }
+
+#button-holder {
+  height: 110px; }
+  #button-holder .button-center {
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%); }
+    #button-holder .button-center .button {
+      float: left; }
+  #button-holder:not(.active) .button-center .button {
+    display: none; }

@@ -3,6 +3,8 @@
     <title>EDF RDDI Stand Up</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/css/main.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     
     <link rel="icon" type="image/x-icon" href="./favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -40,16 +42,33 @@
       </div>
       <div class="container collapser closed">
         <form id="input-form">
-          <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
-            <div class="select-strip" id="team-members">
+          <div class="tab-holder">
+            <div class="select-strip">
+              <input id="useRegister" type="checkbox" name="useRegister" class="option-checkbox option-control" func="setRegister"/>
+              <label id="use-register" for="useRegister" data-info="Do you want the team to use the client app?">Use Register</label>
             </div>
+            <div class="tab">
+              <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
+              <div class="select-strip" id="team-members"></div>
+            </div>
+            <div class="tab hidden">
+              
+              <label id="register-title">Register</label>
+              <div class="register-holder">
+                <div id="meeting-code" class="meeting-code"></div>
+                <div class="select-strip" id="register-display"></div>
+                <div id="open-registration" class="selection-button">Open Registration</div>
+                <div id="close-registration" class="selection-button hidden">Close Registration</div>
+              </div>
+            </div>
+          </div>
           <label>Duration</label>
           <div class="select-strip">
           <div>
             <input id="time-slider" type="range" name="duration" value="1" class="set-check" min="1" max="60"/>
 
             <input id="pp" type="checkbox" name="pp" class="option-checkbox option-control"/>
-            <label for="pp" data-info="Do you want the time to be per person?">pp</label>
+            <label for="pp" class="lock-width" data-info="Do you want the time to be per person?">pp</label>
           </div>
         
             <div id="duration-display"></div>
@@ -60,8 +79,8 @@
             <label for="pausable" data-info="Do you want a pause button on the timer?">Pause Button</label>
             <input id="skipable" type="checkbox" name="skipable" class="option-checkbox option-control"/>
             <label for="skipable" data-info="Do you want a skip button on the timer?">Skip Button</label>
-            <input id="collect-time" type="checkbox" name="pepTalk" class="option-checkbox option-control"/>
-            <label for="collect-time" data-info="Do you want to randomly select a pep talker at the end of the timer?">Pep Talk</label>
+            <input id="pep-talk" type="checkbox" name="pepTalk" class="option-checkbox option-control"/>
+            <label for="pep-talk" data-info="Do you want to randomly select a pep talker at the end of the timer?">Pep Talk</label>
             <input id="collect-time" type="checkbox" name="collectTime" class="option-checkbox option-control"/>
             <label for="collect-time" data-info="Do you want a team member's unused time to be split amongst everyone else?">Collect Time</label>
           </div>
@@ -127,7 +146,7 @@
     <div id="team-modal" class="modal hidden">
       
       <div class="container">
-        <span id="team-modal-close" class="fa fa-times"></span>
+        <span id="team-modal-close" class="fa fa-times modal-close"></span>
         <h2>Manage Team</h2>
         <input type="text" id="meeting-name-input" name="meeting-name" placeholder="Team name"/>
         <div id="team-editor">
@@ -144,7 +163,7 @@
 
     <div id="save-modal" class="modal hidden">
       <div class="container">
-        <span id="save-modal-close" class="fa fa-times"></span>
+        <span id="save-modal-close" class="fa fa-times modal-close"></span>
         <h2>Save Meeting</h2>
         <div id="save-editor">
           <div class="save-name-input">
@@ -158,7 +177,7 @@
 
     <div id="load-modal" class="modal hidden">
       <div class="container">
-        <span id="load-modal-close" class="fa fa-times"></span>
+        <span id="load-modal-close" class="fa fa-times modal-close"></span>
         <h2>Load Meeting</h2>
         <div id="load-editor">
           <div id="load-editor-list">
@@ -168,16 +187,21 @@
       </div>
     </div>
 
-    <div id="flash-message" class="hidden success" message="">
-      <span id="icon-success" class="fa fa-check"></span>
-      <span id="icon-notice" class="fa fa-exclamation-triangle"></span>
-      <span id="icon-error" class="fa fa-times"></span>
+    <div id="qr-code-modal" class="modal hidden">
+      <div class="container">
+        <span id="qr-code-modal-close" class="fa fa-times modal-close"></span>
+        <h2>Client QR</h2>
+        <img id="qr-code"/>
+      </div>
     </div>
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
     <script type="text/javascript" src="scripts/timer.js"></script>
     <script type="text/javascript" src="scripts/sound.js"></script>
     <script type="text/javascript" src="scripts/memory.js"></script>
+    <script type="text/javascript" src="scripts/comms.js"></script>
     <script type="text/javascript" src="scripts/team.js"></script>
+    <script type="text/javascript" src="scripts/page.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
   </body>
 </html>

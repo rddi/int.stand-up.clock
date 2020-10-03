@@ -185,7 +185,7 @@
     font-size:30px;
     color:$white;
     cursor:pointer;
-    transition: color $transTime, background-color $transTime, text-decoration $transTime;
+    transition: color $transTime, background-color $transTime, text-decoration $transTime, opacity $transTime;
     position:relative;
     &::before {
       content:'';

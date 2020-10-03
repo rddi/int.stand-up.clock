@@ -157,13 +157,16 @@ label {
   label {
     padding:5px;
     display:inline-block;
-    width:70px;
+    width:auto;
     height:70px;
     font-weight:normal;
     @include transition(font-size $transTime, font-weight $transTime, transform $transTime);
     text-align:center;
     line-height:70px;
     position:relative;
+    &.lock-width {
+      width:70px;
+    }
     &.extra {
       width:140px;
     }
@@ -182,6 +185,7 @@ label {
         pointer-events: none;
         @include transition(opacity $transTime);
         font-size:12px;
+        z-index:100;
         &:empty {
           display:none;
         }
@@ -394,4 +398,102 @@ input[type="text"] {
 #save-settings-button {
   background-color:$orange;
   color:$white;
+}
+
+.tab-holder {
+  .tab-buttons {
+    .tab-button {
+      float:left;
+      padding:5px;
+      background-color:$blue;
+      color:$orange;
+      border-radius:5px;
+      cursor: pointer;
+      width:40px;
+      text-align:center;
+    }
+  }
+  .tab {
+    &.hidden {
+      display:none;
+    }
+  }
+}
+
+#meeting-code {
+  padding:10px;
+  font-weight:bold;
+  color:$white;
+  border-radius:5px;
+  background-color:$grey;
+  position:absolute;
+  left:30px;
+  top:-18px;
+  opacity:1;
+  @include transition(background-color $transTime, opacity $transTime);
+  &:empty {
+    opacity:0;
+    pointer-events: none;
+  }
+  &.connected {
+    background-color:$blue;
+  }
+  span {
+    margin-left:10px;
+    cursor: pointer;
+    &:hover {
+      color:$orange;
+    }
+  }
+}
+
+#register-display {
+  margin-top:20px;
+  border:2px solid $grey;
+  border-radius:10px;
+  padding:20px;
+  @include transition(border-color $transTime);
+  
+  &:not(.connected){
+    &~#close-registration {
+    display:none;
+    }
+  }
+  &.connected {
+    border-color:$white;
+    &.open{
+      border-color:$blue;
+    }
+  }
+}
+
+.register-lozenge {
+  background-color:$orange;
+  display:inline-block;
+  padding:5px 15px;
+  border-radius:5px;
+  color:$white;
+  margin:5px;
+  &.hidden {
+    display:none;
+  }
+}
+
+.register-holder {
+  position:relative;
+  .selection-button {
+    position: absolute;
+    right: 30px;
+    bottom: -18px;
+    color:$white;
+    &#close-registration {
+      background-color:$red;
+      
+    }
+  }
+}
+
+#use-register {
+  position:absolute;
+  right:20px;
 }

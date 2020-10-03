@@ -1,0 +1,161 @@
+#main-display {
+  color:$orange;
+  opacity:1;
+  @include transition(color $transTime, transform $transTime, opacity $transTime, font-size $transTime, padding $transTime, border-color $transTime);
+  margin:0;
+  padding:20px;
+  border:2px solid $orange;
+  border-radius:10px;
+  position:relative;
+  &.green {
+    color:$green;
+    font-size:60px;
+    border-color:$green;
+    padding:10px 20px;
+  }
+  &.yellow {
+    color:$yellow;
+    border-color:$yellow;
+  }
+  &.red {
+    color:$red;
+    border-color:$red;
+  }
+  &.orange {
+    color:$orange;
+    border-color:$orange;
+  }
+  &.blue {
+    color:$blue;
+    border-color:$blue;
+  }
+  &.hidden {
+    @include transform(translateY(-300px));
+  }
+  span {
+    display:block;
+    @include transition(transform $slowTransTime);
+  }
+  &:before {
+    content:attr(label);
+    background-color:$white;
+    position:absolute;
+    padding:5px;
+    top: -17px;
+    font-size: 16px;
+    left: 10px;
+    overflow:hidden;
+    max-width:250px;
+    white-space: nowrap;
+    @include transition(color $transTime, max-width $transTime, padding $transTime);
+  }
+  &.change {
+    span {
+      @include transform(translateX(100vw));
+    }
+  }
+  &.reset {
+    span {
+      @include transition(transform 0);
+      @include transform(translateX(-100vw));
+    }
+  }
+  &.change-label {
+    &:before {
+      max-width:0;
+      color:$white;
+    }
+  }
+  
+}
+
+#team-display {
+  position: absolute;
+  left: 50%;
+  @include transform(translateX(-50%));
+  overflow:scroll;
+  max-width:380px;
+  width:100%;
+  .team-button {
+    width:100%;
+    margin:10px 0;
+  }
+  &:not(.active) {
+    .team-button {
+      background-color:$grey;
+      cursor:default;
+      opacity:0.5;
+    }
+  }
+}
+
+.input-holder {
+  &.hidden {
+    display:none;
+  }
+}
+
+
+#join-modal {
+  &:before {
+    background-color:$slightFade;
+  }
+  .container {
+    background: linear-gradient($fade, $fade), url('../../images/pattern.png');
+    color:$white;
+
+    input[type="text"] {
+      background-color:transparent;
+      border:2px solid $grey;
+      text-align:center;
+      color:$grey;
+      font-weight:bold;
+      font-size:30px;
+      padding:10px;
+      @include transition(border-color $transTime, color $transTime);
+      @include input-placeholder {
+        font-weight:normal;
+        text-transform:capitalize;
+        @include transition(color $transTime);
+      }
+      &:focus {
+        border-color:$lightgrey;
+        color:$lightgrey;
+        @include input-placeholder {
+          color:$lightgrey;
+        }
+      }
+      &:valid {
+        border-color:$white;
+        color:$white;
+      }
+      &#meeting-code-input {
+        text-transform:uppercase;
+      }
+    }
+
+    .button {
+      background-color:$blue;
+    }
+  }
+}
+
+#button-holder {
+  height:110px;
+  .button-center {
+    position:absolute;
+    left:50%;
+    @include transform(translateX(-50%));
+    .button {
+      float:left;
+
+    }
+  }
+  &:not(.active) {
+    .button-center {
+      .button {
+        display:none;
+      }
+    }
+  }
+}
