@@ -291,6 +291,7 @@ function setUpForm() {
 
   registerDisplay = document.getElementById('register-display');
   meetingCodeDisplay = document.getElementById('meeting-code');
+  qrMeetingCodeDisplay = document.getElementById('qr-meeting-code');
 
   qrCodeModal = document.getElementById('qr-code-modal');
   qrCode = document.getElementById('qr-code');
@@ -1475,6 +1476,7 @@ function connectHandler() {
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
   meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}</span><span class="fa fa-qrcode qr-code-button"></span><span class="fa fa-clipboard copy-code">`;
   meetingCodeDisplay.classList.add('connected');
+  qrMeetingCodeDisplay.innerHTML = Comms.params.meetingCode;
   registerDisplay.classList.add('connected');
   setRegisterOpen(true);
 }

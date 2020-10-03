@@ -35,6 +35,8 @@ const Comms = {
 
     // mqtt.username_pw_set(mqtt_username, mqtt_password);
 
+    mqtt.onConnectionLost = Comms.onConnectionLost;
+
     mqtt.onMessageArrived = Comms.onMessageArrived;
 
     Page.flashMessage(`Attempting to connect to channel`, 'notice');
@@ -70,6 +72,11 @@ const Comms = {
     if(typeof handleReciept === 'function') {
       handleReciept(message);
     }
+  },
+  onConnectionLost: function() {
+    Page.flashMessage('Connection lost','error');
+    Page.flashMessage('Retrying connection','notice');
+    Comms.MQTTConnect(Comms.params.meetingCode);
   },
   isConnected: function() {
     return Comms.params.connected;

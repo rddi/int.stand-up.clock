@@ -420,7 +420,7 @@ input[type="text"] {
   }
 }
 
-#meeting-code {
+.meeting-code {
   padding:10px;
   font-weight:bold;
   color:$white;
@@ -444,6 +444,10 @@ input[type="text"] {
     &:hover {
       color:$orange;
     }
+  }
+  &#qr-meeting-code {
+    top:15px;
+    left:15px;
   }
 }
 
