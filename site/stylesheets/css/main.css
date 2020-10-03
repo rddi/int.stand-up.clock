@@ -633,7 +633,7 @@ input[type="text"] {
 .tab-holder .tab.hidden {
   display: none; }
 
-#meeting-code {
+.meeting-code {
   padding: 10px;
   font-weight: bold;
   color: #fff;
@@ -647,16 +647,19 @@ input[type="text"] {
   -moz-transition: background-color 300ms, opacity 300ms;
   -o-transition: background-color 300ms, opacity 300ms;
   transition: background-color 300ms, opacity 300ms; }
-  #meeting-code:empty {
+  .meeting-code:empty {
     opacity: 0;
     pointer-events: none; }
-  #meeting-code.connected {
+  .meeting-code.connected {
     background-color: #335fa3; }
-  #meeting-code span {
+  .meeting-code span {
     margin-left: 10px;
     cursor: pointer; }
-    #meeting-code span:hover {
+    .meeting-code span:hover {
       color: #d9643e; }
+  .meeting-code#qr-meeting-code {
+    top: 15px;
+    left: 15px; }
 
 #register-display {
   margin-top: 20px;
