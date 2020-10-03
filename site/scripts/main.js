@@ -62,7 +62,7 @@ let timer,
   restrictedNames = ['READY'];
 
 function setCollapser() {
-  collapser = document.getElementsByClassName("collapser")[0]; 
+  collapser = document.getElementsByClassName("collapser")[0];
   title = document.getElementById("title");
 }
 
@@ -75,7 +75,7 @@ function openLoadModal() {
 
   let list = [];
 
-  for(let index in loads) {
+  for (let index in loads) {
     let name = decodeURI(index.slice(5));
 
     list.push(`<div class="load-option"><span class="fa fa-minus remove-save remove" id="remove-${index}"></span><div class='load-selection selection-button' data-loadname="${index}">${name}</div></div>`);
@@ -91,20 +91,20 @@ function setSetButton() {
   saveButton = document.getElementById("save-button");
   loadButton = document.getElementById("load-button");
 
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     if (e.target.classList.contains('set-check')) {
       checkSetButton();
     }
   });
 
-  saveButton.addEventListener('click', function(e) {
+  saveButton.addEventListener('click', function (e) {
     if (e.target.classList.contains('disabled')) {
       return;
     }
     openSaveModal();
   });
 
-  loadButton.addEventListener('click', function(e) {
+  loadButton.addEventListener('click', function (e) {
     if (e.target.classList.contains('disabled')) {
       return;
     }
@@ -119,18 +119,18 @@ function checkSetButton() {
   let i = 0;
   let memSet = false;
 
-  if(options.useRegister) {
+  if (options.useRegister) {
     if (Object.keys(register).length > 0) {
       memSet = true;
     }
   } else {
-    for(i = 0;i < checked.length;i += 1) {
+    for (i = 0; i < checked.length; i += 1) {
       if (checked[i].id.match(/member-/g)) {
         memSet = true;
       }
     }
   }
-  
+
   if (memSet) {
     setButton.classList.remove('disabled');
     saveButton.classList.remove('disabled');
@@ -159,7 +159,7 @@ function toggleTray(close = false) {
 
 function setCollapseButton() {
   settings = document.getElementById("settings-button");
-  settings.addEventListener("click", function(e) {
+  settings.addEventListener("click", function (e) {
     e.preventDefault();
     toggleTray(timer.start != null);
   });
@@ -177,7 +177,7 @@ function setSpeaker() {
 function mintosentence(time) {
   let quantifier = 'minute';
 
-  if (stringtoms(time) <  60000) {
+  if (stringtoms(time) < 60000) {
     time = time.split(':')[1];
     quantifier = 'second';
   }
@@ -189,7 +189,7 @@ function mintosentence(time) {
 
 function showEndScreen() {
   let endTime = mintosentence(timer.getElapsedTimer());
-  let avgTime  = mintosentence(mstomin(timer.getElapsedMilliseconds() / team.length));
+  let avgTime = mintosentence(mstomin(timer.getElapsedMilliseconds() / team.length));
   document.getElementById('end-time').innerHTML = endTime;
   document.getElementById('avg-time').innerHTML = `${avgTime}s`;
   endScreen.classList.remove("hidden");
@@ -200,25 +200,25 @@ function setSelectionButtons() {
   deselectAll = document.getElementById("deselect-all");
   edit = document.getElementById("edit-team");
 
-  selectAll.addEventListener("click", function(e) {
+  selectAll.addEventListener("click", function (e) {
     const allMembers = document.getElementsByClassName("team-member");
     let i = 0;
 
-    for(i = 0;i < allMembers.length;i += 1) {
+    for (i = 0; i < allMembers.length; i += 1) {
       allMembers[i].checked = true;
     }
   });
 
-  deselectAll.addEventListener("click", function(e) {
+  deselectAll.addEventListener("click", function (e) {
     const allMembers = document.getElementsByClassName("team-member");
     let i = 0;
 
-    for(i = 0;i < allMembers.length;i += 1) {
+    for (i = 0; i < allMembers.length; i += 1) {
       allMembers[i].checked = false;
     }
   });
 
-  edit.addEventListener("click", function(e) {
+  edit.addEventListener("click", function (e) {
     openTeamModal();
   });
 }
@@ -245,7 +245,7 @@ function closeLoadModal() {
 
 function updateDurationDisplay(_value = null) {
   value = timeSlider.value;
-  
+
   let perperson = `in total`;
   if (options.pp) {
     perperson = `per person`;
@@ -260,19 +260,19 @@ function setRegisterOpen(_open = true) {
   }
   registrationOpen = _open;
 
-  if (!_open){
+  if (!_open) {
     openRegistrationButton.classList.remove("hidden");
     closeRegistrationButton.classList.add("hidden");
     registerDisplay.classList.remove("open");
     if (wasOpen) {
-      Page.flashMessage('Registration closed','notice');
+      Page.flashMessage('Registration closed', 'notice');
     }
   } else {
     openRegistrationButton.classList.add("hidden");
     closeRegistrationButton.classList.remove("hidden");
     registerDisplay.classList.add("open");
     if (Comms.isConnected()) {
-      Page.flashMessage('Registration open','success');
+      Page.flashMessage('Registration open', 'success');
     }
   }
 }
@@ -297,46 +297,46 @@ function setUpForm() {
 
   tabs = document.getElementsByClassName('tab');
 
-  document.addEventListener('click', function(e){
+  document.addEventListener('click', function (e) {
     if (!e.target.classList.contains('deregister')) {
       return;
     }
 
     const removee = e.target.id.split('deregister-')[1];
-  
+
     sendDeregister(removee);
   });
 
-  meetingCodeDisplay.addEventListener('click', function(e) {
+  meetingCodeDisplay.addEventListener('click', function (e) {
     let clientURL = `${window.location.href}client?meeting=${Comms.params.meetingCode}`;
-    if(e.target.classList.contains('copy-code')) {
+    if (e.target.classList.contains('copy-code')) {
 
       var clipboard = document.createElement("textarea");
       clipboard.value = clientURL;
-      
+
       // Avoid scrolling to bottom
       clipboard.style.top = "0";
       clipboard.style.left = "0";
       clipboard.style.position = "fixed";
-    
+
       document.body.appendChild(clipboard);
       clipboard.focus();
       clipboard.select();
-      
+
       document.execCommand('copy');
 
       document.body.removeChild(clipboard);
 
-      Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`,'success');  
+      Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`, 'success');
     } else if (e.target.classList.contains('qr-code-button')) {
       qrCode.setAttribute('src', `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${clientURL}`);
       qrCodeModal.classList.remove('hidden');
     }
-    
+
   });
 
-  openRegistrationButton.addEventListener('click', function(e) {
-    if(Comms.params.meetingCode == null) { 
+  openRegistrationButton.addEventListener('click', function (e) {
+    if (Comms.params.meetingCode == null) {
       // Set meeting code
       Comms.params.meetingCode = Page.generateCode(4, true, true);
 
@@ -351,15 +351,15 @@ function setUpForm() {
     setRegisterOpen(true);
   });
 
-  closeRegistrationButton.addEventListener('click', function(e) {
+  closeRegistrationButton.addEventListener('click', function (e) {
     setRegisterOpen(false);
   });
 
-  timeSlider.addEventListener('input', function(e) {
+  timeSlider.addEventListener('input', function (e) {
     updateDurationDisplay(e.target.value);
   });
 
-  form.addEventListener("submit", function(e) {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (setButton.classList.contains('disabled')) {
       return;
@@ -369,12 +369,12 @@ function setUpForm() {
       duration: timeSlider.value
     };
 
-    for (let i = 0;i < results.length;i++) {                                                                                                                               
+    for (let i = 0; i < results.length; i++) {
       formData[results[i].getAttribute('name')] = results[i].value;
     }
 
     team = [];
-    
+
     const activeList = document.getElementsByClassName('active-team-list');
     activeList[0].innerHTML = '';
     activeList[1].innerHTML = '';
@@ -383,11 +383,11 @@ function setUpForm() {
     let flipflop = false;
 
     if (options.useRegister) {
-      for(let member in register) {
+      for (let member in register) {
         team.push(member);
       }
     } else {
-      Object.keys(formData).forEach(function(item) {
+      Object.keys(formData).forEach(function (item) {
         let breakdown = item.split("-");
 
         if (breakdown.shift() === "team") {
@@ -396,9 +396,9 @@ function setUpForm() {
       });
     }
 
-    for(i = 0;i < team.length;i += 1) {
+    for (i = 0; i < team.length; i += 1) {
       target = 0;
-      if(flipflop) {
+      if (flipflop) {
         target = 1;
       }
       flipflop = !flipflop;
@@ -459,10 +459,10 @@ function mintoms(min) {
 
 function mstomin(ms) {
   let minutes = Math.floor(ms / 1000 / 60);
-  let paddingM = (minutes < 10)?"0":"";
+  let paddingM = (minutes < 10) ? "0" : "";
   let seconds = Math.floor((ms / 1000) % 60);
-  let paddingS = (seconds < 10)?"0":"";
-  
+  let paddingS = (seconds < 10) ? "0" : "";
+
   return `${paddingM}${minutes}:${paddingS}${seconds}`;
 }
 
@@ -505,7 +505,7 @@ function setupTimers() {
   pepDisplay = document.getElementById("pep-display");
   teamCount = document.getElementById("team-remaining");
 
-  pause.addEventListener("click", function(e) {
+  pause.addEventListener("click", function (e) {
     let symbols = pause.getElementsByClassName('fa');
     let i = 0;
     if (timer.isPaused() || timer.isReady()) {
@@ -517,7 +517,7 @@ function setupTimers() {
         subtimer.startTimer();
         playSound('next');
       }
-      for(i=0;i<symbols.length;i += 1) {
+      for (i = 0; i < symbols.length; i += 1) {
         symbols[i].classList.remove('fa-play');
         symbols[i].classList.add('fa-pause');
       }
@@ -526,7 +526,7 @@ function setupTimers() {
     } else {
       timer.pauseTimer();
       subtimer.pauseTimer();
-      for(i=0;i<symbols.length;i += 1) {
+      for (i = 0; i < symbols.length; i += 1) {
         symbols[i].classList.remove('fa-pause');
         symbols[i].classList.add('fa-play');
       }
@@ -537,18 +537,18 @@ function setupTimers() {
     sendMemberList();
   });
 
-  end.addEventListener("click", function(e) {
+  end.addEventListener("click", function (e) {
     timer.stopTimer();
     subtimer.stopTimer();
     sendMemberList();
   });
 
-  next.addEventListener("click", function(e) {
+  next.addEventListener("click", function (e) {
     randomSelectMember();
     subtimerRebuild();
   });
 
-  reset.addEventListener("click", function(e) {
+  reset.addEventListener("click", function (e) {
     timer.resetTimer();
     subtimer.resetTimer();
   });
@@ -587,8 +587,21 @@ function newSpeaker() {
 
   nameWheel.innerHTML = '';
 
-  const name = currentSpeaker.split('');
+  let name = currentSpeaker.split('');
+
+  const regex = '(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32-\ude3a]|[\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])';
+
   let i = 0;
+
+  let matched = [...currentSpeaker.matchAll(regex)];
+
+  for(i = matched.length - 1;i >= 0;i -= 1) {
+    let index = matched[i].index;
+    name[index] = matched[i][0];
+    name.splice(index+1,1);
+  }
+
+  
 
   let nameElement = '';
   let type = 'even';
@@ -603,7 +616,7 @@ function newSpeaker() {
   offset = 0 - offset; //-3
 
 
-  for(i = 0;i < name.length;i += 1) {
+  for (i = 0; i < name.length; i += 1) {
     nameElement += `<div class="letter" id="${type}${offset}">${name[i]}</div>`;
     offset += 1;
   }
@@ -617,7 +630,7 @@ function randomSelectMember() {
   let i = 0;
   let remaining = [];
 
-  for (i = 0;i < members.length;i += 1) {
+  for (i = 0; i < members.length; i += 1) {
     if (members[i].classList.contains('done')) {
       continue;
     }
@@ -683,7 +696,7 @@ function spinPep(time, stop = false) {
     playSound('found');
   } else {
     playSound('spin');
-    setTimeout(function(e) {
+    setTimeout(function (e) {
       spinPep(time + (time * 0.1), time > 500);
     }, time);
   }
@@ -691,15 +704,15 @@ function spinPep(time, stop = false) {
 function setUpTeamMembers(maintainOrder = false) {
   let randomOrder = randomiseArray(TeamMembers.getList());
   let i = 0;
-  
+
   if (maintainOrder && localTeamMembers != []) {
-    for(i = localTeamMembers.length - 1;i>=0;i-=1) {
+    for (i = localTeamMembers.length - 1; i >= 0; i -= 1) {
       if (!randomOrder.includes(localTeamMembers[i])) {
         localTeamMembers.splice(i, 1);
       }
     }
 
-    for(i = 0;i < randomOrder.length;i += 1) {
+    for (i = 0; i < randomOrder.length; i += 1) {
       if (!localTeamMembers.includes(randomOrder[i])) {
         localTeamMembers.push(randomOrder[i]);
       }
@@ -709,11 +722,11 @@ function setUpTeamMembers(maintainOrder = false) {
   } else {
     localTeamMembers = randomOrder;
   }
-  
+
   let memberList = [];
   let editList = [];
-  
-  for (i = 0;i < randomOrder.length;i += 1){
+
+  for (i = 0; i < randomOrder.length; i += 1) {
     memberList.push(`<input id="member-${i}" type="checkbox" class="team-member set-check" name="team-${randomOrder[i]}" />
     <label for="member-${i}">${randomOrder[i]}</label>`);
     editList.push(`<div class="edit-team-member"><span class="fa fa-minus remove-member remove" id="remove-${randomOrder[i]}"></span>${randomOrder[i]}</div>`);
@@ -741,10 +754,10 @@ function setUpTeamEdit() {
   teamModalList = document.getElementById('team-editor-list');
   teamModalInput = document.getElementById('member-name-input');
 
-  teamModalInput.addEventListener('keypress', function(e) {
+  teamModalInput.addEventListener('keypress', function (e) {
     let value = teamModalInput.value;
 
-    if(!['Enter', ' '].includes(e.key)) {
+    if (!['Enter', ' '].includes(e.key)) {
       return;
     }
 
@@ -752,7 +765,7 @@ function setUpTeamEdit() {
 
     teamModalInput.value = '';
 
-    if (['',' '].includes(value)) {
+    if (['', ' '].includes(value)) {
       return;
     }
 
@@ -763,7 +776,7 @@ function setUpTeamEdit() {
     buildTeamSections(true);
   });
 
-  document.addEventListener('click', function(e){
+  document.addEventListener('click', function (e) {
     if (!e.target.classList.contains('remove-member')) {
       return;
     }
@@ -778,7 +791,7 @@ function setUpTeamEdit() {
 
   let close = document.getElementById('team-modal-close');
 
-  close.addEventListener('click', function(e) {
+  close.addEventListener('click', function (e) {
     closeTeamModal();
   });
 }
@@ -793,40 +806,40 @@ function setUpSaveLoad() {
   let saveClose = document.getElementById('save-modal-close');
   let loadClose = document.getElementById('load-modal-close');
 
-  saveClose.addEventListener('click', function(e) {
+  saveClose.addEventListener('click', function (e) {
     closeSaveModal();
   });
-  loadClose.addEventListener('click', function(e) {
+  loadClose.addEventListener('click', function (e) {
     closeLoadModal();
   });
 
-  saveSettingsButton.addEventListener('click', function(e) {
-    if(saveInput.value == '') { // More robust 
+  saveSettingsButton.addEventListener('click', function (e) {
+    if (saveInput.value == '') { // More robust 
       Page.flashMessage(`Please provide a name for the meeting profile`, 'notice');
       return;
     }
 
-    let name =  encodeURI(saveInput.value)
+    let name = encodeURI(saveInput.value)
 
     let fullOptions = options;
 
     fullOptions.duration = timeSlider.value;
-    
+
     const selected = document.querySelectorAll('#team-members input:checked');
     let i = 0;
 
     fullOptions.team = [];
 
-    for(i = 0;i < selected.length;i += 1) {
+    for (i = 0; i < selected.length; i += 1) {
       fullOptions.team.push(selected[i].name);
     }
 
     let message = `Meeting profile saved as \"${saveInput.value}\"`;
 
-    if(Memory.exists(`save-${name}`)) {
+    if (Memory.exists(`save-${name}`)) {
       message = `Meeting profile replaced existing \"${saveInput.value}\"`;
     }
-    
+
     Memory.setObject(`save-${name}`, fullOptions);
 
     Page.flashMessage(message, 'success');
@@ -836,7 +849,7 @@ function setUpSaveLoad() {
     closeSaveModal();
   });
 
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     if (!e.target.classList.contains('load-selection')) {
       return;
     }
@@ -851,23 +864,23 @@ function setUpSaveLoad() {
     closeLoadModal();
   });
 
-  document.addEventListener('click', function(e){
+  document.addEventListener('click', function (e) {
     if (!e.target.classList.contains('remove-save')) {
       return;
     }
 
     const removee = e.target.id.split('remove-')[1];
-    
+
     Memory.remove(removee);
 
-    Page.flashMessage(`Meeting profile \"${e.target.parentNode.getElementsByClassName('load-selection')[0].innerHTML}\" successfully removed`,'success');
+    Page.flashMessage(`Meeting profile \"${e.target.parentNode.getElementsByClassName('load-selection')[0].innerHTML}\" successfully removed`, 'success');
 
     e.target.parentNode.parentNode.removeChild(e.target.parentNode);
   });
 }
 
 function recordTime(element) {
-    element.setAttribute('data-time', subtimer.getElapsedTimer());
+  element.setAttribute('data-time', subtimer.getElapsedTimer());
 }
 
 function setUpTeamButtons() {
@@ -875,20 +888,20 @@ function setUpTeamButtons() {
   let i = 0;
   let j = 0;
 
-    for(i=0;i<teamButtons.length;i+=1) {
-      
-    teamButtons[i].addEventListener("click", function(e) {
+  for (i = 0; i < teamButtons.length; i += 1) {
+
+    teamButtons[i].addEventListener("click", function (e) {
       if (timer.isPaused() || event.target.classList.contains('active') || event.target.classList.contains('done')) {
         return;
       }
 
       if (timer.start === null) {
-        for(j = 0;j < teamButtons.length;j += 1) {
+        for (j = 0; j < teamButtons.length; j += 1) {
           teamButtons[j].classList.remove('active');
         };
       } else {
-        for(j = 0;j < teamButtons.length;j += 1) {
-          if(teamButtons[j].classList.contains('active')) {
+        for (j = 0; j < teamButtons.length; j += 1) {
+          if (teamButtons[j].classList.contains('active')) {
             recordTime(teamButtons[j]);
             teamButtons[j].classList.add('done');
             teamButtons[j].classList.remove('active');
@@ -909,7 +922,7 @@ function setUpTeamButtons() {
 
 function checkTimes() {
   const teamMembers = document.getElementsByClassName("team-button");
-  
+
   let i = 0;
   let fastest = stringtoms(teamMembers[i].getAttribute('data-time'));
   let slowest = stringtoms(teamMembers[i].getAttribute('data-time'));
@@ -917,7 +930,7 @@ function checkTimes() {
   let lowScores = [];
 
 
-  for (i = 0;i < teamMembers.length;i += 1) {
+  for (i = 0; i < teamMembers.length; i += 1) {
     const thisTime = stringtoms(teamMembers[i].getAttribute('data-time'));
 
     if (thisTime === fastest) {
@@ -935,16 +948,16 @@ function checkTimes() {
     }
   }
 
-  for (i = 0;i < highScores.length;i += 1) {
+  for (i = 0; i < highScores.length; i += 1) {
     teamMembers[highScores[i]].classList.add('time-green');
   }
 
-  for (i = 0;i < lowScores.length;i += 1) {
+  for (i = 0; i < lowScores.length; i += 1) {
     teamMembers[lowScores[i]].classList.add('time-red');
   }
 }
 
-function fadeTimer(){
+function fadeTimer() {
   subtimer.fade();
   timer.fade();
 }
@@ -972,8 +985,8 @@ function manageSelectionButtons() {
   let i = 0;
   let all = true;
 
-  for(i = 0;i < allMembers.length;i += 1) {
-    if(!allMembers[i].checked) {
+  for (i = 0; i < allMembers.length; i += 1) {
+    if (!allMembers[i].checked) {
       all = false;
     }
   }
@@ -998,7 +1011,7 @@ function setStage(stage, finish = false) {
 
 function getNextRotation() {
   wheelRot += 120;
-  return wheelRot -120;
+  return wheelRot - 120;
 }
 
 function checkNameWheel() {
@@ -1016,22 +1029,22 @@ function checkNameWheel() {
   let currentName = '';
 
   if (members.length > 0) {
-    currentName= members[0].innerHTML;
+    currentName = members[0].innerHTML;
   }
 
   let name = '';
   let i = 0;
-  
-  for(i = 0;i < letters.length;i += 1) {
+
+  for (i = 0; i < letters.length; i += 1) {
     name += letters[i].innerHTML;
   }
 
   if (!nameWheel.classList.contains('stage-0') && name != currentName) {
     setStage(0);
-    setTimeout(function() {
+    setTimeout(function () {
       setStage(1);
       newSpeaker();
-      setTimeout(function() {
+      setTimeout(function () {
         nameWheel.style.transitionDuration = `${(Math.floor(subtimer.full / 1000))}s`;
         setStage(2);
       }, 250);
@@ -1060,7 +1073,7 @@ function update() {
 
   if (timer.start != null) {
     settings.classList.add("lock");
-    if(timer.isFinished()) {
+    if (timer.isFinished()) {
       end.classList.add("hidden");
       subtimer.element.classList.remove("end");
       next.classList.add("hidden");
@@ -1106,8 +1119,8 @@ function update() {
 }
 
 function startUpdates() {
-  setInterval(function() {
-    update(); 
+  setInterval(function () {
+    update();
   }, updateSpeed);
 }
 
@@ -1117,9 +1130,9 @@ function buildTeamSections(maintainOrder = false) {
   setSelectionButtons();
 }
 
-function setTeamName (name = null) {
-  if(!name) {
-    if(Memory.exists('standup_teamname')) {
+function setTeamName(name = null) {
+  if (!name) {
+    if (Memory.exists('standup_teamname')) {
       teamname = Memory.get('standup_teamname');
     } else {
       teamname = "Super Awesome Team"
@@ -1129,18 +1142,18 @@ function setTeamName (name = null) {
     Memory.set('standup_teamname', teamname);
   }
 
-  title.innerHTML = teamname + ' - Stand Up';
+  title.innerHTML = teamname;
 }
 
-function setOptions (save = false, memorySlot = 'standup_options') {
-  if(!save) {
-    if(Memory.exists(memorySlot)) {
+function setOptions(save = false, memorySlot = 'standup_options') {
+  if (!save) {
+    if (Memory.exists(memorySlot)) {
       options = Memory.getObject(memorySlot);
     }
   } else {
     Memory.setObject(memorySlot, options);
   }
-  for(let option in options) {
+  for (let option in options) {
     if (optionInputs.hasOwnProperty(option)) {
       optionInputs[option].checked = options[option];
       checkFunc(optionInputs[option]);
@@ -1155,7 +1168,7 @@ function setOptions (save = false, memorySlot = 'standup_options') {
     const teamInputs = document.querySelectorAll('#team-members input');
     let i = 0;
 
-    for(i = 0;i < teamInputs.length;i += 1) {
+    for (i = 0; i < teamInputs.length; i += 1) {
       let value = false;
 
       console.log(options);
@@ -1180,11 +1193,11 @@ function getMemory() {
 
   optionInputs = {};
 
-  for(i = 0;i < optionElements.length;i+=1) {
+  for (i = 0; i < optionElements.length; i += 1) {
     optionInputs[optionElements[i].getAttribute('name')] = optionElements[i];
-    optionElements[i].addEventListener("input", function(e) {
+    optionElements[i].addEventListener("input", function (e) {
       options[e.target.getAttribute('name')] = e.target.checked;
-      
+
       checkFunc(e.target);
 
       setOptions(true);
@@ -1201,7 +1214,7 @@ function checkFunc(element) {
 }
 
 function setRegister(value) {
-  if(value) {
+  if (value) {
     tabs[0].classList.add("hidden");
     tabs[1].classList.remove("hidden");
     return;
@@ -1217,7 +1230,7 @@ function handleReciept(input) {
 
   let message = input._getPayloadString();
 
-  try{
+  try {
     message = JSON.parse(message);
 
     let type = message.type.split('.');
@@ -1227,7 +1240,7 @@ function handleReciept(input) {
     if (type[0] != 'Master') {
       return;
     }
-    
+
     switch (type[1]) {
       case 'Message':
         console.log(message.body);
@@ -1251,7 +1264,7 @@ function handleReciept(input) {
   catch (err) {
     console.log('FAIL!', error);
   }
-  
+
 }
 
 function handleCheck(sender, body) {
@@ -1259,7 +1272,7 @@ function handleCheck(sender, body) {
     target: sender,
     status: 'exists'
   }
-  ,'Client.CheckResponse');
+    , 'Client.CheckResponse');
 }
 
 function handleNomination(sender, nomination) {
@@ -1280,7 +1293,7 @@ function handleControlAction(sender, action) {
   }
   let targetId;
 
-  switch(action) {
+  switch (action) {
     case 'play':
       targetId = 'pause-button';
       break;
@@ -1318,8 +1331,8 @@ function handleRegistration(client, uniqueCode) {
         target: client,
         status: 'success',
         error: 'none'
-        }
-        ,'Client.RegisterResponse');
+      }
+        , 'Client.RegisterResponse');
 
       if (timer.hasStarted) {
         updateClients();
@@ -1332,8 +1345,8 @@ function handleRegistration(client, uniqueCode) {
       target: client,
       status: 'failure',
       error: 'Name already exists in meeting'
-      }
-      ,'Client.RegisterResponse');
+    }
+      , 'Client.RegisterResponse');
     return;
   }
 
@@ -1355,7 +1368,7 @@ function handleRegistration(client, uniqueCode) {
     return;
   }
 
-  for(let person in register) {
+  for (let person in register) {
     if (register[person] == uniqueCode) {
       delete register[person];
     }
@@ -1370,7 +1383,7 @@ function handleRegistration(client, uniqueCode) {
     status: 'success',
     error: 'none'
   }
-    ,'Client.RegisterResponse');
+    , 'Client.RegisterResponse');
 
   Page.flashMessage(`"${client}" has joined the meeting`, 'success')
   updateRegister();
@@ -1381,7 +1394,7 @@ function updateRegister() {
   console.log('UPDATING REGISTER');
   console.log(register);
   let registerMembers = [];
-  for(let member in register) {
+  for (let member in register) {
     console.log(member);
     registerMembers.push(
       `<div class="register-lozenge"><span class="fa fa-minus deregister remove" id="deregister-${member}"></span>${member}</div>`
@@ -1418,7 +1431,7 @@ function sendMemberList() {
   let membersObject = [];
   let i;
 
-  for(i = 0;i < currentMemberList.length;i+=1) {
+  for (i = 0; i < currentMemberList.length; i += 1) {
     membersObject.push({
       name: currentMemberList[i].innerHTML,
       active: currentMemberList[i].classList.contains('active'),
@@ -1466,11 +1479,11 @@ function connectHandler() {
   setRegisterOpen(true);
 }
 
-function sendEvent(_body, _type="Message") {
-  if(!options.useRegister) {
+function sendEvent(_body, _type = "Message") {
+  if (!options.useRegister) {
     return;
   }
-   
+
   Comms.sendEvent(_body, _type);
 }
 
