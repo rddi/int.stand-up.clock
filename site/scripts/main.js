@@ -59,7 +59,10 @@ let timer,
   meetingCodeDisplay,
   qrCodeModal,
   qrCode,
-  restrictedNames = ['READY'];
+  restrictedNames = ['READY'],
+  wordOptions = {},
+  wordVotes = 0,
+  voteCount;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0];
@@ -505,6 +508,7 @@ function setupTimers() {
   pep = document.getElementById("pep-button");
   pepDisplay = document.getElementById("pep-display");
   teamCount = document.getElementById("team-remaining");
+  voteCount = document.getElementById("vote-count");
 
   pause.addEventListener("click", function (e) {
     let symbols = pause.getElementsByClassName('fa');
@@ -695,6 +699,19 @@ function spinPep(time, stop = false) {
     pepDisplay.classList.add('green');
     pep.classList.remove('spinning');
     playSound('found');
+
+    wordOptions = {
+      "Clarence" : 0,
+      "Opthripants" : 0,
+      "Loosprintic" : 0
+    };
+
+    let pepTalker = {
+      pepper: pepDisplay.innerHTML,
+      words: Object.keys(wordOptions)
+    }
+
+    Comms.sendEvent(pepTalker, 'Client.PepTalker');
   } else {
     playSound('spin');
     setTimeout(function (e) {
@@ -1258,6 +1275,9 @@ function handleReciept(input) {
       case 'ControlAction':
         handleControlAction(message.client, message.body);
         break;
+      case 'WordVote':
+        handleWordVote(mesage.client, message.body);
+        break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
     }
@@ -1321,6 +1341,33 @@ function handleControlAction(sender, action) {
 
   target.click();
   updateClients();
+}
+
+function handleWordVote(client, word) {
+  if (!register.hasOwnProperty(client) || !wordOptions.hasOwnProperty(word)) {
+    return;
+  }
+
+  wordOptions[word] = wordOptions[word] + 1;
+  wordVotes += 1;
+  voteCount.innerHTML = `${wordVotes}/${team.length - 1} voted`;
+
+  if (wordVotes == team.length - 1) { // May need a better system or maybe a shortcut
+    voteCount.innerHTML = getVoteResults();
+  }
+}
+
+function getVoteResults() {
+
+  let currentWord = ['ERROR', -1];
+
+  for(let option in wordOptions) {
+    if (wordOptions[option] > currentWord[1]) {
+      currentWord = [option, wordOptions[option]];
+    }
+  }
+
+  return currentWord[0];
 }
 
 

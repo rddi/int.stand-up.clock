@@ -13,6 +13,8 @@ let meetingCodeInput,
   skipButton,
   stopButton,
   meetingSearch,
+  wordChoiceButtonHolder,
+  wordChoiceElement,
   searchTimeout = 10000;
 
 function setUpForm() {
@@ -21,6 +23,10 @@ function setUpForm() {
   meetingCodeInput = document.getElementById('meeting-code-input');
   clientNameInput = document.getElementById('client-name-input');
   joinButton = document.getElementById('join-button');
+
+  wordChoiceElement = document.getElementById('word-choice');
+  wordChoiceButtonHolder = document.getElementById('word-choice-button-holder');
+  
 
   let queryParams = Page.getQueryParams();
 
@@ -121,6 +127,12 @@ function handleReciept(input) {
           return;
         }
         handleUpdateSpeaker(message.body);
+        break;
+      case 'PepTalker':
+        if (!Comms.params.registered) {
+          return;
+        }
+        handlePepTalk(message.body);
         break;
       case 'MemberList':
         if (!Comms.params.registered) {
@@ -278,12 +290,55 @@ function handleUpdateSpeaker(speaker) {
   setMainDisplay(currentSpeaker, state, 'Current Speaker');
 }
 
+function handlePepTalk(pepTalker){
+  let state = 2;
+  let wordChoice = true;
+
+  if (pepTalker.pepper = Comms.params.clientName) {
+    state = 3;
+    wordChoise = false;
+    teamDisplay.classList.add('active');
+    buttonHolder.classList.add('active');
+  }
+
+  setMainDisplay(currentSpeaker, state, 'Pep Talker');
+
+  if (!wordChoice) {
+    return;
+  }
+
+  setWordChoice(pepTalker.words);
+}
+
 function handleMemberList(_memberList) {
   memberList = _memberList.members;
 
   buildButtons(_memberList.buttons);
 
   buildMemberElements();
+}
+
+function setWordChoice(list) {
+  let i = 0;
+
+  let wordButtons = [];
+
+  for(i = 0;i < list.length;i += 1) {
+    wordButtons.push(`<div class="word-button" data-word="${list[i]}">${list[i]}</div>`);
+  }
+
+  wordChoiceButtonHolder.innerHTML = wordButtons.join('');
+
+  let wordButtonElements = document.getElementsByClassName('word-button');
+
+  for(i = 0;i < wordButtonElements;i+=1) {
+    wordButtonElements[i].addEventListener('click', function(e) {
+      Comms.sendEvent(e.target.getAttribute('data-word'), 'Master.WordVote');
+      wordChoiceElement.classList.add('hidden');
+    });
+  }
+
+  wordChoiceElement.classList.remove('hidden');
 }
 
 function buildButtons(buttons) {
