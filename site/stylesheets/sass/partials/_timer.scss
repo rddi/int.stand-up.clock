@@ -62,6 +62,7 @@
   #end-button,
   #next-button,
   #pep-button,
+  #close-vote-button,
   #reset-button {
     color:$orange;
     position:absolute;
@@ -76,7 +77,8 @@
     background-color:$red;
   }
 
-  #pep-button {
+  #pep-button,
+  #close-vote-button {
     background-color:$orange;
     color:$white;
     &.spinning {
@@ -173,83 +175,84 @@
   color:$yellow;
 }
 
-.active-team-list {
-  position:absolute;
-
-  .team-button {
-    margin:10px;
-    padding:5px 15px;
-    border-radius:5px;
-    background-color: $blue;
-    text-align:center;
-    font-size:30px;
+.word-button,
+.team-button {
+  margin:10px;
+  padding:5px 15px;
+  border-radius:5px;
+  background-color: $blue;
+  text-align:center;
+  font-size:30px;
+  color:$white;
+  cursor:pointer;
+  transition: color $transTime, background-color $transTime, text-decoration $transTime, opacity $transTime;
+  position:relative;
+  &::before {
+    content:'';
+    width:0;
+    height:3px;
+    background-color:$white;
+    display:block;
+    position:absolute;
+    top:50%;
+    left:15px;
+    transition:background-color $transTime, width $transTime;
+  }
+  &.active {
+    background-color:$orange;
     color:$white;
-    cursor:pointer;
-    transition: color $transTime, background-color $transTime, text-decoration $transTime, opacity $transTime;
-    position:relative;
+  }
+  &.done {
+    // text-decoration:line-through;
+    color:$orange; 
     &::before {
-      content:'';
-      width:0;
-      height:3px;
-      background-color:$white;
-      display:block;
-      position:absolute;
-      top:50%;
-      left:15px;
-      transition:background-color $transTime, width $transTime;
-    }
-    &.active {
+      width:calc(100% - 30px);
       background-color:$orange;
-      color:$white;
     }
-    &.done {
-      // text-decoration:line-through;
-      color:$orange; 
+    &::after {
+      content:attr(data-time);
+      left: calc(100% + 5px);
+      position:absolute;
+    }
+    &.time-red {
+      background-color:$red;
+      color:$white;
+      text-decoration:none;
       &::before {
-        width:calc(100% - 30px);
-        background-color:$orange;
+        background-color:$white;
       }
       &::after {
-        content:attr(data-time);
-        left: calc(100% + 5px);
-        position:absolute;
+        color:$red;
       }
-      &.time-red {
-        background-color:$red;
-        color:$white;
-        text-decoration:none;
-        &::before {
-          background-color:$white;
-        }
-        &::after {
-          color:$red;
-        }
+    }
+    &.time-green {
+      background-color:$green !important;
+      color:$white;
+      text-decoration:none;
+      &::before {
+        background-color:$white;
       }
-      &.time-green {
-        background-color:$green !important;
-        color:$white;
-        text-decoration:none;
-        &::before {
-          background-color:$white;
-        }
-        &::after {
-          color:$green !important;
-        }
+      &::after {
+        color:$green !important;
       }
-      &.highlight {
-        background-color:$yellow !important;
-        color:$black !important;
-        &::before {
-          opacity:0;
-        }
+    }
+    &.highlight {
+      background-color:$yellow !important;
+      color:$black !important;
+      &::before {
+        opacity:0;
       }
     }
   }
+}
+
+.active-team-list {
+  position:absolute;
 
   &#left-list {
     left:0;
   }
-
+  
   &#right-list {
     left:initial;
     right:0;

@@ -97,8 +97,6 @@ function setUpButtons() {
 
     let control = e.target.parentElement.getAttribute("action");
 
-    // buttonHolder.classList.remove('active');
-
     Comms.sendEvent(control,
       'Master.ControlAction');
   });
@@ -185,7 +183,7 @@ function handleReciept(input) {
     }
   }
   catch (err) {
-    console.log('FAIL!', error);
+    console.log('FAIL!', err);
   }
   
 }
@@ -294,11 +292,9 @@ function handlePepTalk(pepTalker){
   let state = 2;
   let wordChoice = true;
 
-  if (pepTalker.pepper = Comms.params.clientName) {
+  if (pepTalker.pepper == Comms.params.clientName) {
     state = 3;
-    wordChoise = false;
-    teamDisplay.classList.add('active');
-    buttonHolder.classList.add('active');
+    wordChoice = false;
   }
 
   setMainDisplay(currentSpeaker, state, 'Pep Talker');
@@ -331,10 +327,12 @@ function setWordChoice(list) {
 
   let wordButtonElements = document.getElementsByClassName('word-button');
 
-  for(i = 0;i < wordButtonElements;i+=1) {
+  for(i = 0;i < wordButtonElements.length;i += 1) {
     wordButtonElements[i].addEventListener('click', function(e) {
-      Comms.sendEvent(e.target.getAttribute('data-word'), 'Master.WordVote');
+      let vote = e.target.getAttribute('data-word');
+      Comms.sendEvent(vote, 'Master.WordVote');
       wordChoiceElement.classList.add('hidden');
+      Page.flashMessage(`You have voted for "${vote}"`, 'success');
     });
   }
 

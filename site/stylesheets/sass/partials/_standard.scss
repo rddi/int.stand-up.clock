@@ -156,6 +156,33 @@ h1 {
   }
 }
 
+#vote-count {
+  position:absolute;
+  left:50%;
+  top:170px;
+  transform:translate(-50%, -50%);
+  color:$orange;
+  font-size:40px;
+  font-weight:bold;
+  width:100%;
+  text-align:center;
+  &:empty {
+    display:none;
+  }
+  &.green {
+    color:$green;
+  }
+
+
+  #close-vote-button {
+    background-color:$red;
+    color:$white;
+    display: inline-block;
+    transform: translateY(-5px);
+    padding: 10px;
+  }
+}
+
 #name-wheel {
   width: $nameWheelSize;
   position: absolute;

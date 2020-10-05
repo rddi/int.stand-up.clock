@@ -311,7 +311,7 @@ function setUpForm() {
     sendDeregister(removee);
   });
 
-  meetingCodeDisplay.addEventListener('click', function (e) {
+  document.addEventListener('click', function (e) {
     let clientURL = `${window.location.href}client?meeting=${Comms.params.meetingCode}`;
     if (e.target.classList.contains('copy-code')) {
 
@@ -559,9 +559,17 @@ function setupTimers() {
   });
 
   pep.addEventListener("click", function (e) {
-    pep.classList.add("spinning");
-    pepDisplay.classList.remove("green");
+    pep.classList.add('spinning');
+    pepDisplay.classList.remove('green');
+    voteCount.classList.remove('green');
     spinPep(100);
+  });
+
+  document.addEventListener("click", function(e) {
+    if (e.target.id != 'close-vote-button') {
+      return;
+    }
+    getVoteResults();
   });
 }
 
@@ -672,7 +680,7 @@ function randomSelectPep() {
 
   pepDisplay.innerHTML = members[selection].innerHTML;
 
-  members[selection].classList.add("highlight")
+  members[selection].classList.add("highlight");
 }
 
 function randomiseArray(input) {
@@ -692,6 +700,12 @@ function randomiseArray(input) {
   return output;
 }
 
+function sentenceCase(input) {
+  let output = input[0].toUpperCase() + input.slice(1);
+  
+  return output;
+}
+
 function spinPep(time, stop = false) {
   randomSelectPep();
 
@@ -699,19 +713,31 @@ function spinPep(time, stop = false) {
     pepDisplay.classList.add('green');
     pep.classList.remove('spinning');
     playSound('found');
+    showVotes(0);
 
-    wordOptions = {
-      "Clarence" : 0,
-      "Opthripants" : 0,
-      "Loosprintic" : 0
-    };
+    function sendPepInfo() {
+      let result = JSON.parse(this.response);
 
-    let pepTalker = {
-      pepper: pepDisplay.innerHTML,
-      words: Object.keys(wordOptions)
+      wordOptions = {};
+      wordVotes = 0;
+
+      for(i=0;i<result.length;i+=1) {
+        wordOptions[sentenceCase(result[i])] = 0;
+      }
+
+      let pepTalker = {
+        pepper: pepDisplay.innerHTML,
+        words: Object.keys(wordOptions)
+      }
+  
+      Comms.sendEvent(pepTalker, 'Client.PepTalker');
     }
 
-    Comms.sendEvent(pepTalker, 'Client.PepTalker');
+    let xhr = new XMLHttpRequest();
+
+    xhr.addEventListener('load', sendPepInfo);
+    xhr.open('GET', 'https://random-word-api.herokuapp.com/word?number=3');
+    xhr.send();
   } else {
     playSound('spin');
     setTimeout(function (e) {
@@ -1276,14 +1302,14 @@ function handleReciept(input) {
         handleControlAction(message.client, message.body);
         break;
       case 'WordVote':
-        handleWordVote(mesage.client, message.body);
+        handleWordVote(message.client, message.body);
         break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
     }
   }
   catch (err) {
-    console.log('FAIL!', error);
+    console.log('FAIL!', err);
   }
 
 }
@@ -1349,16 +1375,22 @@ function handleWordVote(client, word) {
   }
 
   wordOptions[word] = wordOptions[word] + 1;
-  wordVotes += 1;
-  voteCount.innerHTML = `${wordVotes}/${team.length - 1} voted`;
 
-  if (wordVotes == team.length - 1) { // May need a better system or maybe a shortcut
-    voteCount.innerHTML = getVoteResults();
+  wordVotes += 1;
+  showVotes(wordVotes);
+
+  Page.flashMessage(`${client} has voted`, 'success');
+
+  if (wordVotes == team.length - 1) {
+    getVoteResults();
   }
 }
 
-function getVoteResults() {
+function showVotes(votes) {
+  voteCount.innerHTML = `${votes}/${team.length - 1} voted <a id="close-vote-button" class="button hidden"><span class="fa fa-times"></span></a>`;
+}
 
+function getVoteResults() {
   let currentWord = ['ERROR', -1];
 
   for(let option in wordOptions) {
@@ -1367,7 +1399,10 @@ function getVoteResults() {
     }
   }
 
-  return currentWord[0];
+  voteCount.innerHTML = `"${currentWord[0]}"`;
+  voteCount.classList.add('green');
+
+  playSound('found');
 }
 
 
@@ -1382,7 +1417,7 @@ function handleRegistration(client, uniqueCode) {
       }
         , 'Client.RegisterResponse');
 
-      if (timer.hasStarted) {
+      if (timer.hasStarted()) {
         updateClients();
       }
       return;
@@ -1487,8 +1522,6 @@ function sendMemberList() {
     });
   }
 
-  // console.log("TWELSK 1");
-
   sendEvent({
     buttons: {
       play: timer.isPaused(),
@@ -1497,8 +1530,6 @@ function sendMemberList() {
     },
     members: membersObject
   }, 'Client.MemberList');
-
-  // console.log("TWELSK 2");
 }
 
 function sendDeregister(removee) {
@@ -1521,9 +1552,9 @@ function sendFinished() {
 function connectHandler() {
   Page.flashMessage(`Successfully created meeting "${Comms.params.meetingCode}"`, 'success');
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
-  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}</span><span class="fa fa-qrcode qr-code-button"></span><span class="fa fa-clipboard copy-code">`;
+  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<span class="fa fa-qrcode qr-code-button"></span><span class="fa fa-clipboard copy-code"></span>`;
   meetingCodeDisplay.classList.add('connected');
-  qrMeetingCodeDisplay.innerHTML = Comms.params.meetingCode;
+  qrMeetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<span class="fa fa-clipboard copy-code"></span>`;
   registerDisplay.classList.add('connected');
   setRegisterOpen(true);
 }

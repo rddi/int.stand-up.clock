@@ -134,6 +134,27 @@ h1 {
   #pep-display.green {
     color: #0F6B05; }
 
+#vote-count {
+  position: absolute;
+  left: 50%;
+  top: 170px;
+  transform: translate(-50%, -50%);
+  color: #d9643e;
+  font-size: 40px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center; }
+  #vote-count:empty {
+    display: none; }
+  #vote-count.green {
+    color: #0F6B05; }
+  #vote-count #close-vote-button {
+    background-color: #650D1B;
+    color: #fff;
+    display: inline-block;
+    transform: translateY(-5px);
+    padding: 10px; }
+
 #name-wheel {
   width: 660px;
   position: absolute;
@@ -754,6 +775,7 @@ input[type="text"] {
   .timer #end-button,
   .timer #next-button,
   .timer #pep-button,
+  .timer #close-vote-button,
   .timer #reset-button {
     color: #d9643e;
     position: absolute;
@@ -771,10 +793,12 @@ input[type="text"] {
   .timer #reset-button {
     color: #888;
     background-color: #650D1B; }
-  .timer #pep-button {
+  .timer #pep-button,
+  .timer #close-vote-button {
     background-color: #d9643e;
     color: #fff; }
-    .timer #pep-button.spinning {
+    .timer #pep-button.spinning,
+    .timer #close-vote-button.spinning {
       display: none; }
   .timer:not(.pause) #pause-button:not(.paused) {
     display: none; }
@@ -863,62 +887,77 @@ input[type="text"] {
   font-size: 40px;
   color: #e9a351; }
 
+.word-button,
+.team-button {
+  margin: 10px;
+  padding: 5px 15px;
+  border-radius: 5px;
+  background-color: #335fa3;
+  text-align: center;
+  font-size: 30px;
+  color: #fff;
+  cursor: pointer;
+  transition: color 300ms, background-color 300ms, text-decoration 300ms, opacity 300ms;
+  position: relative; }
+  .word-button::before,
+  .team-button::before {
+    content: '';
+    width: 0;
+    height: 3px;
+    background-color: #fff;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transition: background-color 300ms, width 300ms; }
+  .word-button.active,
+  .team-button.active {
+    background-color: #d9643e;
+    color: #fff; }
+  .word-button.done,
+  .team-button.done {
+    color: #d9643e; }
+    .word-button.done::before,
+    .team-button.done::before {
+      width: calc(100% - 30px);
+      background-color: #d9643e; }
+    .word-button.done::after,
+    .team-button.done::after {
+      content: attr(data-time);
+      left: calc(100% + 5px);
+      position: absolute; }
+    .word-button.done.time-red,
+    .team-button.done.time-red {
+      background-color: #650D1B;
+      color: #fff;
+      text-decoration: none; }
+      .word-button.done.time-red::before,
+      .team-button.done.time-red::before {
+        background-color: #fff; }
+      .word-button.done.time-red::after,
+      .team-button.done.time-red::after {
+        color: #650D1B; }
+    .word-button.done.time-green,
+    .team-button.done.time-green {
+      background-color: #0F6B05 !important;
+      color: #fff;
+      text-decoration: none; }
+      .word-button.done.time-green::before,
+      .team-button.done.time-green::before {
+        background-color: #fff; }
+      .word-button.done.time-green::after,
+      .team-button.done.time-green::after {
+        color: #0F6B05 !important; }
+    .word-button.done.highlight,
+    .team-button.done.highlight {
+      background-color: #e9a351 !important;
+      color: #000 !important; }
+      .word-button.done.highlight::before,
+      .team-button.done.highlight::before {
+        opacity: 0; }
+
 .active-team-list {
   position: absolute; }
-  .active-team-list .team-button {
-    margin: 10px;
-    padding: 5px 15px;
-    border-radius: 5px;
-    background-color: #335fa3;
-    text-align: center;
-    font-size: 30px;
-    color: #fff;
-    cursor: pointer;
-    transition: color 300ms, background-color 300ms, text-decoration 300ms, opacity 300ms;
-    position: relative; }
-    .active-team-list .team-button::before {
-      content: '';
-      width: 0;
-      height: 3px;
-      background-color: #fff;
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: 15px;
-      transition: background-color 300ms, width 300ms; }
-    .active-team-list .team-button.active {
-      background-color: #d9643e;
-      color: #fff; }
-    .active-team-list .team-button.done {
-      color: #d9643e; }
-      .active-team-list .team-button.done::before {
-        width: calc(100% - 30px);
-        background-color: #d9643e; }
-      .active-team-list .team-button.done::after {
-        content: attr(data-time);
-        left: calc(100% + 5px);
-        position: absolute; }
-      .active-team-list .team-button.done.time-red {
-        background-color: #650D1B;
-        color: #fff;
-        text-decoration: none; }
-        .active-team-list .team-button.done.time-red::before {
-          background-color: #fff; }
-        .active-team-list .team-button.done.time-red::after {
-          color: #650D1B; }
-      .active-team-list .team-button.done.time-green {
-        background-color: #0F6B05 !important;
-        color: #fff;
-        text-decoration: none; }
-        .active-team-list .team-button.done.time-green::before {
-          background-color: #fff; }
-        .active-team-list .team-button.done.time-green::after {
-          color: #0F6B05 !important; }
-      .active-team-list .team-button.done.highlight {
-        background-color: #e9a351 !important;
-        color: #000 !important; }
-        .active-team-list .team-button.done.highlight::before {
-          opacity: 0; }
   .active-team-list#left-list {
     left: 0; }
   .active-team-list#right-list {
