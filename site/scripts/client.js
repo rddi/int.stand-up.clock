@@ -289,11 +289,16 @@ function handleUpdateSpeaker(speaker) {
 }
 
 function handlePepTalk(pepTalker){
+  console.log(pepTalker);
   let state = 2;
   let wordChoice = true;
 
   if (pepTalker.pepper == Comms.params.clientName) {
     state = 3;
+    wordChoice = false;
+  }
+
+  if (pepTalker.words == null) {
     wordChoice = false;
   }
 

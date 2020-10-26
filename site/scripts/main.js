@@ -713,10 +713,16 @@ function spinPep(time, stop = false) {
     pepDisplay.classList.add('green');
     pep.classList.remove('spinning');
     playSound('found');
-    showVotes(0);
 
-    function sendPepInfo() {
-      let result = JSON.parse(this.response);
+    let pepTalker = {
+      pepper: pepDisplay.innerHTML
+    }
+
+
+    if (options.wordVote) {
+      showVotes(0);
+
+      let result = getRandomWords(3);
 
       wordOptions = {};
       wordVotes = 0;
@@ -725,19 +731,10 @@ function spinPep(time, stop = false) {
         wordOptions[sentenceCase(result[i])] = 0;
       }
 
-      let pepTalker = {
-        pepper: pepDisplay.innerHTML,
-        words: Object.keys(wordOptions)
-      }
-  
-      Comms.sendEvent(pepTalker, 'Client.PepTalker');
+      pepTalker.words = Object.keys(wordOptions);
     }
 
-    let xhr = new XMLHttpRequest();
-
-    xhr.addEventListener('load', sendPepInfo);
-    xhr.open('GET', 'https://random-word-api.herokuapp.com/word?number=3');
-    xhr.send();
+    Comms.sendEvent(pepTalker, 'Client.PepTalker');
   } else {
     playSound('spin');
     setTimeout(function (e) {
@@ -1240,9 +1237,25 @@ function getMemory() {
   for (i = 0; i < optionElements.length; i += 1) {
     optionInputs[optionElements[i].getAttribute('name')] = optionElements[i];
     optionElements[i].addEventListener("input", function (e) {
-      options[e.target.getAttribute('name')] = e.target.checked;
+
+      let name  = e.target.getAttribute('name');
+
+      options[name] = e.target.checked;
 
       checkFunc(e.target);
+
+      let linkType = 'data-linked-off';
+
+      if (e.target.checked) {
+        linkType = 'data-linked-on';
+      }
+
+      for(let option in optionInputs) {
+        if (optionInputs[option].getAttribute(linkType) == name) {
+          optionInputs[option].checked = e.target.checked;
+          options[option] = e.target.checked;
+        }
+      }
 
       setOptions(true);
     });
@@ -1254,6 +1267,23 @@ function getMemory() {
 function checkFunc(element) {
   if (element.getAttribute('func')) {
     window[element.getAttribute('func')](element.checked);
+  }
+}
+
+function checkOptionLinks() {
+  let types = [
+    'data-linked-off',
+    'data-linked-on'
+  ];
+
+  for(let option in optionInputs) {
+    for(i=0;i<types.length;i+=1) {
+      let link = optionInputs[option].getAttribute(types[i]);
+      if (link != undefined && optionInputs[link].checked == (types[i] == 'data-linked-on')) {
+        optionInputs[option].checked = optionInputs[link].checked;
+        options[option] = optionInputs[link].checked;
+      }
+    }
   }
 }
 
@@ -1370,7 +1400,7 @@ function handleControlAction(sender, action) {
 }
 
 function handleWordVote(client, word) {
-  if (!register.hasOwnProperty(client) || !wordOptions.hasOwnProperty(word)) {
+  if (!options.wordVote || !register.hasOwnProperty(client) || !wordOptions.hasOwnProperty(word)) {
     return;
   }
 
@@ -1417,7 +1447,7 @@ function handleRegistration(client, uniqueCode) {
       }
         , 'Client.RegisterResponse');
 
-      if (timer.hasStarted()) {
+      if (timer.hasStarted() && !timer.isFinished()) {
         updateClients();
       }
       return;

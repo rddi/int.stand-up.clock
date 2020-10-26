@@ -62,7 +62,6 @@
   #end-button,
   #next-button,
   #pep-button,
-  #close-vote-button,
   #reset-button {
     color:$orange;
     position:absolute;
@@ -77,8 +76,7 @@
     background-color:$red;
   }
 
-  #pep-button,
-  #close-vote-button {
+  #pep-button {
     background-color:$orange;
     color:$white;
     &.spinning {

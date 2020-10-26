@@ -775,7 +775,6 @@ input[type="text"] {
   .timer #end-button,
   .timer #next-button,
   .timer #pep-button,
-  .timer #close-vote-button,
   .timer #reset-button {
     color: #d9643e;
     position: absolute;
@@ -793,12 +792,10 @@ input[type="text"] {
   .timer #reset-button {
     color: #888;
     background-color: #650D1B; }
-  .timer #pep-button,
-  .timer #close-vote-button {
+  .timer #pep-button {
     background-color: #d9643e;
     color: #fff; }
-    .timer #pep-button.spinning,
-    .timer #close-vote-button.spinning {
+    .timer #pep-button.spinning {
       display: none; }
   .timer:not(.pause) #pause-button:not(.paused) {
     display: none; }

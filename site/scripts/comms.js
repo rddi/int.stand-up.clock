@@ -35,7 +35,7 @@ const Comms = {
 
     // mqtt.username_pw_set(mqtt_username, mqtt_password);
 
-    mqtt.onConnectionLost = Comms.onConnectionLost;
+    // mqtt.onConnectionLost = Comms.onConnectionLost;
 
     mqtt.onMessageArrived = Comms.onMessageArrived;
 
@@ -74,6 +74,9 @@ const Comms = {
     }
   },
   onConnectionLost: function() {
+    if (!Comms.params.connected) {
+      return;
+    }
     Page.flashMessage('Connection lost','error');
     Page.flashMessage('Retrying connection','notice');
     Comms.MQTTConnect(Comms.params.meetingCode);
@@ -82,12 +85,12 @@ const Comms = {
     return Comms.params.connected;
   },
   disconnect: function() {
-    mqtt.disconnect();
     Comms.params.channel = null;
     Comms.params.registered = false;
     Page.flashMessage(`You have been disconnected`, 'error');
     Comms.params.meetingCode = null;
     Comms.params.connected = false;
+    mqtt.disconnect();
   },
   broadcastMessage:function(_message) {
     let message = new Paho.MQTT.Message(_message);

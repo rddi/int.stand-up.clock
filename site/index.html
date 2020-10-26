@@ -79,10 +79,12 @@
             <label for="pausable" data-info="Do you want a pause button on the timer?">Pause Button</label>
             <input id="skipable" type="checkbox" name="skipable" class="option-checkbox option-control"/>
             <label for="skipable" data-info="Do you want a skip button on the timer?">Skip Button</label>
-            <input id="pep-talk" type="checkbox" name="pepTalk" class="option-checkbox option-control"/>
-            <label for="pep-talk" data-info="Do you want to randomly select a pep talker at the end of the timer?">Pep Talk</label>
             <input id="collect-time" type="checkbox" name="collectTime" class="option-checkbox option-control"/>
             <label for="collect-time" data-info="Do you want a team member's unused time to be split amongst everyone else?">Collect Time</label>
+            <input id="pep-talk" type="checkbox" name="pepTalk" class="option-checkbox option-control" data-linked-on="wordVote"/>
+            <label for="pep-talk" data-info="Do you want to randomly select a pep talker at the end of the timer?">Pep Talk</label>
+            <input id="word-vote" type="checkbox" name="wordVote" class="option-checkbox option-control" data-linked-off="pepTalk"/>
+            <label for="word-vote" data-info="Do you want the team to vote on a word for the pep talk?">Word Vote</label>
           </div>
           <input id="set-button" type="submit" value="Set" class="button disabled"></input>
           <div class="save-load-section">
@@ -204,6 +206,7 @@
     <script type="text/javascript" src="scripts/comms.js"></script>
     <script type="text/javascript" src="scripts/team.js"></script>
     <script type="text/javascript" src="scripts/page.js"></script>
+    <script type="text/javascript" src="scripts/words.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
   </body>
 </html>
