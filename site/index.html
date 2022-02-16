@@ -2,8 +2,9 @@
   <head>
     <title>EDF RDDI Stand Up</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/css/main.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     
     <link rel="icon" type="image/x-icon" href="./favicon/favicon.ico" />
@@ -22,16 +23,16 @@
           <div id="mute-button" class="header-button">
             <input id="mute-input" type="checkbox" name="mute" class="option-control"/>
             <label class="icon" for="mute-input">
-              <span class="fa fa-volume-up"></span>
-              <span class="fa fa-volume-off"></span>
+              <i class="fa fa-volume-up"></i>
+              <i class="fa fa-volume-off"></i>
             </label>
           </div>
         </div>
         <div class="right">
           <a class="header-button" id="settings-button">
             <div class="icon">
-              <span class="fa fa-cog"></span>
-              <span class="fa fa-lock"></span>
+              <i class="fa fa-gear"></i>
+              <i class="fa fa-lock"></i>
             </div>
             <div class="corner t"></div>
             <div class="corner r"></div>
@@ -48,7 +49,7 @@
               <label id="use-register" for="useRegister" data-info="Do you want the team to use the client app?">Use Register</label>
             </div>
             <div class="tab">
-              <label>Team<div id="edit-team" class="edit-button"><span class="fa fa-pencil-square-o"></div></label>
+              <label>Team<div id="edit-team" class="edit-button"><i class="fa fa-pen-to-square"></i></div></label>
               <div class="select-strip" id="team-members"></div>
             </div>
             <div class="tab hidden">
@@ -85,6 +86,8 @@
             <label for="pep-talk" data-info="Do you want to randomly select a pep talker at the end of the timer?">Pep Talk</label>
             <input id="word-vote" type="checkbox" name="wordVote" class="option-checkbox option-control" data-linked-off="pepTalk"/>
             <label for="word-vote" data-info="Do you want the team to vote on a word for the pep talk?">Word Vote</label>
+            <input id="emotable" type="checkbox" name="emotable" class="option-checkbox option-control" data-linked-off="emotable"/>
+            <label for="emotable" data-info="Do you want the team to be able to send emotes during the meeting?">Emotes</label>
           </div>
           <input id="set-button" type="submit" value="Set" class="button disabled"></input>
           <div class="save-load-section">
@@ -126,13 +129,13 @@
         </div>
         <div class="timer-display">00:00</div>
         <a id="pause-button" class="button symbol paused hidden">
-          <span class="fa fa-play pos-main"></span>
+          <i class="fa fa-play pos-main"></i>
         <a id="end-button" class="button symbol hidden">
-          <span class="fa fa-stop pos-main"></span>
+          <i class="fa fa-stop pos-main"></i>
         </a>
         <a id="reset-button" class="button hidden">RESET</a>
         <a id="next-button" class="button symbol hidden">
-          <span class="fa fa-step-forward pos-main"></span>
+          <i class="fa fa-step-forward pos-main"></i>
         </a>
         <a id="pep-button" class="button hidden">PEP TALK</a>
       </div>
@@ -141,10 +144,17 @@
 
       <div id="end-screen" class="hidden">
         <div>You achieved a <span id="end-time"></span> stand up, with an average of <span id="avg-time"></span> per person</div>
+      </div>
+    </div>
+
+    <div id="pep-talk-modal" class="modal hidden">
+      <div id="pep-talk-container">
+        <span id="pep-talk-modal-close" class="fa fa-times modal-close"></span>
+        <span id="pep-talk-respin" class="fa fa-refresh"></span>
         <div id="pep-display"></div>
         <div id="vote-count"></div>
       </div>
-    </div>
+  </div>
 
     <div id="team-modal" class="modal hidden">
       
@@ -199,6 +209,9 @@
       </div>
     </div>
 
+    <div id="emotes-container">
+    </div>
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
     <script type="text/javascript" src="scripts/timer.js"></script>
     <script type="text/javascript" src="scripts/sound.js"></script>
@@ -207,6 +220,7 @@
     <script type="text/javascript" src="scripts/team.js"></script>
     <script type="text/javascript" src="scripts/page.js"></script>
     <script type="text/javascript" src="scripts/words.js"></script>
+    <script type="text/javascript" src="scripts/emotes.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
   </body>
 </html>

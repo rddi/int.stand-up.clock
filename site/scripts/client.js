@@ -15,7 +15,10 @@ let meetingCodeInput,
   meetingSearch,
   wordChoiceButtonHolder,
   wordChoiceElement,
-  searchTimeout = 10000;
+  searchTimeout = 10000
+  lastEmote = 0,
+  emoteThrottle = 5000,
+  emotesContainer;
 
 function setUpForm() {
   joinModal = document.getElementById('join-modal');
@@ -188,6 +191,46 @@ function handleReciept(input) {
   
 }
 
+function sendEmote(emoteTag) {
+  if ((new Date().getTime() - lastEmote) >= emoteThrottle) {
+    Comms.sendEvent(emoteTag, 'Master.Emote');
+    lastEmote = new Date().getTime()
+  }
+}
+
+function setUpEmoteButtons(suppliedEmotes) { 
+  if (!suppliedEmotes) {
+    return;
+  }
+  emotesContainer = document.getElementById('emotes-button-container');
+  let buttons = '',
+    i = 0,
+    options = Object.keys(suppliedEmotes);
+
+    console.log(suppliedEmotes);
+    console.log(options);
+
+  for (i = 0;i<options.length;i+=1) {
+    buttons += `<div id="emote-${options[i]}" class="emote-button"><i class="fa fa-${suppliedEmotes[options[i]].tag}"></i></div>`;
+  }
+
+  emotesContainer.innerHTML = buttons;
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('emote-button') || (new Date().getTime() - lastEmote) < emoteThrottle) {
+      return;
+    }
+
+    let emoteTag = e.target.id.split('-')[1];
+    sendEmote(emoteTag)
+
+    e.target.classList.add('bounce');
+    setTimeout (function() {
+      e.target.classList.remove('bounce');
+    }, emoteThrottle);
+  });
+}
+
 function setMainDisplay(content, state = null, newLabel = null) {
   let html = `<span>${content}</span>`;
   if (mainDisplay.innerHTML == html && mainDisplay.getAttribute('label') == newLabel) {
@@ -256,6 +299,7 @@ function handleRegisterResponse(response) {
   if (response.target != Comms.params.clientName) {
     return;
   }
+  console.log("reg response", response)
   if (response.status == 'success') {
     setMainDisplay("Waiting for others", 1);
     Page.flashMessage(`Registered in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
@@ -312,11 +356,16 @@ function handlePepTalk(pepTalker){
 }
 
 function handleMemberList(_memberList) {
+  console.log(_memberList);
   memberList = _memberList.members;
 
   buildButtons(_memberList.buttons);
 
   buildMemberElements();
+
+  if (Object.prototype.hasOwnProperty.call(_memberList, 'emotes')) {
+    setUpEmoteButtons(_memberList.emotes)
+  }
 }
 
 function setWordChoice(list) {

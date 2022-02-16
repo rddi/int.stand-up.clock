@@ -29,6 +29,7 @@ let timer,
   teamModalInput,
   saveModal,
   loadModal,
+  pepModal,
   loadList,
   saveInput,
   localTeamMembers = [],
@@ -40,6 +41,7 @@ let timer,
     pausable: false,
     collectTime: true,
     pp: false,
+    emote: false,
   },
   optionInputs,
   timeSlider,
@@ -81,7 +83,7 @@ function openLoadModal() {
   for (let index in loads) {
     let name = decodeURI(index.slice(5));
 
-    list.push(`<div class="load-option"><span class="fa fa-minus remove-save remove" id="remove-${index}"></span><div class='load-selection selection-button' data-loadname="${index}">${name}</div></div>`);
+    list.push(`<div class="load-option"><i class="fa fa-minus remove-save remove" id="remove-${index}"></i><div class='load-selection selection-button' data-loadname="${index}">${name}</div></div>`);
   }
 
   loadList.innerHTML = list.join('');
@@ -489,7 +491,7 @@ function stopSound(name) {
   }
 }
 
-function setupSounds() {
+function setUpSounds() {
   sounds['beep'] = new Sound('sounds/beep.mp3');
   sounds['next'] = new Sound('sounds/end.mp3');
   sounds['spin'] = new Sound('sounds/spin.mp3');
@@ -497,7 +499,7 @@ function setupSounds() {
   sounds['tada'] = new Sound('sounds/tada.mp3');
 }
 
-function setupTimers() {
+function setUpTimers() {
   timer = new Timer('timer', true);
   subtimer = new Timer('sub-timer');
 
@@ -559,10 +561,7 @@ function setupTimers() {
   });
 
   pep.addEventListener("click", function (e) {
-    pep.classList.add('spinning');
-    pepDisplay.classList.remove('green');
-    voteCount.classList.remove('green');
-    spinPep(100);
+    randomisePepTalker();
   });
 
   document.addEventListener("click", function(e) {
@@ -571,6 +570,15 @@ function setupTimers() {
     }
     getVoteResults();
   });
+}
+
+function randomisePepTalker() {
+  pep.classList.add('spinning');
+  pepDisplay.classList.remove('green');
+  voteCount.classList.remove('green');
+  voteCount.innerHTML = '';
+  pepModal.classList.remove('hidden', 'green');
+  spinPep(100);
 }
 
 function subtimerRebuild() {
@@ -710,7 +718,8 @@ function spinPep(time, stop = false) {
   randomSelectPep();
 
   if (stop) {
-    pepDisplay.classList.add('green');
+    // pepDisplay.classList.add('green');
+    pepModal.classList.add('green');
     pep.classList.remove('spinning');
     playSound('found');
 
@@ -770,7 +779,7 @@ function setUpTeamMembers(maintainOrder = false) {
   for (i = 0; i < randomOrder.length; i += 1) {
     memberList.push(`<input id="member-${i}" type="checkbox" class="team-member set-check" name="team-${randomOrder[i]}" />
     <label for="member-${i}">${randomOrder[i]}</label>`);
-    editList.push(`<div class="edit-team-member"><span class="fa fa-minus remove-member remove" id="remove-${randomOrder[i]}"></span>${randomOrder[i]}</div>`);
+    editList.push(`<div class="edit-team-member"><i class="fa fa-minus remove-member remove" id="remove-${randomOrder[i]}"></i>${randomOrder[i]}</div>`);
   }
 
   let hide = '';
@@ -835,6 +844,34 @@ function setUpTeamEdit() {
   close.addEventListener('click', function (e) {
     closeTeamModal();
   });
+}
+
+function setUpPepTalk () {
+  pepModal = document.getElementById('pep-talk-modal');
+
+  document.addEventListener('click', function (e) {
+    if (e.target.id != 'pep-talk-modal-close') {
+      return;
+    }
+    closePepTalk();
+  });
+
+  document.addEventListener('click', function (e) {
+    if (e.target.id != 'pep-talk-respin') {
+      return;
+    }
+    randomisePepTalker();
+  });
+}
+
+function openPepTalk () {
+  pep.classList.add('hidden');
+  pepModal.classList.remove('hidden')
+}
+
+function closePepTalk () {
+  pepModal.classList.add('hidden');
+  pep.classList.remove('hidden');
 }
 
 function setUpSaveLoad() {
@@ -1311,31 +1348,32 @@ function handleReciept(input) {
 
     console.log(type);
     console.log(type[0] == 'Master');
-    if (type[0] != 'Master') {
-      return;
-    }
-
-    switch (type[1]) {
-      case 'Message':
-        console.log(message.body);
-        break;
-      case 'Check':
-        handleCheck(message.client, message.body);
-        break;
-      case 'Nomination':
-        handleNomination(message.client, message.body);
-        break;
-      case 'Register':
-        handleRegistration(message.client, message.body);
-        break;
-      case 'ControlAction':
-        handleControlAction(message.client, message.body);
-        break;
-      case 'WordVote':
-        handleWordVote(message.client, message.body);
-        break;
-      default:
-        console.log(`Could not handle message type: "${message.type}"`);
+    if (type[0] == 'Master') {
+      switch (type[1]) {
+        case 'Message':
+          console.log(message.body);
+          break;
+        case 'Check':
+          handleCheck(message.client, message.body);
+          break;
+        case 'Nomination':
+          handleNomination(message.client, message.body);
+          break;
+        case 'Register':
+          handleRegistration(message.client, message.body);
+          break;
+        case 'ControlAction':
+          handleControlAction(message.client, message.body);
+          break;
+        case 'WordVote':
+          handleWordVote(message.client, message.body);
+          break;
+        case 'Emote':
+          handleEmote(message.client, message.body);
+          break;
+        default:
+          console.log(`Could not handle message type: "${message.type}"`);
+      }
     }
   }
   catch (err) {
@@ -1411,13 +1449,24 @@ function handleWordVote(client, word) {
 
   Page.flashMessage(`${client} has voted`, 'success');
 
+  Emotes.spawnEmote(`check-to-slot`, client, `green`)
+
   if (wordVotes == team.length - 1) {
     getVoteResults();
   }
 }
 
+function handleEmote(client, emote) {
+  if (!options.emotable || !register.hasOwnProperty(client) || !Emotes.emoteOptions.hasOwnProperty(emote)) {
+     return;
+  }
+  console.log(client,emote);
+
+  Emotes.spawnEmote(Emotes.emoteOptions[emote].tag, client, Emotes.emoteOptions[emote].colour)
+}
+
 function showVotes(votes) {
-  voteCount.innerHTML = `${votes}/${team.length - 1} voted <a id="close-vote-button" class="button hidden"><span class="fa fa-times"></span></a>`;
+  voteCount.innerHTML = `<i class="fa fa-check-to-slot"></i><span>${votes}/${team.length - 1}</span><a id="close-vote-button" class="button hidden"><i class="fa fa-times"></i></a>`;
 }
 
 function getVoteResults() {
@@ -1510,7 +1559,7 @@ function updateRegister() {
   for (let member in register) {
     console.log(member);
     registerMembers.push(
-      `<div class="register-lozenge"><span class="fa fa-minus deregister remove" id="deregister-${member}"></span>${member}</div>`
+      `<div class="register-lozenge"><i class="fa fa-minus deregister remove" id="deregister-${member}"></i>${member}</div>`
     );
   }
 
@@ -1552,14 +1601,20 @@ function sendMemberList() {
     });
   }
 
-  sendEvent({
+  const meetingPackage = {
     buttons: {
       play: timer.isPaused(),
       pause: options.pausable && !timer.isPaused(),
       skip: options.skipable,
     },
-    members: membersObject
-  }, 'Client.MemberList');
+    members: membersObject,
+  };
+
+  if (options.emotable) {
+    meetingPackage.emotes = Emotes.emoteOptions;
+  }
+
+  sendEvent(meetingPackage, 'Client.MemberList');
 }
 
 function sendDeregister(removee) {
@@ -1582,9 +1637,9 @@ function sendFinished() {
 function connectHandler() {
   Page.flashMessage(`Successfully created meeting "${Comms.params.meetingCode}"`, 'success');
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
-  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<span class="fa fa-qrcode qr-code-button"></span><span class="fa fa-clipboard copy-code"></span>`;
+  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<i class="fa fa-qrcode qr-code-button"></i><i class="fa fa-clipboard copy-code"></i>`;
   meetingCodeDisplay.classList.add('connected');
-  qrMeetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<span class="fa fa-clipboard copy-code"></span>`;
+  qrMeetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<i class="fa fa-clipboard copy-code"></i>`;
   registerDisplay.classList.add('connected');
   setRegisterOpen(true);
 }
@@ -1608,18 +1663,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setUpSaveLoad();
 
-  setupSounds();
+  setUpSounds();
 
-  setupTimers();
+  setUpTimers();
 
   setEndScreen();
   setSpeaker();
+
+  setUpPepTalk();
 
   setSetButton();
 
   Page.setUpModals();
 
   Page.setUpFlash();
+
+  Emotes.setUpEmotes();
 
   startUpdates();
 });
