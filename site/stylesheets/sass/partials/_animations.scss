@@ -1,0 +1,26 @@
+@keyframes fade-in {
+  from {
+    color:$invisiGreen;
+  }
+  to {
+    color:$green;
+  }
+}
+
+@keyframes bubble-up {
+  from {
+    top:100%;
+  }
+  to {
+    top:-#{$emoteSize + 20px};
+  }
+}
+
+@keyframes bounce {
+  from {
+    height:100%;
+  }
+  to {
+    height:0;
+  }
+}

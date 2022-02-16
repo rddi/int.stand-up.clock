@@ -177,7 +177,7 @@
 .team-button {
   margin:10px;
   padding:5px 15px;
-  border-radius:5px;
+  border-radius:$borderRadius;
   background-color: $blue;
   text-align:center;
   font-size:30px;

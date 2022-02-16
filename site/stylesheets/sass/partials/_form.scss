@@ -2,7 +2,7 @@
   height:60px;
   width:60px;
   border:1px solid white;
-  border-radius:5px;
+  border-radius:$borderRadius;
   display:block;
   overflow:hidden;
   position:relative;
@@ -14,7 +14,7 @@
     text-align:center;
     @include transition(transform $transTime);
       
-    span.fa {
+    i.fa {
       font-size: 40px;
       line-height:60px;
       @include transition(transform $transTime);
@@ -49,14 +49,14 @@
   }
 
   &:hover {
-    span.fa {
+    i.fa {
       transform: rotateZ(180deg);
     }
     cursor:pointer;
   }
 
   &.close {
-    span.fa-cog {
+    i.fa-gear {
       transform: rotateZ(180deg) scale(4);
     }
 
@@ -93,7 +93,7 @@ label {
   padding:15px 30px;
   font-size:20px;
   border:none;
-  border-radius:5px;
+  border-radius:$borderRadius;
   text-align:center;
   margin:20px auto;
   display:block;
@@ -111,7 +111,7 @@ label {
     font-size:60px;
     width:100px;
     position:relative;
-    span {
+    i {
       position:absolute;
       top:50%;
       left:50%;
@@ -132,7 +132,7 @@ label {
       }
     }
     &:hover {
-      span {
+      i {
         &.pos-main {
           @include transform(translate(-50%,-50%) scale(#{$symbolScale}));
           color:$yellow;
@@ -214,12 +214,12 @@ label {
   input[type="checkbox"] {
     display:none;
     +label {
-      padding:5px;
+      padding:5px 10px;
       font-size:16px;
       background-color:$orange;
       opacity:0.5; 
-      border-radius:5px;
-      line-height:16px;
+      border-radius:$borderRadius;
+      line-height:20px;
       height:30px;
       margin:5px;
       transition: opacity $transTime;
@@ -322,7 +322,7 @@ label {
   display:inline-block;
   margin:0 auto;
   padding:5px 15px;
-  border-radius:5px;
+  border-radius:$borderRadius;
   color:$orange;
   margin:5px;
   cursor:pointer;
@@ -354,7 +354,7 @@ label {
 
 input[type="text"] {
   margin-top:20px;
-  border-radius:5px;
+  border-radius:$borderRadius;
   padding:15px;
   color:$orange;
   border:1px solid $green;
@@ -407,7 +407,7 @@ input[type="text"] {
       padding:5px;
       background-color:$blue;
       color:$orange;
-      border-radius:5px;
+      border-radius:$borderRadius;
       cursor: pointer;
       width:40px;
       text-align:center;
@@ -424,7 +424,7 @@ input[type="text"] {
   padding:10px;
   font-weight:bold;
   color:$white;
-  border-radius:5px;
+  border-radius:$borderRadius;
   background-color:$grey;
   position:absolute;
   left:30px;
@@ -438,7 +438,7 @@ input[type="text"] {
   &.connected {
     background-color:$blue;
   }
-  span {
+  i {
     margin-left:10px;
     cursor: pointer;
     &:hover {

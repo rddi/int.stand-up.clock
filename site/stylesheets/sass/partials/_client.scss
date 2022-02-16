@@ -159,3 +159,41 @@
     }
   }
 }
+
+#emotes-button-holder {
+  .emote-button {
+    padding:15px;
+    border-radius:$borderRadius;
+    border:2px solid $orange;
+    float:left;
+    cursor:pointer;
+    overflow:hidden;
+    transition:border-color $transTime;
+    i.fa {
+      color: $orange;
+      font-size:30px;
+      pointer-events: none;
+      transition:color $transTime;
+    }
+    &.bounce {
+      position:relative;
+      border-color:$grey;
+      cursor:auto;
+      &::before {
+        content:'';
+        animation-name:bounce;
+        animation-duration:$debounce;
+        animation-timing-function: linear;
+        width:100%;
+        background-color:$orangefade;
+        position:absolute;
+        left:0;
+        bottom:0;
+        // display:block;
+      }
+      i.fa {
+        color: $grey;
+      }
+    }
+  }
+}

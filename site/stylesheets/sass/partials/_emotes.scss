@@ -1,0 +1,50 @@
+#emotes-container {
+  height:100vh;
+  width:100vw;
+  top:0;
+  left:0;
+  position:fixed;
+  pointer-events:none;
+  overflow:hidden;
+  .emote {
+    border-radius: 50%;
+    height:$emoteSize;
+    width:$emoteSize;
+    position:relative;
+    background-color:$yellow;
+    color:$yellow;
+    animation-name:bubble-up;
+    animation-duration:$emoteTime;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    display:inline-block;
+    &.green {
+      background-color:$green;
+      color:$green;
+    }
+    &.blue {
+      background-color:$blue;
+      color:$blue;
+    }
+    &.red {
+      background-color:$red;
+      color:$red;
+    }
+    i {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      font-size:30px;
+      color:$white;
+    }
+    &::after {
+      content:attr(data-member);
+      position:absolute;
+      top: calc(100% + 5px);
+      left:50%;
+      transform:translateX(-50%);
+      font-weight:bold;
+    }
+  }
+}
