@@ -24,3 +24,12 @@
     height:0;
   }
 }
+
+@keyframes grow-left {
+  from {
+    max-width:0;
+  }
+  to {
+    max-width:300px;
+  }
+}

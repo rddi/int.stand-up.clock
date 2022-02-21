@@ -20,6 +20,8 @@ let meetingCodeInput,
   emoteThrottle = 5000,
   emotesContainer;
 
+  let emotesHolder;
+
 function setUpForm() {
   joinModal = document.getElementById('join-modal');
   joinTitle = document.getElementById('join-title');
@@ -68,7 +70,7 @@ function setUpForm() {
       return;
     }
     Comms.params.meetingCode = meetingCodeInput.value.toUpperCase();
-    Comms.params.clientName = clientNameInput.value;
+    Comms.params.clientName = Utilities.sanitise(clientNameInput.value);
 
     Memory.setObject('standup_client_settings', Comms.params);
 
@@ -80,6 +82,8 @@ function setUpForm() {
     },1000);
   });
 }
+
+
 
 function setUpDisplay() {
   mainDisplay = document.getElementById('main-display');
@@ -202,6 +206,7 @@ function setUpEmoteButtons(suppliedEmotes) {
   if (!suppliedEmotes) {
     return;
   }
+  emotesHolder = document.getElementById('emotes-button-holder');
   emotesContainer = document.getElementById('emotes-button-container');
   let buttons = '',
     i = 0,
@@ -224,9 +229,9 @@ function setUpEmoteButtons(suppliedEmotes) {
     let emoteTag = e.target.id.split('-')[1];
     sendEmote(emoteTag)
 
-    e.target.classList.add('bounce');
+    emotesHolder.classList.add('bounce');
     setTimeout (function() {
-      e.target.classList.remove('bounce');
+      emotesHolder.classList.remove('bounce');
     }, emoteThrottle);
   });
 }

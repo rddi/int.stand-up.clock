@@ -43,8 +43,8 @@ const Comms = {
 
     mqtt.connect(options);
   },
-  onConnect: function() {
-    console.log('connected');
+  onConnect: function(e) {
+    console.log('connected', e);
     mqtt.subscribe(Comms.params.channel);
 
     console.log(`Channel: ${Comms.params.channel}`);

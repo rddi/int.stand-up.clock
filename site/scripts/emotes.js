@@ -5,6 +5,10 @@ const Emotes = {
     'like': {
       'tag': 'thumbs-up',
       'colour': 'green'
+    },
+    'dislike': {
+      'tag': 'thumbs-down',
+      'colour': 'red'
     }
   },
   setUpEmotes: function() {

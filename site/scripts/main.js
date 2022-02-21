@@ -49,10 +49,8 @@ let timer,
   saveButton,
   saveSettingsButton,
   loadButton,
-  // useRegister = false,
   register = {},
   registrationOpen = false,
-  // registerTitle,
   registerDisplay,
   openRegistrationButton,
   closeRegistrationButton,
@@ -64,7 +62,9 @@ let timer,
   restrictedNames = ['READY'],
   wordOptions = {},
   wordVotes = 0,
-  voteCount;
+  voteCount,
+  pepExclusions = [],
+  postFinishWait = 2000;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0];
@@ -416,7 +416,15 @@ function setUpForm() {
         first = false;
       }
 
-      const teamButton = `<div id="team-button-${team[i]}" class="team-button ${extraClass}">${team[i]}</div>`;
+      const order = Math.ceil(i/2);
+
+      const teamButton = `
+      <div class="team-button-holder order-${order}">
+        <input id="exclude-${team[i]}" class="team-button-checkbox" value="${team[i]}" type="checkbox"/>
+        <label for='exclude-${team[i]}'></label>
+        <div id="team-button-${team[i]}" class="team-button ${extraClass}">${team[i]}</div>
+        <div id="team-button-time-${team[i]}" class="team-button-time"></div>
+      </div>`;
 
       activeList[target].innerHTML = activeList[target].innerHTML + teamButton;
     }
@@ -578,6 +586,7 @@ function randomisePepTalker() {
   voteCount.classList.remove('green');
   voteCount.innerHTML = '';
   pepModal.classList.remove('hidden', 'green');
+  showExclusionCheckboxes(false);
   spinPep(100);
 }
 
@@ -604,9 +613,17 @@ function nameWheelPause(toPause) {
 }
 
 function newSpeaker() {
-  const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
-
+  const activeMember = document.querySelector('.team-button.active');
+  
   nameWheel.innerHTML = '';
+
+  if (!activeMember) {
+    return;
+  }
+
+  const currentSpeaker = activeMember.innerHTML;
+
+  
 
   let name = currentSpeaker.split('');
 
@@ -678,7 +695,11 @@ function randomSelectMember() {
 function randomSelectPep() {
   const members = document.getElementsByClassName('team-button');
 
-  const selection = Math.ceil(Math.random() * members.length) - 1;
+
+  // Strip out non included members
+  let allowedMembers = Array.from(members).filter(member => !pepExclusions.includes(member.innerHTML))
+
+  const selection = Math.ceil(Math.random() * allowedMembers.length) - 1;
 
   const highlighted = document.getElementsByClassName('highlight');
 
@@ -686,9 +707,11 @@ function randomSelectPep() {
     highlighted[0].classList.remove('highlight');
   }
 
-  pepDisplay.innerHTML = members[selection].innerHTML;
+  pepDisplay.innerHTML = allowedMembers[selection].innerHTML;
 
-  members[selection].classList.add("highlight");
+  Utilities.resizeTextToFit(pepDisplay, 750, 70);
+
+  allowedMembers[selection].classList.add("highlight");
 }
 
 function randomiseArray(input) {
@@ -726,7 +749,6 @@ function spinPep(time, stop = false) {
     let pepTalker = {
       pepper: pepDisplay.innerHTML
     }
-
 
     if (options.wordVote) {
       showVotes(0);
@@ -804,6 +826,8 @@ function setUpTeamEdit() {
   teamModalList = document.getElementById('team-editor-list');
   teamModalInput = document.getElementById('member-name-input');
 
+
+
   teamModalInput.addEventListener('keypress', function (e) {
     let value = teamModalInput.value;
 
@@ -830,6 +854,8 @@ function setUpTeamEdit() {
     if (!e.target.classList.contains('remove-member')) {
       return;
     }
+
+    console.log(e.target)
 
     const removee = e.target.id.split('remove-')[1];
     TeamMembers.remove(removee);
@@ -866,12 +892,27 @@ function setUpPepTalk () {
 
 function openPepTalk () {
   pep.classList.add('hidden');
-  pepModal.classList.remove('hidden')
+  pepModal.classList.remove('hidden');
+  showExclusionCheckboxes(false);
 }
 
 function closePepTalk () {
   pepModal.classList.add('hidden');
   pep.classList.remove('hidden');
+  showExclusionCheckboxes(true);
+}
+
+function showExclusionCheckboxes (value) {
+  const holders = document.getElementsByClassName('team-button-holder');
+  let i = 0;
+
+  for(i=0;i<holders.length;i+=1) {
+    if (value) {
+      holders[i].classList.add('show-checkbox');
+      continue;
+    }
+    holders[i].classList.remove('show-checkbox');
+  }
 }
 
 function setUpSaveLoad() {
@@ -958,15 +999,24 @@ function setUpSaveLoad() {
 }
 
 function recordTime(element) {
-  element.setAttribute('data-time', subtimer.getElapsedTimer());
+  const teamMember = element.id.split('-').pop();
+  const teamTime = document.getElementById(`team-button-time-${teamMember}`);
+  const time = subtimer.getElapsedTimer();
+
+  element.setAttribute('data-time', time);
+  teamTime.innerHTML = time;
 }
 
 function setUpTeamButtons() {
   let teamButtons = document.getElementsByClassName('team-button');
+  let teamExclusionCheckboxes = document.getElementsByClassName('team-button-checkbox');
   let i = 0;
   let j = 0;
 
+  const teamButtonMax = 200;
+
   for (i = 0; i < teamButtons.length; i += 1) {
+    Utilities.resizeTextToFit(teamButtons[i], teamButtonMax, 18)
 
     teamButtons[i].addEventListener("click", function (e) {
       if (timer.isPaused() || event.target.classList.contains('active') || event.target.classList.contains('done')) {
@@ -995,6 +1045,19 @@ function setUpTeamButtons() {
       }
       updateClients();
     });
+
+    teamExclusionCheckboxes[i].addEventListener('change', function (e) {
+      if (e.target.checked) {
+        pepExclusions.push(e.target.value);
+        return;
+      }
+
+      for(j = pepExclusions.length - j;j >= 0;j -= 1) {
+        if(pepExclusions[j] === e.target.value) {
+          pepExclusions.splice(j, 1);
+        }
+      }
+    });
   };
 }
 
@@ -1002,8 +1065,8 @@ function checkTimes() {
   const teamMembers = document.getElementsByClassName("team-button");
 
   let i = 0;
-  let fastest = stringtoms(teamMembers[i].getAttribute('data-time'));
-  let slowest = stringtoms(teamMembers[i].getAttribute('data-time'));
+  let fastest = stringtoms(teamMembers[0].getAttribute('data-time'));
+  let slowest = stringtoms(teamMembers[0].getAttribute('data-time'));
   let highScores = [];
   let lowScores = [];
 
@@ -1156,7 +1219,10 @@ function update() {
       subtimer.element.classList.remove("end");
       next.classList.add("hidden");
       pause.classList.add("hidden");
-      pep.classList.remove("hidden");
+      setTimeout(function() {
+        pep.classList.remove("hidden");
+        showExclusionCheckboxes(true);
+      }, postFinishWait);
     } else if (teamRemaining > 1) {
       end.classList.add("hidden");
       subtimer.element.classList.remove("end");
@@ -1204,7 +1270,6 @@ function startUpdates() {
 
 function buildTeamSections(maintainOrder = false) {
   setUpTeamMembers(maintainOrder);
-  setUpTeamEdit();
   setSelectionButtons();
 }
 
@@ -1339,7 +1404,8 @@ function setRegister(value) {
 function handleReciept(input) {
   console.log(input, input._getPayloadString());
 
-  let message = input._getPayloadString();
+  const message = input._getPayloadString();
+  const sanitisedClient = Utilities.sanitise(message.client);
 
   try {
     message = JSON.parse(message);
@@ -1354,22 +1420,22 @@ function handleReciept(input) {
           console.log(message.body);
           break;
         case 'Check':
-          handleCheck(message.client, message.body);
+          handleCheck(sanitisedClient, message.body);
           break;
         case 'Nomination':
-          handleNomination(message.client, message.body);
+          handleNomination(sanitisedClient, message.body);
           break;
         case 'Register':
-          handleRegistration(message.client, message.body);
+          handleRegistration(sanitisedClient, message.body);
           break;
         case 'ControlAction':
-          handleControlAction(message.client, message.body);
+          handleControlAction(sanitisedClient, message.body);
           break;
         case 'WordVote':
-          handleWordVote(message.client, message.body);
+          handleWordVote(sanitisedClient, message.body);
           break;
         case 'Emote':
-          handleEmote(message.client, message.body);
+          handleEmote(sanitisedClient, message.body);
           break;
         default:
           console.log(`Could not handle message type: "${message.type}"`);
@@ -1466,7 +1532,7 @@ function handleEmote(client, emote) {
 }
 
 function showVotes(votes) {
-  voteCount.innerHTML = `<i class="fa fa-check-to-slot"></i><span>${votes}/${team.length - 1}</span><a id="close-vote-button" class="button hidden"><i class="fa fa-times"></i></a>`;
+  voteCount.innerHTML = `<i class="fa fa-check-to-slot"></i><span>${votes}/${team.length - 1}</span><a id="close-vote-button" class="button hidden"><i class="fa fa-forward"></i></a>`;
 }
 
 function getVoteResults() {
@@ -1493,8 +1559,7 @@ function handleRegistration(client, uniqueCode) {
         target: client,
         status: 'success',
         error: 'none'
-      }
-        , 'Client.RegisterResponse');
+      } , 'Client.RegisterResponse');
 
       if (timer.hasStarted() && !timer.isFinished()) {
         updateClients();
@@ -1662,6 +1727,8 @@ document.addEventListener("DOMContentLoaded", function () {
   getMemory();
 
   setUpSaveLoad();
+
+  setUpTeamEdit();
 
   setUpSounds();
 

@@ -77,17 +77,17 @@
           <label>Options</label>
           <div class="select-strip" id="options">
             <input id="pausable" type="checkbox" name="pausable" class="option-checkbox option-control"/>
-            <label for="pausable" data-info="Do you want a pause button on the timer?">Pause Button</label>
+            <label for="pausable" class="tooltip" data-info="Do you want a pause button on the timer?">Pause Button</label>
             <input id="skipable" type="checkbox" name="skipable" class="option-checkbox option-control"/>
-            <label for="skipable" data-info="Do you want a skip button on the timer?">Skip Button</label>
+            <label for="skipable" class="tooltip" data-info="Do you want a skip button on the timer?">Skip Button</label>
             <input id="collect-time" type="checkbox" name="collectTime" class="option-checkbox option-control"/>
-            <label for="collect-time" data-info="Do you want a team member's unused time to be split amongst everyone else?">Collect Time</label>
+            <label for="collect-time" class="tooltip" data-info="Do you want a team member's unused time to be split amongst everyone else?">Collect Time</label>
             <input id="pep-talk" type="checkbox" name="pepTalk" class="option-checkbox option-control" data-linked-on="wordVote"/>
-            <label for="pep-talk" data-info="Do you want to randomly select a pep talker at the end of the timer?">Pep Talk</label>
+            <label for="pep-talk" class="tooltip" data-info="Do you want to randomly select a pep talker at the end of the timer?">Pep Talk</label>
             <input id="word-vote" type="checkbox" name="wordVote" class="option-checkbox option-control" data-linked-off="pepTalk"/>
-            <label for="word-vote" data-info="Do you want the team to vote on a word for the pep talk?">Word Vote</label>
+            <label for="word-vote" class="tooltip" data-info="Do you want the team to vote on a word for the pep talk?">Word Vote</label>
             <input id="emotable" type="checkbox" name="emotable" class="option-checkbox option-control" data-linked-off="emotable"/>
-            <label for="emotable" data-info="Do you want the team to be able to send emotes during the meeting?">Emotes</label>
+            <label for="emotable" class="tooltip" data-info="Do you want the team to be able to send emotes during the meeting?">Emotes</label>
           </div>
           <input id="set-button" type="submit" value="Set" class="button disabled"></input>
           <div class="save-load-section">
@@ -148,9 +148,9 @@
     </div>
 
     <div id="pep-talk-modal" class="modal hidden">
-      <div id="pep-talk-container">
-        <span id="pep-talk-modal-close" class="fa fa-times modal-close"></span>
-        <span id="pep-talk-respin" class="fa fa-refresh"></span>
+      <div id="pep-talk-container" class="container">
+        <i id="pep-talk-modal-close" class="fa fa-times modal-close"></i>
+        <i id="pep-talk-respin" class="fa fa-refresh modal-button"></i>
         <div id="pep-display"></div>
         <div id="vote-count"></div>
       </div>
@@ -213,6 +213,7 @@
     </div>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <script type="text/javascript" src="scripts/utilities.js"></script>
     <script type="text/javascript" src="scripts/timer.js"></script>
     <script type="text/javascript" src="scripts/sound.js"></script>
     <script type="text/javascript" src="scripts/memory.js"></script>

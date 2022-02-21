@@ -66,6 +66,7 @@ header {
   left:50%;
   top:50%;
   min-width:340px;
+  z-index: 20;
   
   .container {
     background-color:$white; 
@@ -73,10 +74,8 @@ header {
       text-align:center;
       margin-top:0;
     }
-    .fa-times {
-      position:absolute;
-      top:10px;
-      right:10px;
+    .modal-close,
+    .modal-button {
       font-size:25px;
       cursor:pointer;
       @include transition(color $transTime, transform $transTime);
@@ -84,6 +83,11 @@ header {
         color:$red;
         @include transform(rotate3d(0, 0, 1, 180deg));
       }
+    }
+    .modal-close {
+      position:absolute;
+      top:10px;
+      right:10px;
     }
   }
 
@@ -153,14 +157,6 @@ h1 {
     border-radius:15px;
     transition: border-color $transTime;
 
-    // &.green {
-    //   border-color:$green;
-    //   #pep-talk-modal-close,
-    //   #pep-talk-respin {
-    //     display:block;
-    //   }
-    // }
-
     &.hidden {
       display:none;
     }
@@ -171,11 +167,11 @@ h1 {
       top:50%;
       transform:translate(-50%, -50%);
       color:$orange;
-      background-color:$white;
       font-size:100px;
       font-weight:bold;
-      width:100%;
+      // width:100%;
       text-align:center;
+      white-space: nowrap;
       &:empty {
         display:none;
       }
@@ -194,8 +190,8 @@ h1 {
       border-radius:15px;
       border:3px solid $orange;
       padding:5px 10px;
-      max-width:210px;
-      min-width:210px;
+      max-width:220px;
+      min-width:220px;
       width:auto;
       transition: max-width $transTime, min-width $transTime , border-color $transTime;
       &:empty {
@@ -377,6 +373,36 @@ h1 {
     &::after {
       content:attr(message);
       font-weight:bold;
+    }
+  }
+}
+
+.tooltip {
+  &[data-info] {
+    &::after {
+      content:attr(data-info);
+      background-color: $fade;
+      position: absolute;
+      padding: 5px;
+      border-radius:3px;
+      top: 100%;
+      right:100%;
+      width: auto;
+      min-width: 200px;
+      opacity:0;
+      pointer-events: none;
+      @include transition(opacity $transTime);
+      font-size:12px;
+      z-index:100;
+      &:empty {
+        display:none;
+      }
+    }
+    &:hover {
+      &::after {
+        @include transition-delay(1000ms);
+        opacity:1;
+      }
     }
   }
 }

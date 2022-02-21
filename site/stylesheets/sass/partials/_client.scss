@@ -161,6 +161,9 @@
 }
 
 #emotes-button-holder {
+  position:fixed;
+  bottom:0;
+  left:0;
   .emote-button {
     padding:15px;
     border-radius:$borderRadius;
@@ -169,13 +172,19 @@
     cursor:pointer;
     overflow:hidden;
     transition:border-color $transTime;
+    margin-right:20px;
     i.fa {
       color: $orange;
       font-size:30px;
       pointer-events: none;
       transition:color $transTime;
     }
-    &.bounce {
+    &:last-of-type {
+      margin-right:0;
+    }
+  }
+  &.bounce {
+    .emote-button {
       position:relative;
       border-color:$grey;
       cursor:auto;

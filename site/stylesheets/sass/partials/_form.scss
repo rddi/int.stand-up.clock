@@ -170,33 +170,6 @@ label {
     &.extra {
       width:140px;
     }
-    &[data-info] {
-      &::after {
-        content:attr(data-info);
-        background-color: $fade;
-        position: absolute;
-        padding: 5px;
-        border-radius:3px;
-        top: 100%;
-        right:100%;
-        width: auto;
-        min-width: 200px;
-        opacity:0;
-        pointer-events: none;
-        @include transition(opacity $transTime);
-        font-size:12px;
-        z-index:100;
-        &:empty {
-          display:none;
-        }
-      }
-      &:hover {
-        &::after {
-          @include transition-delay(1000ms);
-          opacity:1;
-        }
-      }
-    }
   }
 
   &#team-members,
