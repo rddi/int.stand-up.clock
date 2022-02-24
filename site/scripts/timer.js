@@ -110,6 +110,9 @@ class Timer {
       if (!this.notices[key] && (timeLeft < (parseInt(key, 10) + 1000))) {
         this.notices[key] = true;
         playSound('beep');
+        // Add notification to user on client app??
+        Comms.sendEvent(key, 'Client.Notify');
+
       }
     }
   }

@@ -1346,6 +1346,34 @@ input[type="text"] {
     #emotes-button-holder.bounce .emote-button i.fa {
       color: #888; }
 
+#notice-container {
+  opacity: 0;
+  transition: opacity 300ms;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  height: 130px;
+  transition: opacity 900ms; }
+  #notice-container #notice {
+    pointer-events: none;
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 10px;
+    height: 90px;
+    line-height: 70px;
+    font-size: 40px; }
+  #notice-container.show {
+    opacity: 1;
+    transition: opacity 0ms; }
+  #notice-container.red #notice {
+    background-color: #650D1B; }
+  #notice-container.green #notice {
+    background-color: #0F6B05; }
+
 @keyframes fade-in {
   from {
     color: #0F6B0500; }

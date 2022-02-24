@@ -6,7 +6,6 @@ let meetingCodeInput,
   currentSpeaker,
   mainDisplay,
   teamDisplay,
-  memberList = {},
   buttonHolder,
   playButton,
   pauseButton,
@@ -15,10 +14,13 @@ let meetingCodeInput,
   meetingSearch,
   wordChoiceButtonHolder,
   wordChoiceElement,
+  emotesButtonContainer,
+  noticeContainer,
+  noticeContent
+  memberList = {},
   searchTimeout = 10000
   lastEmote = 0,
-  emoteThrottle = 5000,
-  emotesContainer;
+  emoteThrottle = 5000;
 
   let emotesHolder;
 
@@ -83,11 +85,11 @@ function setUpForm() {
   });
 }
 
-
-
 function setUpDisplay() {
   mainDisplay = document.getElementById('main-display');
   teamDisplay = document.getElementById('team-display');
+  noticeContainer = document.getElementById('notice-container');
+  noticeContent = document.getElementById('notice');
 }
 
 function setUpButtons() {
@@ -185,6 +187,9 @@ function handleReciept(input) {
       case 'RegisterResponse':
         handleRegisterResponse(message.body);
         break;
+      case 'Notice':
+        notice(`${notice}s remaining`, 'red');
+        break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
     }
@@ -193,6 +198,22 @@ function handleReciept(input) {
     console.log('FAIL!', err);
   }
   
+}
+
+// function handleNotice(notice) {
+//   notice(`${notice}`, 'red');
+// }
+
+function notice(message, colour) {
+  noticeContent.innerHTML = message;
+  noticeContainer.classList.add(colour, 'show');
+  setTimeout(function() {
+    clearNotice();
+  }, 100);
+}
+
+function clearNotice() {
+  noticeContainer.classList.remove('show');
 }
 
 function sendEmote(emoteTag) {
@@ -207,7 +228,7 @@ function setUpEmoteButtons(suppliedEmotes) {
     return;
   }
   emotesHolder = document.getElementById('emotes-button-holder');
-  emotesContainer = document.getElementById('emotes-button-container');
+  emotesButtonContainer = document.getElementById('emotes-button-container');
   let buttons = '',
     i = 0,
     options = Object.keys(suppliedEmotes);
@@ -219,7 +240,7 @@ function setUpEmoteButtons(suppliedEmotes) {
     buttons += `<div id="emote-${options[i]}" class="emote-button"><i class="fa fa-${suppliedEmotes[options[i]].tag}"></i></div>`;
   }
 
-  emotesContainer.innerHTML = buttons;
+  emotesButtonContainer.innerHTML = buttons;
 
   document.addEventListener('click', function(e) {
     if (!e.target.classList.contains('emote-button') || (new Date().getTime() - lastEmote) < emoteThrottle) {

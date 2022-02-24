@@ -198,11 +198,47 @@
         position:absolute;
         left:0;
         bottom:0;
-        // display:block;
       }
       i.fa {
         color: $grey;
       }
+    }
+  }
+}
+
+#notice-container {
+  opacity: 0;
+  transition: opacity $transTime;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  padding:20px;
+  height:130px;
+  transition: opacity 900ms;
+  #notice {
+    pointer-events:none;
+    padding:10px;
+    color:$white;
+    text-align:center;
+    font-weight:bold;
+    border-radius:10px;
+    height:90px;
+    line-height:70px;
+    font-size:40px;
+  }
+  &.show {
+    opacity:1;
+    transition: opacity 0ms;
+  }
+  &.red {
+    #notice {
+      background-color:$red;
+    }
+  }
+  &.green {
+    #notice {
+      background-color:$green;
     }
   }
 }

@@ -6,7 +6,6 @@ let mqtt,
     mqtt_password = '7h31&0n1yrddi!'; 
 
 
-
 const Comms = {
   params: {
     meetingCode: null,
