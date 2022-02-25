@@ -239,8 +239,8 @@ function setUpEmoteButtons(suppliedEmotes) {
     i = 0,
     options = Object.keys(suppliedEmotes);
 
-    console.log(suppliedEmotes);
-    console.log(options);
+    // console.log(suppliedEmotes);
+    // console.log(options);
 
   for (i = 0;i<options.length;i+=1) {
     buttons += `<div id="emote-${options[i]}" class="emote-button"><i class="fa fa-${suppliedEmotes[options[i]].tag}"></i></div>`;

@@ -1314,8 +1314,8 @@ function setOptions(save = false, memorySlot = 'standup_options') {
     for (i = 0; i < teamInputs.length; i += 1) {
       let value = false;
 
-      console.log(options);
-      console.log(options.team);
+      // console.log(options);
+      // console.log(options.team);
 
       if (options.team.includes(teamInputs[i].getAttribute('name'))) {
         value = true;
