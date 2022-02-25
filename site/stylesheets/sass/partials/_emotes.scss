@@ -14,7 +14,7 @@
     background-color:$yellow;
     color:$yellow;
     animation-name:bubble-up;
-    animation-duration:$emoteTime;
+    // animation-duration:$emoteTime;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
     display:inline-block;
@@ -45,6 +45,8 @@
       left:50%;
       transform:translateX(-50%);
       font-weight:bold;
+      $outlineColour:$white;
+      text-shadow: -1px -1px 0 $outlineColour, 1px -1px 0 $outlineColour, -1px 1px 0 $outlineColour, 1px 1px 0 $outlineColour;
     }
   }
 }

@@ -1,5 +1,6 @@
 const Utilities = {
   sanitise: function(input) {
+    console.log("SANITISING!",input)
     return input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
   },
   resizeTextToFit: function (element, maxWidth, minFontSize) {

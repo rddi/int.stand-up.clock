@@ -1312,7 +1312,8 @@ input[type="text"] {
 #emotes-button-holder {
   position: fixed;
   bottom: 0;
-  left: 0; }
+  left: 0;
+  width: 100%; }
   #emotes-button-holder .emote-button {
     padding: 15px;
     border-radius: 10px;
@@ -1349,13 +1350,13 @@ input[type="text"] {
 #notice-container {
   opacity: 0;
   transition: opacity 300ms;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px;
-  height: 130px;
-  transition: opacity 900ms; }
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: calc(100% - 40px);
+  height: 100%;
+  transition: opacity 900ms;
+  pointer-events: none; }
   #notice-container #notice {
     pointer-events: none;
     padding: 10px;
@@ -1363,7 +1364,7 @@ input[type="text"] {
     text-align: center;
     font-weight: bold;
     border-radius: 10px;
-    height: 90px;
+    height: calc(100% - 40px);
     line-height: 70px;
     font-size: 40px; }
   #notice-container.show {
@@ -1414,7 +1415,6 @@ input[type="text"] {
     background-color: #e9a351;
     color: #e9a351;
     animation-name: bubble-up;
-    animation-duration: 4000ms;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
     display: inline-block; }
@@ -1440,4 +1440,5 @@ input[type="text"] {
       top: calc(100% + 5px);
       left: 50%;
       transform: translateX(-50%);
-      font-weight: bold; }
+      font-weight: bold;
+      text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; }

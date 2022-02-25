@@ -107,12 +107,11 @@ class Timer {
     const timeLeft = this.full - this.current;
 
     for (let key in this.notices) {
-      if (!this.notices[key] && (timeLeft < (parseInt(key, 10) + 1000))) {
+      let milliseconds = parseInt(key,10);
+      if (!this.notices[key] && (timeLeft < (milliseconds + 1000))) {
         this.notices[key] = true;
         playSound('beep');
-        // Add notification to user on client app??
-        Comms.sendEvent(key, 'Client.Notify');
-
+        Comms.sendEvent(milliseconds/1000, 'Client.Notify');
       }
     }
   }

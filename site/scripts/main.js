@@ -1404,17 +1404,17 @@ function setRegister(value) {
 function handleReciept(input) {
   console.log(input, input._getPayloadString());
 
-  const message = input._getPayloadString();
-  const sanitisedClient = Utilities.sanitise(message.client);
+  let message = input._getPayloadString();
+  message = JSON.parse(message);
 
   try {
-    message = JSON.parse(message);
-
     let type = message.type.split('.');
 
     console.log(type);
-    console.log(type[0] == 'Master');
     if (type[0] == 'Master') {
+      console.log(typeof message, message);
+      const sanitisedClient = Utilities.sanitise(message.client);
+
       switch (type[1]) {
         case 'Message':
           console.log(message.body);

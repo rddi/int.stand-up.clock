@@ -114,8 +114,12 @@ function setUpButtons() {
 function handleReciept(input) {
   let message = input._getPayloadString();
 
+  console.log(input, message, typeof message);
+
   try{
     message = JSON.parse(message);
+
+    console.log(message, typeof message);
 
     let type = message.type.split('.');
     if (type[0] !== 'Client') {
@@ -159,6 +163,7 @@ function handleReciept(input) {
         Comms.disconnect();
         
         Comms.params.registered = false;
+        clearEmoteButtons();
         setMainDisplay("Disconnected", 0, 'Connection Status');
         Page.flashMessage('You have been removed from the meeting', 'notice');
 
@@ -187,8 +192,8 @@ function handleReciept(input) {
       case 'RegisterResponse':
         handleRegisterResponse(message.body);
         break;
-      case 'Notice':
-        notice(`${notice}s remaining`, 'red');
+      case 'Notify':
+        notice(`${message.body}s remaining`, 'red');
         break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
@@ -205,6 +210,7 @@ function handleReciept(input) {
 // }
 
 function notice(message, colour) {
+  noticeContainer.classList.remove('red', 'green');
   noticeContent.innerHTML = message;
   noticeContainer.classList.add(colour, 'show');
   setTimeout(function() {
@@ -255,6 +261,10 @@ function setUpEmoteButtons(suppliedEmotes) {
       emotesHolder.classList.remove('bounce');
     }, emoteThrottle);
   });
+}
+
+function clearEmoteButtons() {
+  emotesButtonContainer.innerHTML = '';
 }
 
 function setMainDisplay(content, state = null, newLabel = null) {
