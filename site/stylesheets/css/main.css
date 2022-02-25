@@ -1311,9 +1311,10 @@ input[type="text"] {
 
 #emotes-button-holder {
   position: fixed;
-  bottom: 0;
+  bottom: -100px;
   left: 0;
-  width: 100%; }
+  width: 100%;
+  transition: bottom 300ms; }
   #emotes-button-holder .emote-button {
     padding: 15px;
     border-radius: 10px;
@@ -1346,6 +1347,8 @@ input[type="text"] {
       bottom: 0; }
     #emotes-button-holder.bounce .emote-button i.fa {
       color: #888; }
+  #emotes-button-holder.active {
+    bottom: 0; }
 
 #notice-container {
   opacity: 0;

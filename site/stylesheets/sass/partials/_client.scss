@@ -162,9 +162,10 @@
 
 #emotes-button-holder {
   position:fixed;
-  bottom:0;
+  bottom:-100px;
   left:0;
   width:100%;
+  transition:bottom $transTime;
   .emote-button {
     padding:15px;
     border-radius:$borderRadius;
@@ -204,6 +205,9 @@
         color: $grey;
       }
     }
+  }
+  &.active {
+    bottom:0;
   }
 }
 

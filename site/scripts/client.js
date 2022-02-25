@@ -351,6 +351,7 @@ function handleUpdateSpeaker(speaker) {
 
   teamDisplay.classList.remove('active');
   buttonHolder.classList.remove('active');
+  emotesHolder.classList.add('active');
 
   if (currentSpeaker == 'READY') {
     setMainDisplay('Ready', 1);  
@@ -363,6 +364,7 @@ function handleUpdateSpeaker(speaker) {
     state = 3;
     teamDisplay.classList.add('active');
     buttonHolder.classList.add('active');
+    emotesHolder.classList.remove('active');
   }
 
   setMainDisplay(currentSpeaker, state, 'Current Speaker');
