@@ -1409,12 +1409,13 @@ input[type="text"] {
   left: 0;
   position: fixed;
   pointer-events: none;
-  overflow: hidden; }
+  overflow: hidden;
+  z-index: 1000; }
   #emotes-container .emote {
     border-radius: 50%;
     height: 60px;
     width: 60px;
-    position: relative;
+    position: fixed;
     background-color: #e9a351;
     color: #e9a351;
     animation-name: bubble-up;

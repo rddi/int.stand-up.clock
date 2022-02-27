@@ -999,7 +999,7 @@ function setUpSaveLoad() {
 }
 
 function recordTime(element) {
-  const teamMember = element.id.split('-').pop();
+  const teamMember = element.id.replace('team-button-','');
   const teamTime = document.getElementById(`team-button-time-${teamMember}`);
   const time = subtimer.getElapsedTimer();
 
@@ -1513,7 +1513,7 @@ function handleWordVote(client, word) {
   wordVotes += 1;
   showVotes(wordVotes);
 
-  Page.flashMessage(`${client} has voted`, 'success');
+  // Page.flashMessage(`${client} has voted`, 'success');
 
   Emotes.spawnEmote(`check-to-slot`, client, `green`)
 

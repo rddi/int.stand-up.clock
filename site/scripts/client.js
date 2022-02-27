@@ -205,11 +205,17 @@ function handleReciept(input) {
   
 }
 
-// function handleNotice(notice) {
-//   notice(`${notice}`, 'red');
-// }
+function isSpeaker() {
+  if (currentSpeaker == Comms.params.clientName) {
+    return true;
+  }
+  return false;
+}
 
 function notice(message, colour) {
+  if (!isSpeaker()) {
+    return;
+  }
   noticeContainer.classList.remove('red', 'green');
   noticeContent.innerHTML = message;
   noticeContainer.classList.add(colour, 'show');
@@ -268,6 +274,9 @@ function clearEmoteButtons() {
 }
 
 function setMainDisplay(content, state = null, newLabel = null) {
+  
+
+
   let html = `<span>${content}</span>`;
   if (mainDisplay.innerHTML == html && mainDisplay.getAttribute('label') == newLabel) {
     return;
@@ -360,7 +369,7 @@ function handleUpdateSpeaker(speaker) {
 
   let state = 2;
 
-  if (speaker == Comms.params.clientName) {
+  if (isSpeaker()) {
     state = 3;
     teamDisplay.classList.add('active');
     buttonHolder.classList.add('active');

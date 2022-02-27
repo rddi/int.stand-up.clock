@@ -6,11 +6,12 @@
   position:fixed;
   pointer-events:none;
   overflow:hidden;
+  z-index:1000;
   .emote {
     border-radius: 50%;
     height:$emoteSize;
     width:$emoteSize;
-    position:relative;
+    position:fixed;
     background-color:$yellow;
     color:$yellow;
     animation-name:bubble-up;
