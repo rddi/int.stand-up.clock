@@ -1,4 +1,5 @@
-let timer,
+let version = '1.1',
+  timer,
   subtimer,
   collapser,
   selectAll,
@@ -57,6 +58,8 @@ let timer,
   tabs,
   finishSent = false,
   meetingCodeDisplay,
+  qrMeetingCodeDisplay,
+  qrCorner,
   qrCodeModal,
   qrCode,
   restrictedNames = ['READY'],
@@ -64,7 +67,9 @@ let timer,
   wordVotes = 0,
   voteCount,
   pepExclusions = [],
-  postFinishWait = 2000;
+  postFinishWait = 2000,
+  qrURL,
+  clientURL;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0];
@@ -297,6 +302,7 @@ function setUpForm() {
   registerDisplay = document.getElementById('register-display');
   meetingCodeDisplay = document.getElementById('meeting-code');
   qrMeetingCodeDisplay = document.getElementById('qr-meeting-code');
+  qrCorner = document.getElementById('qr-corner');
 
   qrCodeModal = document.getElementById('qr-code-modal');
   qrCode = document.getElementById('qr-code');
@@ -314,7 +320,7 @@ function setUpForm() {
   });
 
   document.addEventListener('click', function (e) {
-    let clientURL = `${window.location.href}client?meeting=${Comms.params.meetingCode}`;
+    clientURL = `${window.location.href}client?meeting=${Comms.params.meetingCode}`;
     if (e.target.classList.contains('copy-code')) {
 
       var clipboard = document.createElement("textarea");
@@ -335,7 +341,7 @@ function setUpForm() {
 
       Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`, 'success');
     } else if (e.target.classList.contains('qr-code-button')) {
-      qrCode.setAttribute('src', `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${clientURL}`);
+      qrCode.setAttribute('src', qrURL);
       qrCodeModal.classList.remove('hidden');
     }
 
@@ -345,11 +351,12 @@ function setUpForm() {
     if (Comms.params.meetingCode == null) {
       // Set meeting code
       Comms.params.meetingCode = Page.generateCode(4, true, true);
-
+      
       // registerDisplay.classList.add('lozenge');
 
       // Add to code to page with clipboard button
-      meetingCodeDisplay.innerHTML = 'Connecting...';
+      // meetingCodeDisplay.innerHTML = 'Connecting...';
+      registerDisplay.classList.add('connecting')
 
       Comms.MQTTConnect(Comms.params.meetingCode);
     }
@@ -1702,10 +1709,14 @@ function sendFinished() {
 function connectHandler() {
   Page.flashMessage(`Successfully created meeting "${Comms.params.meetingCode}"`, 'success');
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
+  qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${clientURL}`;
   meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<i class="fa fa-qrcode qr-code-button"></i><i class="fa fa-clipboard copy-code"></i>`;
   meetingCodeDisplay.classList.add('connected');
+  
   qrMeetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<i class="fa fa-clipboard copy-code"></i>`;
+  registerDisplay.classList.remove('connecting');
   registerDisplay.classList.add('connected');
+  registerDisplay.setAttribute('style', `--qr-image: url('${qrURL}');`);
   setRegisterOpen(true);
 }
 
@@ -1718,6 +1729,7 @@ function sendEvent(_body, _type = "Message") {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  Utilities.setVersion();
   buildTeamSections();
 
   setCollapser();

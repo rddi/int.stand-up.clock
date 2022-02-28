@@ -1,4 +1,5 @@
-let meetingCodeInput,
+let version = '1.1',
+  meetingCodeInput,
   clientNameInput,
   joinModal,
   joinTitle,
@@ -46,6 +47,13 @@ function setUpForm() {
     joinTitle.innerHTML = `Join Meeting "${code}"`;
   } else if (memory != null && memory.hasOwnProperty('meetingCode')) {
     meetingCodeInput.value = memory.meetingCode;
+    meetingCodeInput.addEventListener('paste', function(event) {
+      const paste = (event.clipboardData || window.clipboardData).getData('text');
+
+      if (paste.includes('meeting=')) {
+        meetingCodeInput.value = paste.split('meeting=').pop();
+      }
+    });
   }
 
   if (memory != null && memory.hasOwnProperty('clientName')) {
@@ -274,7 +282,7 @@ function clearEmoteButtons() {
 }
 
 function setMainDisplay(content, state = null, newLabel = null) {
-  
+
 
 
   let html = `<span>${content}</span>`;
@@ -538,6 +546,7 @@ function getUniqueCode() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  Utilities.setVersion();
   getUniqueCode();
   setUpForm();
   setUpDisplay();

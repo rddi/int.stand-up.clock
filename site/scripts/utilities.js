@@ -1,6 +1,5 @@
 const Utilities = {
   sanitise: function(input) {
-    console.log("SANITISING!",input)
     return input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
   },
   resizeTextToFit: function (element, maxWidth, minFontSize) {
@@ -35,6 +34,11 @@ const Utilities = {
 
     // Reset the display so we don't mess up the layout
     element.style.display = '';
+  },
+  setVersion: function() {
+    const versionLabel = document.getElementById('version');
+
+    versionLabel.innerHTML=`v${version}`;
   }
 };
 

@@ -397,19 +397,15 @@ input[type="text"] {
   padding:10px;
   font-weight:bold;
   color:$white;
-  border-radius:$borderRadius;
-  background-color:$grey;
   position:absolute;
-  left:30px;
-  top:-18px;
+  left:10px;
+  top:20px;
+  transform:translateY(-50%);
   opacity:1;
-  @include transition(background-color $transTime, opacity $transTime);
+  @include transition(opacity $transTime);
   &:empty {
     opacity:0;
     pointer-events: none;
-  }
-  &.connected {
-    background-color:$blue;
   }
   i {
     margin-left:10px;
@@ -428,8 +424,29 @@ input[type="text"] {
   margin-top:20px;
   border:2px solid $grey;
   border-radius:10px;
-  padding:20px;
-  @include transition(border-color $transTime);
+  padding:20px 20px 20px ($qrCornerSize + ($qrCornerBorder * 2) + 20px);
+  @include transition(all $slowTransTime);
+  &::before {
+    content: '';
+    background-color: $grey;
+    display: block;
+    width: 100%;
+    border-radius: 10px 10px 10px 10px;
+    margin: -22px -#{$qrCornerSize + ($qrCornerBorder * 2) + 22};
+    height: 100%;
+    position: absolute;
+    max-width:1210px;
+    transition: all $slowTransTime;
+    color:$grey;
+    overflow:hidden;
+    font-weight: bold;
+    font-size:25px;
+    line-height:44px;
+    text-indent:-100%;
+    background-repeat:no-repeat;
+    background-size:$qrCornerSize;
+    background-position:#{$qrCornerBorder} calc(40px + #{$qrCornerBorder});
+  }
   
   &:not(.connected){
     &~#close-registration {
@@ -438,8 +455,36 @@ input[type="text"] {
   }
   &.connected {
     border-color:$white;
+    min-height:44px;
     &.open{
       border-color:$blue;
+      min-height:(40px + $qrCornerSize + ($qrCornerBorder * 2));
+      transition-delay: $slowTransTime;
+      &::before {
+        background-color:$blue;
+        background-image:var(--qr-image);
+        max-width:#{$qrCornerSize + ($qrCornerBorder * 2)};
+        transition-delay: 0ms;
+      }
+      #qr-corner {
+        height:$qrCornerSize;
+        margin-top:10px;
+      }
+    }
+    &::before {
+      content:'Connected';
+      max-width:120px;
+      border-radius: 10px 0 0 10px;
+      text-indent:100%;
+      // transition-delay: $slowTransTime;
+    }
+  }
+
+  &.connecting {
+    &::before {
+      content: 'Connecting...';
+      color:$white;
+      text-indent:0;
     }
   }
 }
@@ -459,13 +504,14 @@ input[type="text"] {
 .register-holder {
   position:relative;
   .selection-button {
-    position: absolute;
-    right: 30px;
-    bottom: -18px;
+    position:absolute;
+    right:10px;
+    top:50%;
     color:$white;
+    transform:translateY(-50%);
+    margin:0;
     &#close-registration {
       background-color:$red;
-      
     }
   }
 }
@@ -474,3 +520,15 @@ input[type="text"] {
   position:absolute;
   right:20px;
 }
+
+// #qr-corner {
+//   position:fixed;
+//   top: calc(100% - #{$qrCornerSize + $qrCornerBorder});
+//   left:$qrCornerBorder;
+//   height:$qrCornerSize;
+//   width:$qrCornerSize;
+//   transition: top $transTime;
+//   &.hidden {
+//     top:100%;
+//   }
+// }
