@@ -463,8 +463,9 @@ label {
   text-align: center;
   display: block;
   font-weight: bold;
-  font-size: 30px;
-  cursor: pointer; }
+  font-size: 30px; }
+  label:not(.heading) {
+    cursor: pointer; }
 
 .button {
   background-color: white;
@@ -726,16 +727,26 @@ input[type="text"] {
   color: #fff;
   position: absolute;
   left: 10px;
-  top: 20px;
-  transform: translateY(-50%);
+  height: 100%;
+  width: 150px;
+  overflow: hidden;
   opacity: 1;
-  -webkit-transition: opacity 300ms;
-  -moz-transition: opacity 300ms;
-  -o-transition: opacity 300ms;
-  transition: opacity 300ms; }
+  top: 50%;
+  transform: translateY(-27px);
+  -webkit-transition: all 300ms;
+  -moz-transition: all 300ms;
+  -o-transition: all 300ms;
+  transition: all 300ms; }
   .meeting-code:empty {
     opacity: 0;
     pointer-events: none; }
+  .meeting-code .copy-code {
+    font-size: 30px;
+    color: #888;
+    -webkit-transition: all 300ms;
+    -moz-transition: all 300ms;
+    -o-transition: all 300ms;
+    transition: all 300ms; }
   .meeting-code i {
     margin-left: 10px;
     cursor: pointer; }
@@ -744,6 +755,22 @@ input[type="text"] {
   .meeting-code#qr-meeting-code {
     top: 15px;
     left: 15px; }
+  .meeting-code .qr-code-button {
+    height: 150px;
+    width: 150px;
+    display: block;
+    position: absolute;
+    top: 52px;
+    left: 0;
+    border: 2px solid #335fa3;
+    opacity: 0;
+    cursor: pointer;
+    -webkit-transition: all 300ms;
+    -moz-transition: all 300ms;
+    -o-transition: all 300ms;
+    transition: all 300ms; }
+    .meeting-code .qr-code-button:hover {
+      border-color: #d9643e; }
 
 #register-display {
   margin-top: 20px;
@@ -770,10 +797,7 @@ input[type="text"] {
     font-weight: bold;
     font-size: 25px;
     line-height: 44px;
-    text-indent: -100%;
-    background-repeat: no-repeat;
-    background-size: 150px;
-    background-position: 10px calc(40px + 10px); }
+    text-indent: -100%; }
   #register-display:not(.connected) ~ #close-registration {
     display: none; }
   #register-display.connected {
@@ -782,20 +806,31 @@ input[type="text"] {
     #register-display.connected.open {
       border-color: #335fa3;
       min-height: 210px;
-      transition-delay: 500ms; }
+      transition-delay: 500ms;
+      background-color: #335fa388; }
       #register-display.connected.open::before {
         background-color: #335fa3;
-        background-image: var(--qr-image);
         max-width: 170px;
         transition-delay: 0ms; }
-      #register-display.connected.open #qr-corner {
-        height: 150px;
-        margin-top: 10px; }
+      #register-display.connected.open ~ .meeting-code {
+        top: 0;
+        transition-delay: 500ms;
+        transform: translateY(0); }
+        #register-display.connected.open ~ .meeting-code .copy-code {
+          color: #fff; }
+          #register-display.connected.open ~ .meeting-code .copy-code:hover {
+            color: #d9643e;
+            cursor: pointer; }
+        #register-display.connected.open ~ .meeting-code .qr-code-button {
+          opacity: 1;
+          transition-delay: 500ms; }
     #register-display.connected::before {
       content: 'Connected';
+      background-color: #fff;
       max-width: 120px;
       border-radius: 10px 0 0 10px;
-      text-indent: 100%; }
+      text-indent: 100%;
+      transition-delay: 500ms; }
   #register-display.connecting::before {
     content: 'Connecting...';
     color: #fff;

@@ -49,22 +49,25 @@
               <label id="use-register" for="useRegister" data-info="Do you want the team to use the client app?">Use Register</label>
             </div>
             <div class="tab">
-              <label>Team<div id="edit-team" class="edit-button"><i class="fa fa-pen-to-square"></i></div></label>
+              <label class="heading">Team<div id="edit-team" class="edit-button"><i class="fa fa-pen-to-square"></i></div></label>
               <div class="select-strip" id="team-members"></div>
             </div>
             <div class="tab hidden">
               
-              <label id="register-title">Register</label>
+              <label id="register-title" class="heading">Register</label>
               <div class="register-holder">
                 
                 <div class="select-strip" id="register-display"></div>
                 <div id="meeting-code" class="meeting-code"></div>
-                <div id="open-registration" class="selection-button">Open Registration</div>
-                <div id="close-registration" class="selection-button hidden">Close Registration</div>
+                <!-- <div id="open-registration" class="selection-button"><i class="fa fa-door-closed"></i></div>
+                
+                <div id="close-registration" class="selection-button hidden"><i class="fa fa-door-open"></i></div> -->
+                <div id="open-registration" class="selection-button">Open</div>
+                <div id="close-registration" class="selection-button hidden">Close</div>
               </div>
             </div>
           </div>
-          <label>Duration</label>
+          <label class="heading">Duration</label>
           <div class="select-strip">
           <div>
             <input id="time-slider" type="range" name="duration" value="1" class="set-check" min="1" max="60"/>
@@ -75,7 +78,7 @@
         
             <div id="duration-display"></div>
           </div>
-          <label>Options</label>
+          <label class="heading">Options</label>
           <div class="select-strip" id="options">
             <input id="pausable" type="checkbox" name="pausable" class="option-checkbox option-control"/>
             <label for="pausable" class="tooltip" data-info="Do you want a pause button on the timer?">Pause Button</label>

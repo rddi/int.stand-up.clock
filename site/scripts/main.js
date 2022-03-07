@@ -68,7 +68,6 @@ let version = '1.1',
   voteCount,
   pepExclusions = [],
   postFinishWait = 2000,
-  qrURL,
   clientURL;
 
 function setCollapser() {
@@ -341,7 +340,7 @@ function setUpForm() {
 
       Page.flashMessage(`Client URL: ${clientURL} has been copied to the clipboard`, 'success');
     } else if (e.target.classList.contains('qr-code-button')) {
-      qrCode.setAttribute('src', qrURL);
+      qrCode.setAttribute('src', Utilities.getQRCodeUrl(400, clientURL));
       qrCodeModal.classList.remove('hidden');
     }
 
@@ -1404,6 +1403,7 @@ function setRegister(value) {
   }
   tabs[0].classList.remove("hidden");
   tabs[1].classList.add("hidden");
+  setRegisterOpen(false);
 }
 
 
@@ -1608,10 +1608,10 @@ function handleRegistration(client, uniqueCode) {
     }
   }
 
-  //If not, add to new team list
+  // If not, add to new team list
   register[client] = uniqueCode;
 
-  //Send registration success
+  // Send registration success
   sendEvent({
     target: client,
     status: 'success',
@@ -1619,7 +1619,7 @@ function handleRegistration(client, uniqueCode) {
   }
     , 'Client.RegisterResponse');
 
-  Page.flashMessage(`"${client}" has joined the meeting`, 'success')
+  Emotes.spawnEmote(`door-open`, client, `green`)
   updateRegister();
   updateClients();
 }
@@ -1709,14 +1709,12 @@ function sendFinished() {
 function connectHandler() {
   Page.flashMessage(`Successfully created meeting "${Comms.params.meetingCode}"`, 'success');
   registerDisplay.setAttribute('code', Comms.params.meetingCode);
-  qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${clientURL}`;
-  meetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<i class="fa fa-qrcode qr-code-button"></i><i class="fa fa-clipboard copy-code"></i>`;
+  meetingCodeDisplay.innerHTML = `<div class="copy-code">${Comms.params.meetingCode}</div><img src="${Utilities.getQRCodeUrl(150,clientURL)}"class="qr-code-button"/>`;
   meetingCodeDisplay.classList.add('connected');
   
   qrMeetingCodeDisplay.innerHTML = `${Comms.params.meetingCode}<i class="fa fa-clipboard copy-code"></i>`;
   registerDisplay.classList.remove('connecting');
   registerDisplay.classList.add('connected');
-  registerDisplay.setAttribute('style', `--qr-image: url('${qrURL}');`);
   setRegisterOpen(true);
 }
 

@@ -85,7 +85,9 @@ label {
   display:block;
   font-weight:bold;
   font-size:30px;
-  cursor:pointer;
+  &:not(.heading) {
+    cursor:pointer;
+  }
 }
 
 .button {
@@ -399,13 +401,22 @@ input[type="text"] {
   color:$white;
   position:absolute;
   left:10px;
-  top:20px;
-  transform:translateY(-50%);
+  // top:-5px;
+  height:100%;
+  width:$qrCornerSize;
+  overflow: hidden;
   opacity:1;
-  @include transition(opacity $transTime);
+  top: 50%;
+  transform: translateY(-27px);
+  @include transition(all $transTime);
   &:empty {
     opacity:0;
     pointer-events: none;
+  }
+  .copy-code {
+    font-size:30px;
+    color:$grey;
+    @include transition(all $transTime);
   }
   i {
     margin-left:10px;
@@ -417,6 +428,21 @@ input[type="text"] {
   &#qr-meeting-code {
     top:15px;
     left:15px;
+  }
+  .qr-code-button {
+    height:$qrCornerSize;
+    width:$qrCornerSize;
+    display:block;
+    position:absolute;
+    top:52px; // Not too happy with this
+    left:0;
+    border:2px solid $blue;
+    opacity:0;
+    cursor:pointer;
+    @include transition(all $transTime);
+    &:hover {
+      border-color:$orange;
+    }
   }
 }
 
@@ -443,9 +469,9 @@ input[type="text"] {
     font-size:25px;
     line-height:44px;
     text-indent:-100%;
-    background-repeat:no-repeat;
-    background-size:$qrCornerSize;
-    background-position:#{$qrCornerBorder} calc(40px + #{$qrCornerBorder});
+    // background-repeat:no-repeat;
+    // background-size:$qrCornerSize;
+    // background-position:#{$qrCornerBorder} calc(40px + #{$qrCornerBorder});
   }
   
   &:not(.connected){
@@ -460,23 +486,36 @@ input[type="text"] {
       border-color:$blue;
       min-height:(40px + $qrCornerSize + ($qrCornerBorder * 2));
       transition-delay: $slowTransTime;
+      background-color: $bluefade;
       &::before {
         background-color:$blue;
-        background-image:var(--qr-image);
         max-width:#{$qrCornerSize + ($qrCornerBorder * 2)};
         transition-delay: 0ms;
       }
-      #qr-corner {
-        height:$qrCornerSize;
-        margin-top:10px;
+      &~.meeting-code {
+        top:0;
+        transition-delay: $slowTransTime;
+        transform:translateY(0);
+        .copy-code {
+          color:$white;
+          &:hover {
+            color:$orange;
+            cursor:pointer;
+          }
+        }
+        .qr-code-button {
+          opacity:1;
+          transition-delay: $slowTransTime;
+        }
       }
     }
     &::before {
       content:'Connected';
+      background-color: $white;
       max-width:120px;
       border-radius: 10px 0 0 10px;
       text-indent:100%;
-      // transition-delay: $slowTransTime;
+      transition-delay: $slowTransTime;
     }
   }
 

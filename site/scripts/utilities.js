@@ -39,6 +39,9 @@ const Utilities = {
     const versionLabel = document.getElementById('version');
 
     versionLabel.innerHTML=`v${version}`;
-  }
+  },
+  getQRCodeUrl: function(size, url) {
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${url}`;
+  },
 };
 
