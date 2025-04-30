@@ -1,7 +1,9 @@
 let mqtt,
     reconnectTimeout = 2000,
-    host = 'mqtt.edflabs.net',
+    //host = 'mqtt.edflabs.net',
+    host = 'ec2-35-176-222-61.eu-west-2.compute.amazonaws.com',
     port = 8081, //MQTT over WebSockets, encrypted
+    useSSL = false,
     mqtt_username = 'standup',
     mqtt_password = '7h31&0n1yrddi!'; 
 
@@ -27,7 +29,7 @@ const Comms = {
       timeout: 5,
       onSuccess:Comms.onConnect,
       onFailure:Comms.onError,
-      useSSL: true,
+      useSSL: useSSL,
       userName: mqtt_username,
       password: mqtt_password,
     };
