@@ -1,9 +1,8 @@
 let mqtt,
     reconnectTimeout = 2000,
-    //host = 'mqtt.edflabs.net',
-    host = 'ec2-35-176-222-61.eu-west-2.compute.amazonaws.com',
-    port = 8081, //MQTT over WebSockets, encrypted
-    useSSL = false,
+    host = 'mqtt.edflabs.net',
+    port = 443,
+    useSSL = true,
     mqtt_username = 'standup',
     mqtt_password = '7h31&0n1yrddi!'; 
 
