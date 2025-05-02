@@ -32,8 +32,6 @@ const Comms = {
       userName: mqtt_username,
       password: mqtt_password,
       keepAliveInterval: 60,
-      reconnect: true,
-      reconnectInterval: 5000,
     };
 
     // mqtt.username_pw_set(mqtt_username, mqtt_password);
