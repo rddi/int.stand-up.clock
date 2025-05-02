@@ -31,6 +31,9 @@ const Comms = {
       useSSL: useSSL,
       userName: mqtt_username,
       password: mqtt_password,
+      keepAliveInterval: 60,
+      reconnect: true,
+      reconnectInterval: 5000,
     };
 
     // mqtt.username_pw_set(mqtt_username, mqtt_password);
@@ -73,12 +76,13 @@ const Comms = {
       handleReciept(message);
     }
   },
-  onConnectionLost: function() {
+  onConnectionLost: function(responseObject) {
     if (!Comms.params.connected) {
       return;
     }
     Page.flashMessage('Connection lost','error');
     Page.flashMessage('Retrying connection','notice');
+    console.log('connection lost', responseObject.errorMessage);
     Comms.MQTTConnect(Comms.params.meetingCode);
   },
   isConnected: function() {
