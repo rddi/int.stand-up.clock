@@ -661,7 +661,7 @@ function newSpeaker() {
 
 
   for (i = 0; i < name.length; i += 1) {
-    nameElement += `<div class="letter" id="${type}${offset}">${name[i]}</div>`;
+    nameElement += `<div class="letter letter-${i}" id="${type}${offset}">${name[i]}</div>`;
     offset += 1;
   }
 
