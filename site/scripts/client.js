@@ -200,6 +200,9 @@ function handleReciept(input) {
       case 'RegisterResponse':
         handleRegisterResponse(message.body);
         break;
+      case 'RegisterResponseLate':
+        handleRegisterResponseLate(message.body);
+        break;
       case 'Notify':
         notice(`${message.body}s remaining`, 'red');
         break;
@@ -361,6 +364,15 @@ function handleRegisterResponse(response) {
     setMainDisplay("Unable to register", 0);
     Page.flashMessage(`Could not register in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}": ${response.error}`, 'error');
   }
+}
+
+function handleRegisterResponseLate(response) {
+  if (response.target != Comms.params.clientName) {
+    return;
+  }
+  setMainDisplay("Meeting in Progress", 1);
+    Page.flashMessage(`Registered as a late comerin meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
+    Comms.params.registered = true;
 }
 
 function handleUpdateSpeaker(speaker) {

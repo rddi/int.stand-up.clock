@@ -274,7 +274,11 @@ function setRegisterOpen(_open = true) {
     closeRegistrationButton.classList.add("hidden");
     registerDisplay.classList.remove("open");
     if (wasOpen) {
-      Page.flashMessage('Registration closed', 'notice');
+      if (options.lateComers) {
+        Page.flashMessage('Registration closed, but late comers can still join', 'notice');
+      } else {
+        Page.flashMessage('Registration closed', 'notice');
+      }
     }
   } else {
     openRegistrationButton.classList.add("hidden");
@@ -1584,7 +1588,7 @@ function handleRegistration(client, uniqueCode) {
     return;
   }
 
-  if (!registrationOpen) {
+  if (!registrationOpen && !options.lateComers) {
     sendEvent({
       target: client,
       status: 'failure',
@@ -1610,8 +1614,6 @@ function handleRegistration(client, uniqueCode) {
 
   // If not, add to new team list
   register[client] = uniqueCode;
-
-  // Send registration success
   sendEvent({
     target: client,
     status: 'success',
@@ -1619,7 +1621,27 @@ function handleRegistration(client, uniqueCode) {
   }
     , 'Client.RegisterResponse');
 
-  Emotes.spawnEmote(`door-open`, client, `green`)
+  if (!registrationOpen) {
+    sendEvent({
+      target: client,
+      status: 'success',
+      error: 'none'
+    }
+      , 'Client.RegisterResponseLate');
+    Emotes.spawnEmote(`door-open`, client, `red`)
+  } else {
+    sendEvent({
+      target: client,
+      status: 'success',
+      error: 'none'
+    }
+      , 'Client.RegisterResponse');
+    Emotes.spawnEmote(`door-open`, client, `green`)
+  }
+  // Send registration success
+  
+
+  // Emotes.spawnEmote(`door-open`, client, `green`)
   updateRegister();
   updateClients();
 }

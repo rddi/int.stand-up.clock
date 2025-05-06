@@ -40,6 +40,11 @@
             <div class="corner l"></div>
           </a>
         </div>
+        <div class="right">
+          <div id="late-comers-qr">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://digital-innovation-stand-up.vercel.app/" alt="Late comers QR code"/>
+          </div>
+        </div>
       </div>
       <div class="container collapser closed">
         <form id="input-form">
@@ -92,6 +97,8 @@
             <label for="word-vote" class="tooltip" data-info="Do you want the team to vote on a word for the pep talk?">Word Vote</label>
             <input id="emotable" type="checkbox" name="emotable" class="option-checkbox option-control" data-linked-off="emotable"/>
             <label for="emotable" class="tooltip" data-info="Do you want the team to be able to send emotes during the meeting?">Emotes</label>
+            <input id="late-comers" type="checkbox" name="late-comers" class="option-checkbox option-control"/>
+            <label for="late-comers" class="tooltip" data-info="Do you want the team to be able to join the meeting late?">Late comers</label>
           </div>
           <input id="set-button" type="submit" value="Set" class="button disabled"></input>
           <div class="save-load-section">
