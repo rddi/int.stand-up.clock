@@ -1,4 +1,4 @@
-let version = '1.1',
+let version = '1.2',
   timer,
   subtimer,
   collapser,
@@ -43,6 +43,7 @@ let version = '1.1',
     collectTime: true,
     pp: false,
     emote: false,
+    lateComers: false,
   },
   optionInputs,
   timeSlider,
@@ -55,6 +56,8 @@ let version = '1.1',
   registerDisplay,
   openRegistrationButton,
   closeRegistrationButton,
+  membersCount,
+  membersCountNumber,
   tabs,
   finishSent = false,
   meetingCodeDisplay,
@@ -271,7 +274,11 @@ function setRegisterOpen(_open = true) {
 
   if (!_open) {
     openRegistrationButton.classList.remove("hidden");
+    
     closeRegistrationButton.classList.add("hidden");
+    if (Object.keys(register).length === 0) {
+      membersCount.classList.add("hidden");
+    }
     registerDisplay.classList.remove("open");
     if (wasOpen) {
       if (options.lateComers) {
@@ -283,6 +290,7 @@ function setRegisterOpen(_open = true) {
   } else {
     openRegistrationButton.classList.add("hidden");
     closeRegistrationButton.classList.remove("hidden");
+    membersCount.classList.remove("hidden");
     registerDisplay.classList.add("open");
     if (Comms.isConnected()) {
       Page.flashMessage('Registration open', 'success');
@@ -301,7 +309,8 @@ function setUpForm() {
 
   openRegistrationButton = document.getElementById('open-registration');
   closeRegistrationButton = document.getElementById('close-registration');
-
+  membersCount = document.getElementById('members-count');
+  membersCountNumber = document.getElementById('members-count-number');
   registerDisplay = document.getElementById('register-display');
   meetingCodeDisplay = document.getElementById('meeting-code');
   qrMeetingCodeDisplay = document.getElementById('qr-meeting-code');
@@ -1588,6 +1597,8 @@ function handleRegistration(client, uniqueCode) {
     return;
   }
 
+  console.log("HIGGINS!", registrationOpen, options.lateComers);
+
   if (!registrationOpen && !options.lateComers) {
     sendEvent({
       target: client,
@@ -1614,28 +1625,21 @@ function handleRegistration(client, uniqueCode) {
 
   // If not, add to new team list
   register[client] = uniqueCode;
-  sendEvent({
-    target: client,
-    status: 'success',
-    error: 'none'
-  }
-    , 'Client.RegisterResponse');
-
   if (!registrationOpen) {
     sendEvent({
       target: client,
       status: 'success',
       error: 'none'
-    }
-      , 'Client.RegisterResponseLate');
+    },
+    'Client.RegisterResponseLate');
     Emotes.spawnEmote(`door-open`, client, `red`)
   } else {
     sendEvent({
       target: client,
       status: 'success',
       error: 'none'
-    }
-      , 'Client.RegisterResponse');
+    },
+    'Client.RegisterResponse');
     Emotes.spawnEmote(`door-open`, client, `green`)
   }
   // Send registration success
@@ -1658,6 +1662,7 @@ function updateRegister() {
   }
 
   registerDisplay.innerHTML = registerMembers.join('');
+  membersCountNumber.innerHTML = Object.keys(register).length;
   checkSetButton();
 }
 

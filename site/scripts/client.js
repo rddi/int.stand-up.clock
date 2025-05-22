@@ -1,4 +1,4 @@
-let version = '1.1',
+let version = '1.12',
   meetingCodeInput,
   clientNameInput,
   joinModal,
@@ -557,6 +557,11 @@ function getUniqueCode() {
   Comms.params.uniqueCode = Memory.get('standup_client_uniquecode');
 }
 
+function attemptReconnect() {
+    Page.flashMessage('Attempting to reconnect...', 'notice');
+    Comms.MQTTConnect(Comms.params.meetingCode);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   Utilities.setVersion();
   getUniqueCode();
@@ -568,3 +573,12 @@ document.addEventListener("DOMContentLoaded", function () {
   Page.setUpFlash();
 });
 
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') {
+    Page.flashMessage('Page inactive. Disconnecting...', 'notice');
+    Comms.disconnect(); // Don't know if this is the correct way to handle this
+  }
+  if (document.visibilityState === 'visible' && !Comms.params.connected) {
+    attemptReconnect();
+  }
+});
