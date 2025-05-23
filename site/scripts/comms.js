@@ -55,7 +55,7 @@ const Comms = {
 
     Comms.params.connected = true;
 
-    Comms.startKeepAlive();
+    // Comms.startKeepAlive();
 
     if(connectHandler) {
       connectHandler();
@@ -84,6 +84,8 @@ const Comms = {
     Page.flashMessage('Connection lost','error');
     Page.flashMessage('Retrying connection','notice');
     console.log('connection lost', responseObject.errorMessage);
+    console.log('reconnecting to ', Comms.params.meetingCode);
+    Page.flashMessage(`Retrying connection to ${Comms.params.meetingCode}`,'notice');
     Comms.MQTTConnect(Comms.params.meetingCode);
   },
   isConnected: function() {
@@ -111,19 +113,4 @@ const Comms = {
 
     Comms.broadcastMessage(JSON.stringify(output));
   },
-  startKeepAlive: function() {
-    if (keepAliveIntervalId) clearInterval(keepAliveIntervalId);
-  keepAliveIntervalId = setInterval(() => {
-    if (mqtt && mqtt.isConnected()) {
-      const msg = new Paho.MQTT.Message(JSON.stringify({
-        type: 'keepalive',
-        clientId: Comms.params.clientName || 'unknown',
-        timestamp: Date.now()
-      }));
-      msg.destinationName = `standup/${Comms.params.meetingCode}/keepalive`;
-      mqtt.send(msg);
-    }
-  }, 15000); // Send every 15 seconds
-  },
-
 }

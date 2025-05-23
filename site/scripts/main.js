@@ -567,8 +567,7 @@ function setUpTimers() {
       pause.classList.add('paused');
       nameWheelPause(true);
     }
-    sendSpeaker();
-    sendMemberList();
+    updateClients();
   });
 
   end.addEventListener("click", function (e) {
@@ -1457,6 +1456,9 @@ function handleReciept(input) {
         case 'Emote':
           handleEmote(sanitisedClient, message.body);
           break;
+        case 'MeetingStatus':
+          handleMeetingStatus(sanitisedClient);
+          break;
         default:
           console.log(`Could not handle message type: "${message.type}"`);
       }
@@ -1553,6 +1555,12 @@ function handleEmote(client, emote) {
 
 function showVotes(votes) {
   voteCount.innerHTML = `<i class="fa fa-check-to-slot"></i><span>${votes}/${team.length - 1}</span><a id="close-vote-button" class="button hidden"><i class="fa fa-forward"></i></a>`;
+}
+
+function handleMeetingStatus(client) {
+  Page.flashMessage(`Meeting status request received from ${client}`, 'success');
+  sendSpeaker();
+  sendMemberList();
 }
 
 function getVoteResults() {
@@ -1667,8 +1675,7 @@ function updateRegister() {
 }
 
 function updateClients() {
-  sendSpeaker();
-
+  sendSpeaker()
   sendMemberList();
 }
 

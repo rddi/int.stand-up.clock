@@ -134,6 +134,7 @@ function handleReciept(input) {
       return;
     }
     
+    
     switch (type[1]) {
       case 'Message':
         if (!Comms.params.registered) {
@@ -146,6 +147,7 @@ function handleReciept(input) {
           return;
         }
         handleUpdateSpeaker(message.body);
+        // Page.flashMessage(`UpdateSpeaker received: ${message.body}`, 'notice');
         break;
       case 'PepTalker':
         if (!Comms.params.registered) {
@@ -157,6 +159,7 @@ function handleReciept(input) {
         if (!Comms.params.registered) {
           return;
         }
+        // Page.flashMessage(`MemberList received: ${message.body}`, 'notice');
         handleMemberList(message.body);
         break;
       case 'Deregister':
@@ -357,7 +360,8 @@ function handleRegisterResponse(response) {
   }
   console.log("reg response", response)
   if (response.status == 'success') {
-    setMainDisplay("Waiting for others", 1);
+    setMainDisplay("Registered", 1);
+    // requestMeetingStatus();
     Page.flashMessage(`Registered in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
     Comms.params.registered = true;
   } else if (response.status == 'failure') {
@@ -371,7 +375,7 @@ function handleRegisterResponseLate(response) {
     return;
   }
   setMainDisplay("Meeting in Progress", 1);
-    Page.flashMessage(`Registered as a late comerin meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
+    Page.flashMessage(`Registered as a late comer in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
     Comms.params.registered = true;
 }
 
@@ -558,9 +562,24 @@ function getUniqueCode() {
 }
 
 function attemptReconnect() {
-    Page.flashMessage('Attempting to reconnect...', 'notice');
+  Comms.params = Memory.getObject('standup_client_settings');
+    Page.flashMessage(`Attempting to reconnect to meeting "${Comms.params.meetingCode}"`, 'notice');
+    
     Comms.MQTTConnect(Comms.params.meetingCode);
 }
+
+// function requestMeetingStatus() {
+//   Comms.params = Memory.getObject('standup_client_settings');
+//   Comms.sendEvent(Comms.params.clientName, 'Master.MeetingStatus');
+
+//   // let output = {
+//   //   type: 'MeetingStatus',
+//   //   client: Comms.params.clientName,
+//   //   body: _body
+//   // };
+
+//   // Comms.broadcastMessage(JSON.stringify(output));
+// }
 
 document.addEventListener("DOMContentLoaded", function () {
   Utilities.setVersion();
