@@ -136,6 +136,9 @@ function handleReciept(input) {
     
     
     switch (type[1]) {
+      case 'Ping':
+        handlePing(message.body);
+        break;
       case 'Message':
         if (!Comms.params.registered) {
           return;
@@ -403,6 +406,10 @@ function handleUpdateSpeaker(speaker) {
   setMainDisplay(currentSpeaker, state, 'Current Speaker');
 }
 
+function handlePing(ping) {
+  Comms.sendEvent(ping.client, 'Master.Pong', ping.body);
+}
+
 function handlePepTalk(pepTalker){
   console.log(pepTalker);
   let state = 2;
@@ -567,19 +574,6 @@ function attemptReconnect() {
     
     Comms.MQTTConnect(Comms.params.meetingCode);
 }
-
-// function requestMeetingStatus() {
-//   Comms.params = Memory.getObject('standup_client_settings');
-//   Comms.sendEvent(Comms.params.clientName, 'Master.MeetingStatus');
-
-//   // let output = {
-//   //   type: 'MeetingStatus',
-//   //   client: Comms.params.clientName,
-//   //   body: _body
-//   // };
-
-//   // Comms.broadcastMessage(JSON.stringify(output));
-// }
 
 document.addEventListener("DOMContentLoaded", function () {
   Utilities.setVersion();

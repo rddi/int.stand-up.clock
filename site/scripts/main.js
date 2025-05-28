@@ -22,6 +22,7 @@ let version = '1.2',
   pepDisplay,
   muteInput,
   updateSpeed = 100,
+  pingInterval = 10000,
   teamRemaining = 0,
   wheelRot = 0,
   sounds = [],
@@ -71,7 +72,8 @@ let version = '1.2',
   voteCount,
   pepExclusions = [],
   postFinishWait = 2000,
-  clientURL;
+  clientURL,
+  pingList = {};
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0];
@@ -1280,6 +1282,44 @@ function update() {
   }
 }
 
+function checkLastPing() {
+  const currentMembers = document.getElementsByClassName('team-button');
+  
+  for (let i = 0; i < currentMembers.length; i += 1) {
+    let found = false;
+
+    for (let pingCode in pingList) {
+      if (pingList[pingCode].includes(currentMembers[i].innerHTML)) {
+        found = true;
+        break;
+      }
+    }
+
+    currentMembers[i].classList.remove('no-ping');
+
+    if(found) {
+      currentMembers[i].classList.add('no-ping');
+    }
+  }
+}
+
+function startPings() {
+  setInterval(function () {
+    checkLastPing();
+    const pingCode = `${new Date().getTime()}`;
+    let currentMemberList = document.getElementsByClassName('team-button');
+    let memberList = [];
+
+    for (let i = 0; i < currentMemberList.length; i += 1) {
+      memberList.push(currentMemberList[i].innerHTML);
+    }
+
+    pingList[pingCode] = memberList;
+
+    sendEvent(pingCode, 'Client.Ping');
+  }, pingInterval);
+}
+
 function startUpdates() {
   setInterval(function () {
     update();
@@ -1458,6 +1498,9 @@ function handleReciept(input) {
           break;
         case 'MeetingStatus':
           handleMeetingStatus(sanitisedClient);
+          break;
+        case 'Pong':
+          handlePong(sanitisedClient, message.body);
           break;
         default:
           console.log(`Could not handle message type: "${message.type}"`);
@@ -1656,6 +1699,20 @@ function handleRegistration(client, uniqueCode) {
   // Emotes.spawnEmote(`door-open`, client, `green`)
   updateRegister();
   updateClients();
+}
+
+function handlePong(client, pingCode) {
+  if (!pingList.hasOwnProperty(pingCode)) {
+    console.log('Pong received but code not recognised');
+    return;
+  }
+
+  pingList[pingCode] = pingList[pingCode].filter(member => member != client);
+
+  if (pingList[pingCode].length == 0) {
+    delete pingList[pingCode];
+  }
+    
 }
 
 function updateRegister() {
