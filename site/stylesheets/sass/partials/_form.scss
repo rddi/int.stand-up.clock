@@ -6,6 +6,12 @@
   display:block;
   overflow:hidden;
   position:relative;
+  float:left;
+  margin-right: 10px;
+  @include transition(opacity $transTime);
+  &.pulse {
+    animation: pulse-once 300ms ease-out;
+  }
   .icon {
     position: absolute;
     top: 50%;
@@ -15,9 +21,23 @@
     @include transition(transform $transTime);
       
     i.fa {
-      font-size: 40px;
+      font-size:40px;
       line-height:60px;
       @include transition(transform $transTime);
+      position: relative;
+      &.slash {
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(45deg);
+          height: 100%;
+          width: 6px;
+          border-radius: 3px;
+          background-color: $white;
+        }
+      }
     }
   }
 
@@ -76,6 +96,10 @@
         right:$offset;
       }
     }
+  }
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
@@ -338,10 +362,10 @@ label {
   cursor:pointer;
 }
 
-#mute-input {
+#mute-input, #ping-input {
   display:none;
   &:checked+.icon {
-    @include transform(translate(-50%, -75%));
+    @include transform(translate(-50%, -75%)); 
   }
 }
 

@@ -8,17 +8,17 @@
 
   .hand-holder {
     overflow: hidden;
-    width: $timerSize / 2;
+    width: calc($timerSize / 2);
     height: $timerSize;
     position: absolute;
     top: 0;
     left: 0;
-    border-top-left-radius: $timerSize / 2;
-    border-bottom-left-radius: $timerSize / 2;
+    border-top-left-radius: calc($timerSize / 2);
+    border-bottom-left-radius: calc($timerSize / 2);
     .hand {
       background-color: $orange;
       display: block;
-      width: $timerSize / 2;
+      width: calc($timerSize / 2);
       height: $timerSize;
       transform-origin: right center;
     }
@@ -27,8 +27,8 @@
       top: 50%;
       left: 50%;
       border-radius: 0;
-      border-top-right-radius: $timerSize / 2;
-      border-bottom-right-radius: $timerSize / 2;
+      border-top-right-radius: calc($timerSize / 2);
+      border-bottom-right-radius: calc($timerSize / 2);
       .hand {
         transform-origin: left center;
       }
@@ -144,10 +144,10 @@
     @include transform(translate(-50%, -50%));
 
     .hand-holder {
-      width: $subTimerSize / 2;
+      width: calc($subTimerSize / 2);
       height: $subTimerSize;
       .hand {
-        width: $subTimerSize / 2;
+        width: calc($subTimerSize / 2);
         height: $subTimerSize;
         background-color: $blue;
       }
@@ -184,7 +184,7 @@
   line-height:35px;
   color: $white;
   cursor: pointer;
-  transition: color $transTime, background-color $transTime, text-decoration $transTime, opacity $transTime;
+  transition: color $transTime, background-color $transTime, text-decoration $transTime, opacity $transTime, box-shadow $transTime;
   position: relative;
   z-index:10;
   white-space: nowrap;
@@ -246,15 +246,34 @@
         opacity: 0;
       }
     }
-    &.no-ping {
-      &::after {
-        content: 'X';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 20px;
-      }
+  }
+
+  &::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-color: $green;
+    border-radius: 50%;
+    position: absolute;
+    right:-5px;
+    top:-5px;
+    opacity:0;
+    transition: background-color $transTime, opacity $transTime;
+    border: 2px solid black;
+  }
+  &.low-ping {
+    &::after {
+      background-color: $red;
+    }
+  }
+  &.no-ping {
+    &::after {
+      background-color: $grey;
+    }
+  }
+  &.show-ping {
+    &::after {
+      opacity:100;
     }
   }
 }

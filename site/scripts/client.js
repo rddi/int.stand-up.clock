@@ -1,4 +1,4 @@
-let version = '1.12',
+let version = '1.2',
   meetingCodeInput,
   clientNameInput,
   joinModal,
@@ -150,7 +150,7 @@ function handleReciept(input) {
           return;
         }
         handleUpdateSpeaker(message.body);
-        // Page.flashMessage(`UpdateSpeaker received: ${message.body}`, 'notice');
+        Page.flashMessage(`UpdateSpeaker received: ${message.body}`, 'notice');
         break;
       case 'PepTalker':
         if (!Comms.params.registered) {
@@ -162,7 +162,7 @@ function handleReciept(input) {
         if (!Comms.params.registered) {
           return;
         }
-        // Page.flashMessage(`MemberList received: ${message.body}`, 'notice');
+        Page.flashMessage(`MemberList received: ${message.body}`, 'notice');
         handleMemberList(message.body);
         break;
       case 'Deregister':
@@ -291,6 +291,7 @@ function clearEmoteButtons() {
 }
 
 function setMainDisplay(content, state = null, newLabel = null) {
+  Page.flashMessage(`SetMainDisplay: ${content}`, 'notice');
 
 
 
@@ -403,11 +404,11 @@ function handleUpdateSpeaker(speaker) {
     emotesHolder.classList.remove('active');
   }
 
-  setMainDisplay(currentSpeaker, state, 'Current Speaker');
+  setMainDisplay(currentSpeaker, state, 'Current Speaker', true);
 }
 
-function handlePing(ping) {
-  Comms.sendEvent(ping.client, 'Master.Pong', ping.body);
+function handlePing(pingCode) {
+  Comms.sendEvent(pingCode, 'Master.Pong');
 }
 
 function handlePepTalk(pepTalker){

@@ -34,6 +34,18 @@
   }
 }
 
+@keyframes pulse-once {
+  0% {
+    border-width:1px;
+  }
+  50% {
+    border-width:5px;
+  }
+  100% {
+    border-width:1px;
+  }
+}
+
 // @keyframes flash-out {
 //   from {
 //     opacity:1;

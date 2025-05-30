@@ -293,7 +293,7 @@ h1 {
 
     @for $i from -$spread through $spread {
       &#even#{$i} {
-        transform: scale(1) translateX(-50%) rotate3d(0,0,1, #{180 + (($i * $rot) + ($rot / 2))}deg);
+        transform: scale(1) translateX(-50%) rotate3d(0,0,1, #{180 + (($i * $rot) + calc($rot / 2))}deg);
       }
       &#odd#{$i} {
         transform: scale(1) translateX(-50%) rotate3d(0,0,1, #{180 + ($i * $rot)}deg);
@@ -308,13 +308,14 @@ h1 {
     .letter {
       @for $i from -$spread through $spread {
         &#even#{$i} {
-          transform: scale(0) translateX(-50%) rotate3d(0,0,1, #{180 + (($i * $rot) + ($rot / 2))}deg);
+          transform: scale(0) translateX(-50%) rotate3d(0,0,1, #{180 + (($i * $rot) + calc($rot / 2))}deg);
         }
         &#odd#{$i} {
           transform: scale(0) translateX(-50%) rotate3d(0,0,1, #{180 + ($i * $rot)}deg);
         }
       }
     }
+
   }
 }
 
@@ -325,7 +326,7 @@ h1 {
   top:50%;
   left:50%;
   transform:translate(-50%, -50%);
-  border: $nameWheelSize / 2 solid transparent;
+  border: calc($nameWheelSize / 2) solid transparent;
   border-bottom-color: $white;
 }
 

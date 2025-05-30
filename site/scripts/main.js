@@ -1,4 +1,4 @@
-let version = '1.2',
+let version = '1.25',
   timer,
   subtimer,
   collapser,
@@ -21,6 +21,7 @@ let version = '1.2',
   pep,
   pepDisplay,
   muteInput,
+  pingInput,
   updateSpeed = 100,
   pingInterval = 10000,
   teamRemaining = 0,
@@ -40,6 +41,7 @@ let version = '1.2',
   title,
   options = {
     mute: false,
+    pinging: true,
     pausable: false,
     collectTime: true,
     pp: false,
@@ -73,7 +75,8 @@ let version = '1.2',
   pepExclusions = [],
   postFinishWait = 2000,
   clientURL,
-  pingList = {};
+  pingList = {},
+  pingRunner;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0];
@@ -296,6 +299,7 @@ function setRegisterOpen(_open = true) {
     registerDisplay.classList.add("open");
     if (Comms.isConnected()) {
       Page.flashMessage('Registration open', 'success');
+      startPings();
     }
   }
 }
@@ -303,6 +307,7 @@ function setRegisterOpen(_open = true) {
 function setUpForm() {
   form = document.getElementById("input-form");
   muteInput = document.getElementById("mute-input");
+  pingInput = document.getElementById("ping-input");
 
   teamInput = document.getElementById('meeting-name-input');
 
@@ -1282,31 +1287,50 @@ function update() {
   }
 }
 
-function checkLastPing() {
+function applyPingStatusIndicators() {
   const currentMembers = document.getElementsByClassName('team-button');
-  
   for (let i = 0; i < currentMembers.length; i += 1) {
-    let found = false;
-
-    for (let pingCode in pingList) {
-      if (pingList[pingCode].includes(currentMembers[i].innerHTML)) {
-        found = true;
-        break;
-      }
-    }
 
     currentMembers[i].classList.remove('no-ping');
+    currentMembers[i].classList.remove('low-ping');
+    currentMembers[i].classList.remove('show-ping');
+    if (options.pinging && options.useRegister) {
+      currentMembers[i].classList.add('show-ping');
+    
+      if (pingList.hasOwnProperty(currentMembers[i].innerHTML)) {
+        if (new Date().getTime() - pingList[currentMembers[i].innerHTML] > 10000) { // More that 10 seconds since last pong
+          currentMembers[i].classList.add('low-ping');
+        }
 
-    if(found) {
-      currentMembers[i].classList.add('no-ping');
+        if (new Date().getTime() - pingList[currentMembers[i].innerHTML] > 20000) { // More that 10 seconds since last pong
+          currentMembers[i].classList.remove('low-ping');
+          currentMembers[i].classList.add('no-ping');
+        }
+      }
     }
   }
 }
 
 function startPings() {
-  setInterval(function () {
-    checkLastPing();
+  console.log('Setting up pings');
+
+  if (pingRunner) {
+    clearInterval(pingRunner);
+  }
+
+  let currentMemberList = document.getElementsByClassName('team-button');
+
+  for (let i = 0; i < currentMemberList.length; i += 1) {
+    pingList[currentMemberList[i].innerHTML] = 0;
+  }
+
+  pingRunner = setInterval(function () { 
+    applyPingStatusIndicators();
+    if (!options.pinging) {
+      return;
+    }
     const pingCode = `${new Date().getTime()}`;
+    console.log('Ping code: ', pingCode);
     let currentMemberList = document.getElementsByClassName('team-button');
     let memberList = [];
 
@@ -1314,9 +1338,18 @@ function startPings() {
       memberList.push(currentMemberList[i].innerHTML);
     }
 
-    pingList[pingCode] = memberList;
+    console.log('Member list: ', memberList);
+
+    // pingList[pingCode] = memberList;
+
+    
+    pingInput.parentElement.classList.remove('pulse');
+    void pingInput.offsetWidth;
+    pingInput.parentElement.classList.add('pulse');
 
     sendEvent(pingCode, 'Client.Ping');
+    console.log('Ping sent');
+
   }, pingInterval);
 }
 
@@ -1451,10 +1484,12 @@ function setRegister(value) {
   if (value) {
     tabs[0].classList.add("hidden");
     tabs[1].classList.remove("hidden");
+    pingInput.parentElement.classList.remove('hidden');
     return;
   }
   tabs[0].classList.remove("hidden");
   tabs[1].classList.add("hidden");
+  pingInput.parentElement.classList.add('hidden');
   setRegisterOpen(false);
 }
 
@@ -1702,17 +1737,10 @@ function handleRegistration(client, uniqueCode) {
 }
 
 function handlePong(client, pingCode) {
-  if (!pingList.hasOwnProperty(pingCode)) {
-    console.log('Pong received but code not recognised');
-    return;
-  }
-
-  pingList[pingCode] = pingList[pingCode].filter(member => member != client);
-
-  if (pingList[pingCode].length == 0) {
-    delete pingList[pingCode];
-  }
-    
+  console.log('Pong received from ', client, ' with code ', pingCode);
+  pingList[client] = pingCode;
+  console.log('Ping list: ', pingList);
+  applyPingStatusIndicators();
 }
 
 function updateRegister() {
