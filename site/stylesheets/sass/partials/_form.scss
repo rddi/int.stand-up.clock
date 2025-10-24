@@ -10,7 +10,7 @@
   margin-right: 10px;
   @include transition(opacity $transTime);
   &.pulse {
-    animation: pulse-once 300ms ease-out;
+    animation: pulse-border 300ms ease-out;
   }
   .icon {
     position: absolute;

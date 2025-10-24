@@ -17,11 +17,13 @@ let version = '1.2',
   wordChoiceElement,
   emotesButtonContainer,
   noticeContainer,
-  noticeContent
+  noticeContent,
+  pingContainer,
   memberList = {},
   searchTimeout = 10000
   lastEmote = 0,
-  emoteThrottle = 5000;
+  emoteThrottle = 5000,
+  lastPing = 0;
 
   let emotesHolder;
 
@@ -98,6 +100,26 @@ function setUpDisplay() {
   teamDisplay = document.getElementById('team-display');
   noticeContainer = document.getElementById('notice-container');
   noticeContent = document.getElementById('notice');
+  pingContainer = document.getElementById('ping-container');
+
+  setInterval(function() {
+    pingContainer.classList.remove('low-ping', 'no-ping');
+    if (!Comms.params.registered) {
+      return;
+    }
+    if ((new Date().getTime() - lastPing) > 20000) {
+      pingContainer.classList.add('no-ping');
+    } else if ((new Date().getTime() - lastPing) > 10000) {
+      pingContainer.classList.add('low-ping');
+    }
+  }, 10000);
+
+  pingContainer.addEventListener('click', function() {
+    if (!pingContainer.classList.contains('no-ping')) {
+      return;
+    }
+    attemptReconnect();
+  });
 }
 
 function setUpButtons() {
@@ -150,7 +172,6 @@ function handleReciept(input) {
           return;
         }
         handleUpdateSpeaker(message.body);
-        Page.flashMessage(`UpdateSpeaker received: ${message.body}`, 'notice');
         break;
       case 'PepTalker':
         if (!Comms.params.registered) {
@@ -162,7 +183,6 @@ function handleReciept(input) {
         if (!Comms.params.registered) {
           return;
         }
-        Page.flashMessage(`MemberList received: ${message.body}`, 'notice');
         handleMemberList(message.body);
         break;
       case 'Deregister':
@@ -291,11 +311,8 @@ function clearEmoteButtons() {
 }
 
 function setMainDisplay(content, state = null, newLabel = null) {
-  Page.flashMessage(`SetMainDisplay: ${content}`, 'notice');
-
-
-
   let html = `<span>${content}</span>`;
+
   if (mainDisplay.innerHTML == html && mainDisplay.getAttribute('label') == newLabel) {
     return;
   }
@@ -362,12 +379,12 @@ function handleRegisterResponse(response) {
   if (response.target != Comms.params.clientName) {
     return;
   }
-  console.log("reg response", response)
   if (response.status == 'success') {
     setMainDisplay("Registered", 1);
-    // requestMeetingStatus();
     Page.flashMessage(`Registered in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
     Comms.params.registered = true;
+    pingContainer.classList.remove('hidden');
+    lastPing = new Date().getTime();
   } else if (response.status == 'failure') {
     setMainDisplay("Unable to register", 0);
     Page.flashMessage(`Could not register in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}": ${response.error}`, 'error');
@@ -408,7 +425,12 @@ function handleUpdateSpeaker(speaker) {
 }
 
 function handlePing(pingCode) {
+  lastPing = pingCode;
+  pingContainer.classList.remove('pulse');
+  void pingContainer.offsetWidth;
+  pingContainer.classList.add('pulse');
   Comms.sendEvent(pingCode, 'Master.Pong');
+
 }
 
 function handlePepTalk(pepTalker){

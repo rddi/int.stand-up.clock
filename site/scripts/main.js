@@ -1312,8 +1312,6 @@ function applyPingStatusIndicators() {
 }
 
 function startPings() {
-  console.log('Setting up pings');
-
   if (pingRunner) {
     clearInterval(pingRunner);
   }
@@ -1351,6 +1349,10 @@ function startPings() {
     console.log('Ping sent');
 
   }, pingInterval);
+
+  if (options.pinging) {
+    Page.flashMessage('Pinging started', 'success');
+  }
 }
 
 function startUpdates() {

@@ -247,3 +247,35 @@
     }
   }
 }
+
+#ping-container {
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  width:20px;
+  height:20px;
+  transition: color $transTime, opacity $transTime;
+  opacity:1;
+  i.fa {
+    color:$green;
+    font-size:20px;
+  }
+  &.low-ping {
+    i.fa {
+      color:$red;
+    }
+  }
+  &.no-ping {
+    i.fa {
+      color:$grey;
+    }
+  }
+  &.hidden {
+    opacity:0;
+  }
+  &.pulse {
+    i.fa {
+      animation: pulse-once 300ms ease-out;
+    }
+  }
+}

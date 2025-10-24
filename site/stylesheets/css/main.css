@@ -658,7 +658,7 @@ h1 {
   transition: opacity 300ms;
 }
 .header-button.pulse {
-  animation: pulse-once 300ms ease-out;
+  animation: pulse-border 300ms ease-out;
 }
 .header-button .icon {
   position: absolute;
@@ -2005,6 +2005,32 @@ input[type=text] {
   background-color: #0F6B05;
 }
 
+#ping-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  transition: color 300ms, opacity 300ms;
+  opacity: 1;
+}
+#ping-container i.fa {
+  color: #0F6B05;
+  font-size: 20px;
+}
+#ping-container.low-ping i.fa {
+  color: #650D1B;
+}
+#ping-container.no-ping i.fa {
+  color: #888;
+}
+#ping-container.hidden {
+  opacity: 0;
+}
+#ping-container.pulse i.fa {
+  animation: pulse-once 300ms ease-out;
+}
+
 @keyframes fade-in {
   from {
     color: rgba(15, 107, 5, 0);
@@ -2037,7 +2063,7 @@ input[type=text] {
     max-width: 300px;
   }
 }
-@keyframes pulse-once {
+@keyframes pulse-border {
   0% {
     border-width: 1px;
   }
@@ -2046,6 +2072,17 @@ input[type=text] {
   }
   100% {
     border-width: 1px;
+  }
+}
+@keyframes pulse-once {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 #emotes-container {
