@@ -2957,13 +2957,100 @@ const wordList = ['abandon',
   'youth',
   'zone'];
 
-  function getRandomWords (count) {
-    let output = [],
-      i = 0;
-    
-    for(i = 0;i < count;i += 1) {
-      let randomIndex = Math.ceil(Math.random() * wordList.length) - 1;
-      output.push(wordList[randomIndex]);
-    }
-    return output;
+  const genZWordList = [
+    'yeet',
+    'cooked',
+    'slime',
+    'op',
+    'day1',
+    'sigma',
+    'rizz',
+    'skibidi',
+    'sus',
+    'cap',
+    'nocap',
+    'based',
+    'mid',
+    'fire',
+    'drip',
+    'vibe',
+    'bet',
+    'bruh',
+    'gyatt',
+    'mewing',
+    'mog',
+    'goated',
+    'goat',
+    'bussin',
+    'slaps',
+    'lit',
+    'fam',
+    'bro',
+    'bestie',
+    'stan',
+    'simp',
+    'slay',
+    'savage',
+    'cringe',
+    'ratio',
+    'delulu',
+    'fr',
+    'frfr',
+    'lowkey',
+    'highkey',
+    'flex',
+    'clapback',
+    'spicy',
+    'salty',
+    'pressed',
+    'ghosted',
+    'snatched',
+    'iconic',
+    'looksmax',
+    'valid',
+    'w',
+    'l',
+    'aura',
+    'auramax',
+    'core',
+    'npc',
+    'grindset',
+    'brainrot',
+    'pookie',
+    'zesty',
+    'goofy',
+    'ship',
+    'smol',
+    'main',
+    'questgiver',
+    'alt',
+    'hype',
+    'hater',
+    'fomo',
+    'mood',
+    'vibes',
+    'linkup',
+    'unhinged',
+    'feral',
+    'clocked',
+    'served',
+    'ate',
+    'real',
+    'clean',
+    'sweaty',
+    'squad'
+  ];
+
+function getRandomWords(count, useGenZList) {
+  let output = [];
+
+
+  const listToUse = useGenZList ? genZWordList : wordList;
+
+  for (let i = 0; i < count; i++) {
+    const randomIndex = Math.floor(Math.random() * listToUse.length);
+    output.push(listToUse[randomIndex]);
   }
+
+  return output;
+}

@@ -778,7 +778,7 @@ function spinPep(time, stop = false) {
     if (options.wordVote) {
       showVotes(0);
 
-      let result = getRandomWords(3);
+      let result = getRandomWords(3, options.pepTalkGenZ);
 
       wordOptions = {};
       wordVotes = 0;
