@@ -1,25 +1,27 @@
+@use "variables";
+
 .timer {
   border-radius: 50%;
-  width: $timerSize;
-  height: $timerSize;
-  background-color: $white;
+  width: variables.$timerSize;
+  height: variables.$timerSize;
+  background-color: variables.$white;
   margin: 0 auto;
   position: relative;
 
   .hand-holder {
     overflow: hidden;
-    width: calc($timerSize / 2);
-    height: $timerSize;
+    width: calc(variables.$timerSize / 2);
+    height: variables.$timerSize;
     position: absolute;
     top: 0;
     left: 0;
-    border-top-left-radius: calc($timerSize / 2);
-    border-bottom-left-radius: calc($timerSize / 2);
+    border-top-left-radius: calc(variables.$timerSize / 2);
+    border-bottom-left-radius: calc(variables.$timerSize / 2);
     .hand {
-      background-color: $orange;
+      background-color: variables.$orange;
       display: block;
-      width: calc($timerSize / 2);
-      height: $timerSize;
+      width: calc(variables.$timerSize / 2);
+      height: variables.$timerSize;
       transform-origin: right center;
     }
 
@@ -27,8 +29,8 @@
       top: 50%;
       left: 50%;
       border-radius: 0;
-      border-top-right-radius: calc($timerSize / 2);
-      border-bottom-right-radius: calc($timerSize / 2);
+      border-top-right-radius: calc(variables.$timerSize / 2);
+      border-bottom-right-radius: calc(variables.$timerSize / 2);
       .hand {
         transform-origin: left center;
       }
@@ -46,14 +48,14 @@
     top: 100%;
     left: 50%;
     font-weight: bold;
-    color: $darkblue;
+    color: variables.$darkblue;
     font-size: 50px;
-    @include transform(translateX(-50%));
+    transform: translateX(-50%);
     &.red {
-      color: $orange !important;
+      color: variables.$orange !important;
     }
     &.green {
-      color: $green !important;
+      color: variables.$green !important;
     }
   }
 
@@ -63,22 +65,22 @@
   #next-button,
   #pep-button,
   #reset-button {
-    color: $orange;
+    color: variables.$orange;
     position: absolute;
     left: 50%;
     top: 75%;
-    @include transform(translate(-50%, -50%));
-    @include transition(transform $transTime);
+    transform: translate(-50%, -50%);
+    transition: transform variables.$transTime;
   }
 
   #reset-button {
-    color: $grey;
-    background-color: $red;
+    color: variables.$grey;
+    background-color: variables.$red;
   }
 
   #pep-button {
-    background-color: $orange;
-    color: $white;
+    background-color: variables.$orange;
+    color: variables.$white;
     &.spinning {
       display: none;
     }
@@ -95,11 +97,11 @@
   &.pause {
     #end-button,
     #next-button {
-      @include transform(translate(0%, -50%));
+      transform: translate(0%, -50%);
     }
     &.end {
       #pause-button {
-        @include transform(translate(-100%, -50%));
+        transform: translate(-100%, -50%);
       }
     }
   }
@@ -118,38 +120,38 @@
 
   &.skip {
     #pause-button {
-      @include transform(translate(-100%, -50%));
+      transform: translate(-100%, -50%);
       &.paused {
-        @include transform(translate(-50%, -50%));
+        transform: translate(-50%, -50%);
       }
     }
   }
 
   .backing {
-    height: $subTimerSize + 20px;
-    width: $subTimerSize + 20px;
+    height: variables.$subTimerSize + 20px;
+    width: variables.$subTimerSize + 20px;
     position: absolute;
     top: 50%;
     left: 50%;
-    @include transform(translate(-50%, -50%));
-    background-color: $white;
+    transform: translate(-50%, -50%);
+    background-color: variables.$white;
     border-radius: 50%;
   }
   &#sub-timer {
-    height: $subTimerSize;
-    width: $subTimerSize;
+    height: variables.$subTimerSize;
+    width: variables.$subTimerSize;
     position: absolute;
     top: 50%;
     left: 50%;
-    @include transform(translate(-50%, -50%));
+    transform: translate(-50%, -50%);
 
     .hand-holder {
-      width: calc($subTimerSize / 2);
-      height: $subTimerSize;
+      width: calc(variables.$subTimerSize / 2);
+      height: variables.$subTimerSize;
       .hand {
-        width: calc($subTimerSize / 2);
-        height: $subTimerSize;
-        background-color: $blue;
+        width: calc(variables.$subTimerSize / 2);
+        height: variables.$subTimerSize;
+        background-color: variables.$blue;
       }
     }
     .timer-display {
@@ -157,9 +159,9 @@
       top: 50%;
       left: 50%;
       font-weight: bold;
-      color: $yellow;
+      color: variables.$yellow;
       font-size: 130px;
-      @include transform(translate(-50%, -50%));
+      transform: translate(-50%, -50%);
     }
   }
 }
@@ -168,23 +170,23 @@
   position: absolute;
   left: 50%;
   top: 30%;
-  @include transform(translate(-50%, -50%));
+  transform: translate(-50%, -50%);
   font-size: 40px;
-  color: $yellow;
+  color: variables.$yellow;
 }
 
 .word-button,
 .team-button {
   margin:10px;
   padding:5px 15px;
-  border-radius:$borderRadius;
-  background-color:$blue;
+  border-radius:variables.$borderRadius;
+  background-color:variables.$blue;
   text-align:center;
   font-size:30px;
   line-height:35px;
-  color: $white;
+  color: variables.$white;
   cursor: pointer;
-  transition: color $transTime, background-color $transTime, text-decoration $transTime, opacity $transTime, box-shadow $transTime;
+  transition: color variables.$transTime, background-color variables.$transTime, text-decoration variables.$transTime, opacity variables.$transTime, box-shadow variables.$transTime;
   position: relative;
   z-index:10;
   white-space: nowrap;
@@ -192,23 +194,23 @@
     content: '';
     width: 0;
     height: 3px;
-    background-color: $white;
+    background-color: variables.$white;
     display: block;
     position: absolute;
     top: 50%;
     left: 15px;
-    transition: background-color $transTime, width $transTime;
+    transition: background-color variables.$transTime, width variables.$transTime;
   }
   &.active {
-    background-color: $orange;
-    color: $white;
+    background-color: variables.$orange;
+    color: variables.$white;
   }
   &.done {
     // text-decoration:line-through;
-    color: $orange;
+    color: variables.$orange;
     &::before {
       width: calc(100% - 30px);
-      background-color: $orange;
+      background-color: variables.$orange;
     }
     &~.team-button-time {
       left: calc(100% + 5px);
@@ -216,32 +218,32 @@
       font-size:30px;
       top: 50%;
       transform: translateY(-50%);
-      transition:margin-left $transTime, margin-right $transTime;
+      transition:margin-left variables.$transTime, margin-right variables.$transTime;
     }
     &.time-red,
     &.time-green {
-      color: $white;
+      color: variables.$white;
       text-decoration: none;
       &::before {
-        background-color:$white;
+        background-color:variables.$white;
       }
     }
     &.time-red {
-      background-color: $red;
+      background-color: variables.$red;
       &~.team-button-time {
-        color: $red;
+        color: variables.$red;
       }
     }
     &.time-green {
-      background-color: $green !important;
+      background-color: variables.$green !important;
       
       &~.team-button-time {
-        color: $green !important;
+        color: variables.$green !important;
       }
     }
     &.highlight {
-      background-color: $yellow !important;
-      color: $black !important;
+      background-color: variables.$yellow !important;
+      color: variables.$black !important;
       &::before {
         opacity: 0;
       }
@@ -252,23 +254,23 @@
     content: '';
     width: 20px;
     height: 20px;
-    background-color: $green;
+    background-color: variables.$green;
     border-radius: 50%;
     position: absolute;
     right:-5px;
     top:-5px;
     opacity:0;
-    transition: background-color $transTime, opacity $transTime;
+    transition: background-color variables.$transTime, opacity variables.$transTime;
     border: 2px solid black;
   }
   &.low-ping {
     &::after {
-      background-color: $red;
+      background-color: variables.$red;
     }
   }
   &.no-ping {
     &::after {
-      background-color: $grey;
+      background-color: variables.$grey;
     }
   }
   &.show-ping {
@@ -283,28 +285,28 @@
   .team-button-checkbox {
     display: none;
     & + label {
-      background-color: $white;
-      height: $checkboxSize;
-      width: $checkboxSize;
+      background-color: variables.$white;
+      height: variables.$checkboxSize;
+      width: variables.$checkboxSize;
       position: absolute;
       right: 20px;
       top: 50%;
       transform: translateY(-50%);
-      border-radius: $borderRadius;
-      border: 2px solid $blue;
-      transition: all $transTime;
+      border-radius: variables.$borderRadius;
+      border: 2px solid variables.$blue;
+      transition: all variables.$transTime;
       &::before,
       &::after {
         content: '';
         height: 4px;
         width: 0;
         border-radius: 2px;
-        background-color: $red;
+        background-color: variables.$red;
         display: block;
         position: absolute;
         top: 50%;
         left: 50%;
-        transition: width $transTime;
+        transition: width variables.$transTime;
       }
       &:before {
         transform: translate(-50%, -50%) rotateZ(45deg);
@@ -315,16 +317,16 @@
     }
     &:checked {
       & + label {
-        border-color: $red;
+        border-color: variables.$red;
         &::before,
         &::after {
-          width: $checkboxSize - 4;
+          width: variables.$checkboxSize - 4;
         }
       }
       &~.team-button {
-        background-color:$grey !important;
+        background-color:variables.$grey !important;
         &~.team-button-time {
-          color:$grey !important;
+          color:variables.$grey !important;
         }
       }
     }
@@ -332,11 +334,11 @@
   &.show-checkbox {
     .team-button-checkbox {
       & + label {
-        right: -$checkboxSize;
+        right: -(variables.$checkboxSize);
       }
     }
     .team-button-time {
-      margin-left: $checkboxSize;
+      margin-left: variables.$checkboxSize;
     }
     .team-button {
       &::before {
@@ -349,12 +351,12 @@
     &.order-#{$i} {
       .team-button-time,
       label {
-        transition-delay: $i * $revealSpacing;
+        transition-delay: $i * variables.$revealSpacing;
       }
       &.show-checkbox {
         .team-button {
           &:before {
-            transition-delay: $i * $revealSpacing;
+            transition-delay: $i * variables.$revealSpacing;
           }
         }
       }
@@ -388,12 +390,12 @@
       &.show-checkbox {
         .team-button-checkbox {
           & + label {
-            left: -$checkboxSize;
+            left: -(variables.$checkboxSize);
           }
         }
         .team-button-time {
           margin-left:0;
-          margin-right: $checkboxSize;
+          margin-right: variables.$checkboxSize;
         }
       }
     }

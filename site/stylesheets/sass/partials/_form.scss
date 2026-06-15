@@ -1,14 +1,16 @@
+@use "variables";
+
 .header-button {
   height:60px;
   width:60px;
   border:1px solid white;
-  border-radius:$borderRadius;
+  border-radius:variables.$borderRadius;
   display:block;
   overflow:hidden;
   position:relative;
   float:left;
   margin-right: 10px;
-  @include transition(opacity $transTime);
+  transition: opacity variables.$transTime;
   &.pulse {
     animation: pulse-border 300ms ease-out;
   }
@@ -18,12 +20,12 @@
     left: 50%;
     transform: translate(-50%, -25%);
     text-align:center;
-    @include transition(transform $transTime);
+    transition: transform variables.$transTime;
       
     i.fa {
       font-size:40px;
       line-height:60px;
-      @include transition(transform $transTime);
+      transition: transform variables.$transTime;
       position: relative;
       &.slash {
         &::after {
@@ -35,7 +37,7 @@
           height: 100%;
           width: 6px;
           border-radius: 3px;
-          background-color: $white;
+          background-color: variables.$white;
         }
       }
     }
@@ -48,7 +50,7 @@
     display:block;
     transform:rotate(45deg);
     position:absolute;
-    @include transition(top $transTime, right $transTime, bottom $transTime, left $transTime);
+    transition: top variables.$transTime, right variables.$transTime, bottom variables.$transTime, left variables.$transTime;
     &.t {
       bottom:125%;
     }
@@ -64,7 +66,7 @@
   }
   &.lock {
     .icon {
-      @include transform(translate(-50%, -75%));
+      transform: translate(-50%, -75%);
     }
   }
 
@@ -119,12 +121,12 @@ label {
   padding:15px 30px;
   font-size:20px;
   border:none;
-  border-radius:$borderRadius;
+  border-radius:variables.$borderRadius;
   text-align:center;
   margin:20px auto;
   display:block;
   cursor:pointer;
-  transition: opacity $transTime;
+  transition: opacity variables.$transTime;
   &.hidden {
     display:none;
   }
@@ -141,27 +143,27 @@ label {
       position:absolute;
       top:50%;
       left:50%;
-      @include transition(transform $transTime, color $transTime);
+      transition: transform variables.$transTime, color variables.$transTime;
       
-      color:$white;
+      color:variables.$white;
       &.pos-main {
-        @include transform(translate(-50%,-50%) scale(1));
+        transform: translate(-50%,-50%) scale(1);
         text-shadow:
-          0 -#{$symbolOutline} 0 $blue,  
-          #{$symbolOutline} 0 0 $blue,
-          0 #{$symbolOutline} 0 $blue,
-          -#{$symbolOutline} 0 0 $blue,
-          -#{$symbolOutline} -#{$symbolOutline} 0 $blue,  
-          #{$symbolOutline} -#{$symbolOutline} 0 $blue,
-          -#{$symbolOutline} #{$symbolOutline} 0 $blue,
-          #{$symbolOutline} #{$symbolOutline} 0 $blue;
+          0 -#{variables.$symbolOutline} 0 variables.$blue,  
+          #{variables.$symbolOutline} 0 0 variables.$blue,
+          0 #{variables.$symbolOutline} 0 variables.$blue,
+          -#{variables.$symbolOutline} 0 0 variables.$blue,
+          -#{variables.$symbolOutline} -#{variables.$symbolOutline} 0 variables.$blue,  
+          #{variables.$symbolOutline} -#{variables.$symbolOutline} 0 variables.$blue,
+          -#{variables.$symbolOutline} #{variables.$symbolOutline} 0 variables.$blue,
+          #{variables.$symbolOutline} #{variables.$symbolOutline} 0 variables.$blue;
       }
     }
     &:hover {
       i {
         &.pos-main {
-          @include transform(translate(-50%,-50%) scale(#{$symbolScale}));
-          color:$yellow;
+          transform: translate(-50%,-50%) scale(#{variables.$symbolScale});
+          color:variables.$yellow;
         }
       }
     }
@@ -186,7 +188,7 @@ label {
     width:auto;
     height:70px;
     font-weight:normal;
-    @include transition(font-size $transTime, font-weight $transTime, transform $transTime);
+    transition: font-size variables.$transTime, font-weight variables.$transTime, transform variables.$transTime;
     text-align:center;
     line-height:70px;
     position:relative;
@@ -207,7 +209,7 @@ label {
   input[type="radio"] {
     display:none;
     &:checked+label {
-      @include transform(scale(1.5));
+      transform: scale(1.5);
     }
   }
   input[type="checkbox"] {
@@ -215,21 +217,21 @@ label {
     +label {
       padding:5px 10px;
       font-size:16px;
-      background-color:$orange;
+      background-color:variables.$orange;
       opacity:0.5; 
-      border-radius:$borderRadius;
+      border-radius:variables.$borderRadius;
       line-height:20px;
       height:30px;
       margin:5px;
-      transition: opacity $transTime;
+      transition: opacity variables.$transTime;
     }
     &.option-checkbox {
       &+label {
-        background-color:$red;
+        background-color:variables.$red;
         opacity:1;
       }
       &:checked+label {
-        background-color:$green;
+        background-color:variables.$green;
       }
     }
     &:checked+label {
@@ -252,7 +254,7 @@ label {
       width: 100%;
       height: 15px;
       cursor: pointer;
-      background: $barColour;
+      background: variables.$barColour;
       border-radius: 7.5px;
     }
     &::-webkit-slider-thumb {
@@ -260,27 +262,27 @@ label {
       width: 15px;
       border-radius:50%;
       
-      background: $thumbColour;
+      background: variables.$thumbColour;
       cursor: pointer;
       -webkit-appearance: none;
       // margin-top: -9px;
-      box-shadow: -$maxWidth 0 0 calc(#{$maxWidth} - 7.5px) $fillColour;
+      box-shadow: -(variables.$maxWidth) 0 0 calc(#{variables.$maxWidth} - 7.5px) variables.$fillColour;
     }
     &:focus::-webkit-slider-runnable-track {
-      background: $barColour;
+      background: variables.$barColour;
     }
     &::-moz-range-track {
       width: 100%;
       height: 15px;
       cursor: pointer;
-      background: $barColour;
+      background: variables.$barColour;
       border-radius: 7.5px;
     }
     &::-moz-range-thumb {
       height: 15px;
       width: 15px;
       border-radius: 50%;
-      background: $thumbColour;
+      background: variables.$thumbColour;
       cursor: pointer;
     }
     &::-ms-track {
@@ -293,36 +295,36 @@ label {
       color: transparent;
     }
     &::-ms-fill-lower {
-      background: $barColour;
+      background: variables.$barColour;
       border-radius: 2.6px;
     }
     &::-ms-fill-upper {
-      background: $barColour;
+      background: variables.$barColour;
       border-radius: 2.6px;
     }
     &::-ms-thumb {
       height: 15px;
       width: 15px;
       border-radius: 50%;
-      background: $thumbColour;
+      background: variables.$thumbColour;
       cursor: pointer;
     }
     &:focus::-ms-fill-lower {
-      background: $barColour;
+      background: variables.$barColour;
     }
     &:focus::-ms-fill-upper {
-      background: $barColour;
+      background: variables.$barColour;
     }
   }
 }
 
 .selection-button {
-  background-color:$blue;
+  background-color:variables.$blue;
   display:inline-block;
   margin:0 auto;
   padding:5px 15px;
-  border-radius:$borderRadius;
-  color:$orange;
+  border-radius:variables.$borderRadius;
+  color:variables.$orange;
   margin:5px;
   cursor:pointer;
   &.hidden {
@@ -334,16 +336,16 @@ label {
 }
 
 .members-count {
-  background-color: $white;
+  background-color: variables.$white;
   display: inline-block;
   padding: 3px 7px;
   border-radius: 5px;
-  color: $blue;
+  color: variables.$blue;
   position: absolute;
   right: 20px;
   bottom:0;
   transform: translateY(50%);
-  transition: all $transTime;
+  transition: all variables.$transTime;
   font-weight: bold;
   &.hidden {
     opacity: 0;
@@ -357,7 +359,7 @@ label {
   margin:0 auto;
   padding:5px 15px;
   border-radius:5px;
-  color:$white;
+  color:variables.$white;
   margin:5px;
   cursor:pointer;
 }
@@ -365,16 +367,16 @@ label {
 #mute-input, #ping-input {
   display:none;
   &:checked+.icon {
-    @include transform(translate(-50%, -75%)); 
+    transform: translate(-50%, -75%); 
   }
 }
 
 input[type="text"] {
   margin-top:20px;
-  border-radius:$borderRadius;
+  border-radius:variables.$borderRadius;
   padding:15px;
-  color:$orange;
-  border:1px solid $green;
+  color:variables.$orange;
+  border:1px solid variables.$green;
   min-width:300px;
 }
 
@@ -382,11 +384,11 @@ input[type="text"] {
   margin: 0 0 20px 0;
   font-size:20px;
   font-weight:bold;
-  color:$green;
+  color:variables.$green;
 }
 
 .edit-team-member {
-  color:$green;
+  color:variables.$green;
   font-weight:bold;
   margin-bottom:5px;
 }
@@ -394,27 +396,27 @@ input[type="text"] {
 #duration-display {
  font-size:30px;
  span {
-  color:$yellow;
+  color:variables.$yellow;
  }
 }
 
 .remove {
-  background-color:$red;
+  background-color:variables.$red;
   border-radius:50%;
-  color:$white;
+  color:variables.$white;
   margin-right:10px;
   padding: 2px 3px;
   text-align: center;
   cursor:pointer;
-  @include transition(transform $transTime);
+  transition: transform variables.$transTime;
   &:hover {
-    @include transform(rotate3d(0, 0, 1, 180deg));
+    transform: rotate3d(0, 0, 1, 180deg);
   }
 }
 
 #save-settings-button {
-  background-color:$orange;
-  color:$white;
+  background-color:variables.$orange;
+  color:variables.$white;
 }
 
 .tab-holder {
@@ -422,9 +424,9 @@ input[type="text"] {
     .tab-button {
       float:left;
       padding:5px;
-      background-color:$blue;
-      color:$orange;
-      border-radius:$borderRadius;
+      background-color:variables.$blue;
+      color:variables.$orange;
+      border-radius:variables.$borderRadius;
       cursor: pointer;
       width:40px;
       text-align:center;
@@ -440,76 +442,76 @@ input[type="text"] {
 .meeting-code {
   padding:10px;
   font-weight:bold;
-  color:$white;
+  color:variables.$white;
   position:absolute;
   left:10px;
   // top:-5px;
   height:100%;
-  width:$qrCornerSize;
+  width:variables.$qrCornerSize;
   overflow: hidden;
   opacity:1;
   top: 50%;
   transform: translateY(-27px);
-  @include transition(all $transTime);
+  transition: all variables.$transTime;
   &:empty {
     opacity:0;
     pointer-events: none;
   }
   .copy-code {
     font-size:30px;
-    color:$blue;
-    @include transition(all $transTime);
+    color:variables.$blue;
+    transition: all variables.$transTime;
   }
   i {
     margin-left:10px;
     cursor: pointer;
     &:hover {
-      color:$orange;
+      color:variables.$orange;
     }
   }
   &#qr-meeting-code {
     top:5px;
     left:15px;
-    color:$blue;
+    color:variables.$blue;
     font-size:30px;
     height:auto;
     transform: none;
   }
   .qr-code-button {
-    height:$qrCornerSize;
-    width:$qrCornerSize;
+    height:variables.$qrCornerSize;
+    width:variables.$qrCornerSize;
     display:block;
     position:absolute;
     top:52px; // Not too happy with this
     left:0;
-    border:2px solid $blue;
+    border:2px solid variables.$blue;
     opacity:0;
     cursor:pointer;
-    @include transition(all $transTime);
+    transition: all variables.$transTime;
     &:hover {
-      border-color:$orange;
+      border-color:variables.$orange;
     }
   }
 }
 
 #register-display {
   margin-top:20px;
-  border:2px solid $grey;
+  border:2px solid variables.$grey;
   border-radius:10px;
-  padding:20px 20px 20px ($qrCornerSize + ($qrCornerBorder * 2) + 20px);
-  @include transition(all $slowTransTime);
+  padding:20px 20px 20px (variables.$qrCornerSize + (variables.$qrCornerBorder * 2) + 20px);
+  transition: all variables.$slowTransTime;
   &::before {
     content: '';
-    background-color: $grey;
+    background-color: variables.$grey;
     display: block;
     width: 100%;
     border-radius: 10px 10px 10px 10px;
-    margin: -22px -#{$qrCornerSize + ($qrCornerBorder * 2) + 22};
+    margin: -22px -#{variables.$qrCornerSize + (variables.$qrCornerBorder * 2) + 22};
     height: 100%;
     position: absolute;
     max-width:1210px;
-    transition: all $slowTransTime;
-    color:$grey;
+    transition: all variables.$slowTransTime;
+    color:variables.$grey;
     overflow:hidden;
     font-weight: bold;
     font-size:25px;
@@ -526,64 +528,64 @@ input[type="text"] {
     }
   }
   &.connected {
-    border-color:$white;
+    border-color:variables.$white;
     min-height:44px;
     &.open{
-      border-color:$blue;
-      min-height:(40px + $qrCornerSize + ($qrCornerBorder * 2));
-      transition-delay: $slowTransTime;
-      background-color: $bluefade;
+      border-color:variables.$blue;
+      min-height:(40px + variables.$qrCornerSize + (variables.$qrCornerBorder * 2));
+      transition-delay: variables.$slowTransTime;
+      background-color: variables.$bluefade;
       &::before {
-        background-color:$blue;
-        max-width:#{$qrCornerSize + ($qrCornerBorder * 2)};
+        background-color:variables.$blue;
+        max-width:#{variables.$qrCornerSize + (variables.$qrCornerBorder * 2)};
         transition-delay: 0ms;
       }
       &~.meeting-code {
         top:0;
-        transition-delay: $slowTransTime;
+        transition-delay: variables.$slowTransTime;
         transform:translateY(0);
         .copy-code {
-          color:$white;
+          color:variables.$white;
           &:hover {
-            color:$orange;
+            color:variables.$orange;
             cursor:pointer;
           }
         }
         .qr-code-button {
           opacity:1;
-          transition-delay: $slowTransTime;
+          transition-delay: variables.$slowTransTime;
         }
       }
       &~.members-count {
-        background-color: $blue;
-        color: $orange;
+        background-color: variables.$blue;
+        color: variables.$orange;
       }
     }
     &::before {
       content:'Connected';
-      background-color: $white;
+      background-color: variables.$white;
       max-width:120px;
       border-radius: 10px 0 0 10px;
       text-indent:100%;
-      transition-delay: $slowTransTime;
+      transition-delay: variables.$slowTransTime;
     }
   }
 
   &.connecting {
     &::before {
       content: 'Connecting...';
-      color:$white;
+      color:variables.$white;
       text-indent:0;
     }
   }
 }
 
 .register-lozenge {
-  background-color:$orange;
+  background-color:variables.$orange;
   display:inline-block;
   padding:5px 15px;
   border-radius:5px;
-  color:$white;
+  color:variables.$white;
   margin:5px;
   &.hidden {
     display:none;
@@ -596,11 +598,11 @@ input[type="text"] {
     position:absolute;
     right:10px;
     top:50%;
-    color:$white;
+    color:variables.$white;
     transform:translateY(-50%);
     margin:0;
     &#close-registration {
-      background-color:$red;
+      background-color:variables.$red;
     }
   }
 }

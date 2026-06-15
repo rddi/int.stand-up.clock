@@ -1,44 +1,46 @@
+@use "variables";
+
 #main-display {
-  color:$orange;
+  color:variables.$orange;
   opacity:1;
-  @include transition(color $transTime, transform $transTime, opacity $transTime, font-size $transTime, padding $transTime, border-color $transTime);
+  transition: color variables.$transTime, transform variables.$transTime, opacity variables.$transTime, font-size variables.$transTime, padding variables.$transTime, border-color variables.$transTime;
   margin:0;
   padding:20px;
-  border:2px solid $orange;
+  border:2px solid variables.$orange;
   border-radius:10px;
   position:relative;
   &.green {
-    color:$green;
+    color:variables.$green;
     font-size:60px;
-    border-color:$green;
+    border-color:variables.$green;
     padding:10px 20px;
   }
   &.yellow {
-    color:$yellow;
-    border-color:$yellow;
+    color:variables.$yellow;
+    border-color:variables.$yellow;
   }
   &.red {
-    color:$red;
-    border-color:$red;
+    color:variables.$red;
+    border-color:variables.$red;
   }
   &.orange {
-    color:$orange;
-    border-color:$orange;
+    color:variables.$orange;
+    border-color:variables.$orange;
   }
   &.blue {
-    color:$blue;
-    border-color:$blue;
+    color:variables.$blue;
+    border-color:variables.$blue;
   }
   &.hidden {
-    @include transform(translateY(-300px));
+    transform: translateY(-300px);
   }
   span {
     display:block;
-    @include transition(transform $slowTransTime);
+    transition: transform variables.$slowTransTime;
   }
   &:before {
     content:attr(label);
-    background-color:$white;
+    background-color:variables.$white;
     position:absolute;
     padding:5px;
     top: -17px;
@@ -47,23 +49,23 @@
     overflow:hidden;
     max-width:250px;
     white-space: nowrap;
-    @include transition(color $transTime, max-width $transTime, padding $transTime);
+    transition: color variables.$transTime, max-width variables.$transTime, padding variables.$transTime;
   }
   &.change {
     span {
-      @include transform(translateX(100vw));
+      transform: translateX(100vw);
     }
   }
   &.reset {
     span {
-      @include transition(transform 0);
-      @include transform(translateX(-100vw));
+      transition: transform 0;
+      transform: translateX(-100vw);
     }
   }
   &.change-label {
     &:before {
       max-width:0;
-      color:$white;
+      color:variables.$white;
     }
   }
   
@@ -72,7 +74,7 @@
 #team-display {
   position: absolute;
   left: 50%;
-  @include transform(translateX(-50%));
+  transform: translateX(-50%);
   overflow:scroll;
   max-width:380px;
   width:100%;
@@ -82,7 +84,7 @@
   } 
   &:not(.active) {
     .team-button {
-      background-color:$grey;
+      background-color:variables.$grey;
       cursor:default;
       opacity:0.5;
     }
@@ -98,36 +100,36 @@
 
 #join-modal {
   &:before {
-    background-color:$slightFade;
+    background-color:variables.$slightFade;
   }
   .container {
-    background: linear-gradient($fade, $fade), url('../../images/pattern.png');
-    color:$white;
+    background: linear-gradient(variables.$fade, variables.$fade), url('../../images/pattern.png');
+    color:variables.$white;
 
     input[type="text"] {
       background-color:transparent;
-      border:2px solid $grey;
+      border:2px solid variables.$grey;
       text-align:center;
-      color:$grey;
+      color:variables.$grey;
       font-weight:bold;
       font-size:30px;
       padding:10px;
-      @include transition(border-color $transTime, color $transTime);
-      @include input-placeholder {
+      transition: border-color variables.$transTime, color variables.$transTime;
+      &::placeholder {
         font-weight:normal;
         text-transform:capitalize;
-        @include transition(color $transTime);
+        transition: color variables.$transTime;
       }
       &:focus {
-        border-color:$lightgrey;
-        color:$lightgrey;
-        @include input-placeholder {
-          color:$lightgrey;
+        border-color:variables.$lightgrey;
+        color:variables.$lightgrey;
+        &::placeholder {
+          color:variables.$lightgrey;
         }
       }
       &:valid {
-        border-color:$white;
-        color:$white;
+        border-color:variables.$white;
+        color:variables.$white;
       }
       &#meeting-code-input {
         text-transform:uppercase;
@@ -135,7 +137,7 @@
     }
 
     .button {
-      background-color:$blue;
+      background-color:variables.$blue;
     }
   }
 }
@@ -145,7 +147,7 @@
   .button-center {
     position:absolute;
     left:50%;
-    @include transform(translateX(-50%));
+    transform: translateX(-50%);
     .button {
       float:left;
 
@@ -165,21 +167,21 @@
   bottom:-100px;
   left:0;
   width:100%;
-  transition:bottom $transTime;
+  transition:bottom variables.$transTime;
   .emote-button {
     padding:15px;
-    border-radius:$borderRadius;
-    border:2px solid $orange;
+    border-radius:variables.$borderRadius;
+    border:2px solid variables.$orange;
     float:left;
     cursor:pointer;
     overflow:hidden;
-    transition:border-color $transTime;
+    transition:border-color variables.$transTime;
     margin-right:20px;
     i.fa {
-      color: $orange;
+      color: variables.$orange;
       font-size:30px;
       pointer-events: none;
-      transition:color $transTime;
+      transition:color variables.$transTime;
     }
     &:last-of-type {
       margin-right:0;
@@ -188,21 +190,21 @@
   &.bounce {
     .emote-button {
       position:relative;
-      border-color:$grey;
+      border-color:variables.$grey;
       cursor:auto;
       &::before {
         content:'';
         animation-name:bounce;
-        animation-duration:$debounce;
+        animation-duration:variables.$debounce;
         animation-timing-function: linear;
         width:100%;
-        background-color:$orangefade;
+        background-color:variables.$orangefade;
         position:absolute;
         left:0;
         bottom:0;
       }
       i.fa {
-        color: $grey;
+        color: variables.$grey;
       }
     }
   }
@@ -213,7 +215,7 @@
 
 #notice-container {
   opacity: 0;
-  transition: opacity $transTime;
+  transition: opacity variables.$transTime;
   position:absolute;
   top:20px;
   left:20px;
@@ -224,7 +226,7 @@
   #notice {
     pointer-events:none;
     padding:10px;
-    color:$white;
+    color:variables.$white;
     text-align:center;
     font-weight:bold;
     border-radius:10px;
@@ -238,12 +240,12 @@
   }
   &.red {
     #notice {
-      background-color:$red;
+      background-color:variables.$red;
     }
   }
   &.green {
     #notice {
-      background-color:$green;
+      background-color:variables.$green;
     }
   }
 }
@@ -254,20 +256,20 @@
   left:20px;
   width:20px;
   height:20px;
-  transition: color $transTime, opacity $transTime;
+  transition: color variables.$transTime, opacity variables.$transTime;
   opacity:1;
   i.fa {
-    color:$green;
+    color:variables.$green;
     font-size:20px;
   }
   &.low-ping {
     i.fa {
-      color:$red;
+      color:variables.$red;
     }
   }
   &.no-ping {
     i.fa {
-      color:$grey;
+      color:variables.$grey;
     }
   }
   &.hidden {

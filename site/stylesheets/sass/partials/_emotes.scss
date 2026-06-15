@@ -1,3 +1,5 @@
+@use "variables";
+
 #emotes-container {
   height:100vh;
   width:100vw;
@@ -9,27 +11,27 @@
   z-index:1000;
   .emote {
     border-radius: 50%;
-    height:$emoteSize;
-    width:$emoteSize;
+    height:variables.$emoteSize;
+    width:variables.$emoteSize;
     position:fixed;
-    background-color:$yellow;
-    color:$yellow;
+    background-color:variables.$yellow;
+    color:variables.$yellow;
     animation-name:bubble-up;
     // animation-duration:$emoteTime;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
     display:inline-block;
     &.green {
-      background-color:$green;
-      color:$green;
+      background-color:variables.$green;
+      color:variables.$green;
     }
     &.blue {
-      background-color:$blue;
-      color:$blue;
+      background-color:variables.$blue;
+      color:variables.$blue;
     }
     &.red {
-      background-color:$red;
-      color:$red;
+      background-color:variables.$red;
+      color:variables.$red;
     }
     i {
       position:absolute;
@@ -37,7 +39,7 @@
       left:50%;
       transform:translate(-50%, -50%);
       font-size:30px;
-      color:$white;
+      color:variables.$white;
     }
     &::after {
       content:attr(data-member);
@@ -46,7 +48,7 @@
       left:50%;
       transform:translateX(-50%);
       font-weight:bold;
-      $outlineColour:$white;
+      $outlineColour:variables.$white;
       text-shadow: -1px -1px 0 $outlineColour, 1px -1px 0 $outlineColour, -1px 1px 0 $outlineColour, 1px 1px 0 $outlineColour;
     }
   }

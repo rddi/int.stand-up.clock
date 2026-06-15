@@ -1,9 +1,11 @@
+@use "variables";
+
 @keyframes fade-in {
   from {
-    color:$invisiGreen;
+    color:variables.$invisiGreen;
   }
   to {
-    color:$green;
+    color:variables.$green;
   }
 }
 
@@ -12,7 +14,7 @@
     top:100%;
   }
   to {
-    top:-#{$emoteSize + 20px};
+    top:-#{variables.$emoteSize + 20px};
   }
 }
 

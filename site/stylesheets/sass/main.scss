@@ -1,9 +1,7 @@
-@import "compass/css3";
-
-@import "partials/_variables";
-@import "partials/_standard";
-@import "partials/_form";
-@import "partials/_timer";
-@import "partials/_client";
-@import "partials/_animations";
-@import "partials/_emotes";
+@use "partials/variables";
+@use "partials/standard";
+@use "partials/form";
+@use "partials/timer";
+@use "partials/client";
+@use "partials/animations";
+@use "partials/emotes";

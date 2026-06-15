@@ -1,4 +1,6 @@
-$colour: $red;
+@use "variables";
+
+$colour: variables.$red;
 
 body {
   margin:0;
@@ -16,15 +18,15 @@ body {
 }
 
 header {
-  background: linear-gradient($fade, $fade), url('../../images/pattern.png');
-  color:$white;
+  background: linear-gradient(variables.$fade, variables.$fade), url('../../images/pattern.png');
+  color:variables.$white;
   overflow:hidden;
   position:relative;
 }
 
 .container {
   margin:0 auto;
-  max-width: $maxWidth;
+  max-width: variables.$maxWidth;
   padding: 20px;
   position:relative;
   .left, .right {
@@ -48,7 +50,7 @@ header {
 
   &.collapser {
     overflow:hidden;
-    transition: max-height $transTime, padding $transTime;
+    transition: max-height variables.$transTime, padding variables.$transTime;
     max-height:700px;
     &.closed {
       max-height:0vh;
@@ -69,7 +71,7 @@ header {
   z-index: 20;
   
   .container {
-    background-color:$white; 
+    background-color:variables.$white; 
     h2 {
       text-align:center;
       margin-top:0;
@@ -78,10 +80,10 @@ header {
     .modal-button {
       font-size:25px;
       cursor:pointer;
-      @include transition(color $transTime, transform $transTime);
+      transition: color variables.$transTime, transform variables.$transTime;
       &:hover {
-        color:$red;
-        @include transform(rotate3d(0, 0, 1, 180deg));
+        color:variables.$red;
+        transform: rotate3d(0, 0, 1, 180deg);
       }
     }
     .modal-close {
@@ -91,7 +93,7 @@ header {
     }
   }
 
-  @include transform(translate(-50%,-50%));
+  transform: translate(-50%,-50%);
   &.hidden {
     display:none;
   }
@@ -102,11 +104,11 @@ header {
     position:absolute;
     width:100vw;
     height:100vh;
-    background-color: $fade;
+    background-color: variables.$fade;
     left:50%;
     top:50%;
 
-    @include transform(translate(-50%,-50%));
+    transform: translate(-50%,-50%);
   }
 }
 
@@ -125,11 +127,11 @@ h1 {
   position:absolute;
   left:50%;
   transform:translateX(-50%);
-  background-color: $white;
+  background-color: variables.$white;
   text-align: center;
   padding: 20px;
   font-size: 30px;
-  top: $timerSize + 20px;
+  top: variables.$timerSize + 20px;
   &.hidden {
     display: none;
   }
@@ -138,24 +140,24 @@ h1 {
     font-weight:bold;
   }
   &.green {
-    color:$green;
+    color:variables.$green;
   }
   &.orange {
-    color:$orange;
+    color:variables.$orange;
   }
 }
 #pep-talk-modal {
   #pep-talk-container {
-    background-color: $white;
+    background-color: variables.$white;
     position:fixed;
     height:200px;
     width:800px;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
-    border:4px solid $orange;
+    border:4px solid variables.$orange;
     border-radius:15px;
-    transition: border-color $transTime;
+    transition: border-color variables.$transTime;
 
     &.hidden {
       display:none;
@@ -166,7 +168,7 @@ h1 {
       left:50%;
       top:50%;
       transform:translate(-50%, -50%);
-      color:$orange;
+      color:variables.$orange;
       font-size:100px;
       font-weight:bold;
       // width:100%;
@@ -182,32 +184,32 @@ h1 {
       left:50%;
       bottom:0;
       transform:translate(-50%, 50%);
-      color:$orange;
+      color:variables.$orange;
       font-size:40px;
       font-weight:bold;
       text-align:center;
-      background-color:$white;
+      background-color:variables.$white;
       border-radius:15px;
-      border:3px solid $orange;
+      border:3px solid variables.$orange;
       padding:5px 10px;
       max-width:220px;
       min-width:220px;
       width:auto;
-      transition: max-width $transTime, min-width $transTime , border-color $transTime;
+      transition: max-width variables.$transTime, min-width variables.$transTime , border-color variables.$transTime;
       &:empty {
         display:none;
       }
       &.green {
         // color:$green;
-        color:$invisiGreen;
+        color:variables.$invisiGreen;
         animation-name:fade-in;
-        animation-duration: $transTime;
-        animation-delay: $transTime;
+        animation-duration: variables.$transTime;
+        animation-delay: variables.$transTime;
         animation-fill-mode: forwards;
         animation-timing-function: ease-in-out;
         max-width:510px;
         min-width:50px;
-        border-color:$green;
+        border-color:variables.$green;
         
       }
       span {
@@ -215,8 +217,8 @@ h1 {
       }
 
       #close-vote-button {
-        background-color:$red;
-        color:$white;
+        background-color:variables.$red;
+        color:variables.$white;
         display: inline-block;
         transform: translateY(-5px);
         padding: 10px;
@@ -249,9 +251,9 @@ h1 {
   }
   &.green {
     #pep-talk-container {
-      border-color: $green;
+      border-color: variables.$green;
       #pep-display {
-        color: $green;
+        color: variables.$green;
       }
       #pep-talk-modal-close,
       #pep-talk-respin {
@@ -263,12 +265,12 @@ h1 {
 }
 
 #name-wheel {
-  width: $nameWheelSize;
+  width: variables.$nameWheelSize;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
-  height: $nameWheelSize;
+  height: variables.$nameWheelSize;
   transition-property:transform;
   transition-timing-function: linear;
 
@@ -282,7 +284,7 @@ h1 {
     top:0;
     left:50%;
     font-size:60px;
-    color:$green;
+    color:variables.$green;
     transition: transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     @for $i from 0 through $spread*2 {
@@ -321,55 +323,55 @@ h1 {
 
 #name-obscurer {
   position:absolute;
-  height:$nameWheelSize;
-  width:$nameWheelSize;
+  height:variables.$nameWheelSize;
+  width:variables.$nameWheelSize;
   top:50%;
   left:50%;
   transform:translate(-50%, -50%);
-  border: calc($nameWheelSize / 2) solid transparent;
-  border-bottom-color: $white;
+  border: calc(variables.$nameWheelSize / 2) solid transparent;
+  border-bottom-color: variables.$white;
 }
 
 #flash-message-holder {
   position:fixed;
   left:50%;
   bottom:10px;
-  @include transform(translateX(-50%));
-  max-width:$maxWidth;
+  transform: translateX(-50%);
+  max-width:variables.$maxWidth;
   width:calc(100% - 40px);
 
   .flash-message {
-    color: $white;
+    color: variables.$white;
     border-radius:10px;
     padding:20px;
     display:block;
     width:100%;
     margin-bottom:20px;
     
-    box-shadow: 0px 5px 8px $shadow;
+    box-shadow: 0px 5px 8px variables.$shadow;
     pointer-events: none;
     opacity:1;
-    @include transition(opacity $transTime);
+    transition: opacity variables.$transTime;
     span {
       display:none;
-      color: $white;
+      color: variables.$white;
       float:left;
       margin-right:20px;
     }
     &.success {
-      background-color: $green;
+      background-color: variables.$green;
       #icon-success {
         display:block;
       }
     }
     &.notice {
-      background-color: $yellow;
+      background-color: variables.$yellow;
       #icon-notice {
         display:block;
       }
     }
     &.error {
-      background-color: $red;
+      background-color: variables.$red;
       #icon-error {
         display:block;
       }
@@ -388,7 +390,7 @@ h1 {
   &[data-info] {
     &::after {
       content:attr(data-info);
-      background-color: $fade;
+      background-color: variables.$fade;
       position: absolute;
       padding: 5px;
       border-radius:3px;
@@ -398,7 +400,7 @@ h1 {
       min-width: 200px;
       opacity:0;
       pointer-events: none;
-      @include transition(opacity $transTime);
+      transition: opacity variables.$transTime;
       font-size:12px;
       z-index:100;
       &:empty {
@@ -407,7 +409,7 @@ h1 {
     }
     &:hover {
       &::after {
-        @include transition-delay(1000ms);
+        transition-delay: 1000ms;
         opacity:1;
       }
     }
@@ -417,6 +419,6 @@ h1 {
   position: fixed;
   bottom:20px;
   right:20px;
-  color:$lightgrey;
+  color:variables.$lightgrey;
   font:12px;
 }
