@@ -27,6 +27,14 @@
               <i class="fa fa-volume-off"></i>
             </label>
           </div>
+          <div id="ping-button" class="header-button hidden">
+            <input id="ping-input" type="checkbox" name="pinging" class="option-control"/>
+            <label class="icon" for="ping-input">
+              <i class="fa fa-tower-broadcast slash"></i>
+              <i class="fa fa-tower-broadcast"></i>
+              
+            </label>
+          </div>
         </div>
         <div class="right">
           <a class="header-button" id="settings-button">
@@ -64,6 +72,7 @@
                 <div id="close-registration" class="selection-button hidden"><i class="fa fa-door-open"></i></div> -->
                 <div id="open-registration" class="selection-button">Open</div>
                 <div id="close-registration" class="selection-button hidden">Close</div>
+                <div id="members-count" class="members-count hidden"><span id="members-count-number">0</span> <i class="fa fa-users"></i></div>
               </div>
             </div>
           </div>
@@ -92,6 +101,8 @@
             <label for="word-vote" class="tooltip" data-info="Do you want the team to vote on a word for the pep talk?">Word Vote</label>
             <input id="emotable" type="checkbox" name="emotable" class="option-checkbox option-control" data-linked-off="emotable"/>
             <label for="emotable" class="tooltip" data-info="Do you want the team to be able to send emotes during the meeting?">Emotes</label>
+            <input id="late-comers" type="checkbox" name="late-comers" class="option-checkbox option-control"/>
+            <label for="late-comers" class="tooltip" data-info="Do you want the team to be able to join the meeting late?">Late Comers</label>
           </div>
           <input id="set-button" type="submit" value="Set" class="button disabled"></input>
           <div class="save-load-section">

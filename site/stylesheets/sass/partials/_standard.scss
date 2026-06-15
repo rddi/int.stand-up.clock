@@ -272,6 +272,9 @@ h1 {
   transition-property:transform;
   transition-timing-function: linear;
 
+  $spread:8;
+  $rot:8;
+
   .letter {
     height:100%;
     font-weight:bold;
@@ -280,16 +283,20 @@ h1 {
     left:50%;
     font-size:60px;
     color:$green;
+    transition: transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  
-    $spread:8;
-    $rot:8;
+    @for $i from 0 through $spread*2 {
+      &.letter-#{$i} {
+        transition-delay: #{$i * 0.1}s;
+      }
+    }
+
     @for $i from -$spread through $spread {
       &#even#{$i} {
-        transform:translateX(-50%) rotate3d(0,0,1, #{180 + (($i * $rot) + ($rot / 2))}deg);
+        transform: scale(1) translateX(-50%) rotate3d(0,0,1, #{180 + (($i * $rot) + calc($rot / 2))}deg);
       }
       &#odd#{$i} {
-        transform:translateX(-50%) rotate3d(0,0,1, #{180 + ($i * $rot)}deg);
+        transform: scale(1) translateX(-50%) rotate3d(0,0,1, #{180 + ($i * $rot)}deg);
       }
     }
   }
@@ -297,19 +304,19 @@ h1 {
   &.stage-0,
   &.stage-1 {
     transition-duration: 250ms !important;
-  }
 
-  &.stage-0 {
-    // transform:translate(-50%, -50%) rotate3d(0,0,1, 360deg);
-  }
-  &.stage-1 {
-    // transform:translate(-50%, -50%) rotate3d(0,0,1, 120deg);
-  }
-  &.stage-2 {
-    // transform:translate(-50%, -50%) rotate3d(0,0,1, 240deg); 
-  }
+    .letter {
+      @for $i from -$spread through $spread {
+        &#even#{$i} {
+          transform: scale(0) translateX(-50%) rotate3d(0,0,1, #{180 + (($i * $rot) + calc($rot / 2))}deg);
+        }
+        &#odd#{$i} {
+          transform: scale(0) translateX(-50%) rotate3d(0,0,1, #{180 + ($i * $rot)}deg);
+        }
+      }
+    }
 
-  
+  }
 }
 
 #name-obscurer {
@@ -319,7 +326,7 @@ h1 {
   top:50%;
   left:50%;
   transform:translate(-50%, -50%);
-  border: $nameWheelSize / 2 solid transparent;
+  border: calc($nameWheelSize / 2) solid transparent;
   border-bottom-color: $white;
 }
 

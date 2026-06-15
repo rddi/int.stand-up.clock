@@ -6,6 +6,12 @@
   display:block;
   overflow:hidden;
   position:relative;
+  float:left;
+  margin-right: 10px;
+  @include transition(opacity $transTime);
+  &.pulse {
+    animation: pulse-border 300ms ease-out;
+  }
   .icon {
     position: absolute;
     top: 50%;
@@ -15,9 +21,23 @@
     @include transition(transform $transTime);
       
     i.fa {
-      font-size: 40px;
+      font-size:40px;
       line-height:60px;
       @include transition(transform $transTime);
+      position: relative;
+      &.slash {
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(45deg);
+          height: 100%;
+          width: 6px;
+          border-radius: 3px;
+          background-color: $white;
+        }
+      }
     }
   }
 
@@ -76,6 +96,10 @@
         right:$offset;
       }
     }
+  }
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
@@ -309,6 +333,24 @@ label {
   }
 }
 
+.members-count {
+  background-color: $white;
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 5px;
+  color: $blue;
+  position: absolute;
+  right: 20px;
+  bottom:0;
+  transform: translateY(50%);
+  transition: all $transTime;
+  font-weight: bold;
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
 .edit-button {
   background-color:transparent;
   display:inline-block;
@@ -320,10 +362,10 @@ label {
   cursor:pointer;
 }
 
-#mute-input {
+#mute-input, #ping-input {
   display:none;
   &:checked+.icon {
-    @include transform(translate(-50%, -75%));
+    @include transform(translate(-50%, -75%)); 
   }
 }
 
@@ -415,7 +457,7 @@ input[type="text"] {
   }
   .copy-code {
     font-size:30px;
-    color:$grey;
+    color:$blue;
     @include transition(all $transTime);
   }
   i {
@@ -426,8 +468,12 @@ input[type="text"] {
     }
   }
   &#qr-meeting-code {
-    top:15px;
+    top:5px;
     left:15px;
+    color:$blue;
+    font-size:30px;
+    height:auto;
+    transform: none;
   }
   .qr-code-button {
     height:$qrCornerSize;
@@ -507,6 +553,10 @@ input[type="text"] {
           opacity:1;
           transition-delay: $slowTransTime;
         }
+      }
+      &~.members-count {
+        background-color: $blue;
+        color: $orange;
       }
     }
     &::before {

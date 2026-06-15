@@ -4,7 +4,8 @@ let mqtt,
     port = 443,
     useSSL = true,
     mqtt_username = 'standup',
-    mqtt_password = '7h31&0n1yrddi!'; 
+    mqtt_password = '7h31&0n1yrddi!',
+    keepAliveIntervalId = null; 
 
 
 const Comms = {
@@ -31,11 +32,12 @@ const Comms = {
       useSSL: useSSL,
       userName: mqtt_username,
       password: mqtt_password,
+      keepAliveInterval: 10,
     };
 
     // mqtt.username_pw_set(mqtt_username, mqtt_password);
 
-    // mqtt.onConnectionLost = Comms.onConnectionLost;
+    mqtt.onConnectionLost = Comms.onConnectionLost;
 
     mqtt.onMessageArrived = Comms.onMessageArrived;
 
@@ -52,6 +54,8 @@ const Comms = {
     Page.flashMessage(`Connection to channel established`, 'success');
 
     Comms.params.connected = true;
+
+    // Comms.startKeepAlive();
 
     if(connectHandler) {
       connectHandler();
@@ -73,13 +77,16 @@ const Comms = {
       handleReciept(message);
     }
   },
-  onConnectionLost: function() {
-    if (!Comms.params.connected) {
-      return;
-    }
+  onConnectionLost: function(responseObject) {
+    // if (!Comms.params.connected) {
+    //   return;
+    // }
     Page.flashMessage('Connection lost','error');
-    Page.flashMessage('Retrying connection','notice');
-    Comms.MQTTConnect(Comms.params.meetingCode);
+    // Page.flashMessage('Retrying connection','notice');
+    // console.log('connection lost', responseObject.errorMessage);
+    // console.log('reconnecting to ', Comms.params.meetingCode);
+    // Page.flashMessage(`Retrying connection to ${Comms.params.meetingCode}`,'notice');
+    // Comms.MQTTConnect(Comms.params.meetingCode);
   },
   isConnected: function() {
     return Comms.params.connected;
@@ -95,7 +102,13 @@ const Comms = {
   broadcastMessage:function(_message) {
     let message = new Paho.MQTT.Message(_message);
     message.destinationName = Comms.params.channel;
-    mqtt.send(message);
+    try {
+      mqtt.send(message);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      // Reconnect to the MQTT broker
+      Comms.MQTTConnect(Comms.params.meetingCode);
+    }
   },
   sendEvent:function(_body, _type="Message") {
     let output = {
@@ -105,5 +118,5 @@ const Comms = {
     };
 
     Comms.broadcastMessage(JSON.stringify(output));
-  }
+  },
 }

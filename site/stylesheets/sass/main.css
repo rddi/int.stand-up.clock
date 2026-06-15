@@ -273,112 +273,267 @@ h1 {
   left: 50%;
   font-size: 60px;
   color: #0F6B05;
+  transition: transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#name-wheel .letter.letter-0 {
+  transition-delay: 0s;
+}
+#name-wheel .letter.letter-1 {
+  transition-delay: 0.1s;
+}
+#name-wheel .letter.letter-2 {
+  transition-delay: 0.2s;
+}
+#name-wheel .letter.letter-3 {
+  transition-delay: 0.3s;
+}
+#name-wheel .letter.letter-4 {
+  transition-delay: 0.4s;
+}
+#name-wheel .letter.letter-5 {
+  transition-delay: 0.5s;
+}
+#name-wheel .letter.letter-6 {
+  transition-delay: 0.6s;
+}
+#name-wheel .letter.letter-7 {
+  transition-delay: 0.7s;
+}
+#name-wheel .letter.letter-8 {
+  transition-delay: 0.8s;
+}
+#name-wheel .letter.letter-9 {
+  transition-delay: 0.9s;
+}
+#name-wheel .letter.letter-10 {
+  transition-delay: 1s;
+}
+#name-wheel .letter.letter-11 {
+  transition-delay: 1.1s;
+}
+#name-wheel .letter.letter-12 {
+  transition-delay: 1.2s;
+}
+#name-wheel .letter.letter-13 {
+  transition-delay: 1.3s;
+}
+#name-wheel .letter.letter-14 {
+  transition-delay: 1.4s;
+}
+#name-wheel .letter.letter-15 {
+  transition-delay: 1.5s;
+}
+#name-wheel .letter.letter-16 {
+  transition-delay: 1.6s;
 }
 #name-wheel .letter#even-8 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 120deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 120deg);
 }
 #name-wheel .letter#odd-8 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 116deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 116deg);
 }
 #name-wheel .letter#even-7 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 128deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 128deg);
 }
 #name-wheel .letter#odd-7 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 124deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 124deg);
 }
 #name-wheel .letter#even-6 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 136deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 136deg);
 }
 #name-wheel .letter#odd-6 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 132deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 132deg);
 }
 #name-wheel .letter#even-5 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 144deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 144deg);
 }
 #name-wheel .letter#odd-5 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 140deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 140deg);
 }
 #name-wheel .letter#even-4 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 152deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 152deg);
 }
 #name-wheel .letter#odd-4 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 148deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 148deg);
 }
 #name-wheel .letter#even-3 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 160deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 160deg);
 }
 #name-wheel .letter#odd-3 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 156deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 156deg);
 }
 #name-wheel .letter#even-2 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 168deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 168deg);
 }
 #name-wheel .letter#odd-2 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 164deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 164deg);
 }
 #name-wheel .letter#even-1 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 176deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 176deg);
 }
 #name-wheel .letter#odd-1 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 172deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 172deg);
 }
 #name-wheel .letter#even0 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 184deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 184deg);
 }
 #name-wheel .letter#odd0 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 180deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 180deg);
 }
 #name-wheel .letter#even1 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 192deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 192deg);
 }
 #name-wheel .letter#odd1 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 188deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 188deg);
 }
 #name-wheel .letter#even2 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 200deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 200deg);
 }
 #name-wheel .letter#odd2 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 196deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 196deg);
 }
 #name-wheel .letter#even3 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 208deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 208deg);
 }
 #name-wheel .letter#odd3 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 204deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 204deg);
 }
 #name-wheel .letter#even4 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 216deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 216deg);
 }
 #name-wheel .letter#odd4 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 212deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 212deg);
 }
 #name-wheel .letter#even5 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 224deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 224deg);
 }
 #name-wheel .letter#odd5 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 220deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 220deg);
 }
 #name-wheel .letter#even6 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 232deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 232deg);
 }
 #name-wheel .letter#odd6 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 228deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 228deg);
 }
 #name-wheel .letter#even7 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 240deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 240deg);
 }
 #name-wheel .letter#odd7 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 236deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 236deg);
 }
 #name-wheel .letter#even8 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 248deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 248deg);
 }
 #name-wheel .letter#odd8 {
-  transform: translateX(-50%) rotate3d(0, 0, 1, 244deg);
+  transform: scale(1) translateX(-50%) rotate3d(0, 0, 1, 244deg);
 }
 #name-wheel.stage-0, #name-wheel.stage-1 {
   transition-duration: 250ms !important;
 }
+#name-wheel.stage-0 .letter#even-8, #name-wheel.stage-1 .letter#even-8 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 120deg);
+}
+#name-wheel.stage-0 .letter#odd-8, #name-wheel.stage-1 .letter#odd-8 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 116deg);
+}
+#name-wheel.stage-0 .letter#even-7, #name-wheel.stage-1 .letter#even-7 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 128deg);
+}
+#name-wheel.stage-0 .letter#odd-7, #name-wheel.stage-1 .letter#odd-7 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 124deg);
+}
+#name-wheel.stage-0 .letter#even-6, #name-wheel.stage-1 .letter#even-6 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 136deg);
+}
+#name-wheel.stage-0 .letter#odd-6, #name-wheel.stage-1 .letter#odd-6 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 132deg);
+}
+#name-wheel.stage-0 .letter#even-5, #name-wheel.stage-1 .letter#even-5 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 144deg);
+}
+#name-wheel.stage-0 .letter#odd-5, #name-wheel.stage-1 .letter#odd-5 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 140deg);
+}
+#name-wheel.stage-0 .letter#even-4, #name-wheel.stage-1 .letter#even-4 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 152deg);
+}
+#name-wheel.stage-0 .letter#odd-4, #name-wheel.stage-1 .letter#odd-4 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 148deg);
+}
+#name-wheel.stage-0 .letter#even-3, #name-wheel.stage-1 .letter#even-3 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 160deg);
+}
+#name-wheel.stage-0 .letter#odd-3, #name-wheel.stage-1 .letter#odd-3 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 156deg);
+}
+#name-wheel.stage-0 .letter#even-2, #name-wheel.stage-1 .letter#even-2 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 168deg);
+}
+#name-wheel.stage-0 .letter#odd-2, #name-wheel.stage-1 .letter#odd-2 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 164deg);
+}
+#name-wheel.stage-0 .letter#even-1, #name-wheel.stage-1 .letter#even-1 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 176deg);
+}
+#name-wheel.stage-0 .letter#odd-1, #name-wheel.stage-1 .letter#odd-1 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 172deg);
+}
+#name-wheel.stage-0 .letter#even0, #name-wheel.stage-1 .letter#even0 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 184deg);
+}
+#name-wheel.stage-0 .letter#odd0, #name-wheel.stage-1 .letter#odd0 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 180deg);
+}
+#name-wheel.stage-0 .letter#even1, #name-wheel.stage-1 .letter#even1 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 192deg);
+}
+#name-wheel.stage-0 .letter#odd1, #name-wheel.stage-1 .letter#odd1 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 188deg);
+}
+#name-wheel.stage-0 .letter#even2, #name-wheel.stage-1 .letter#even2 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 200deg);
+}
+#name-wheel.stage-0 .letter#odd2, #name-wheel.stage-1 .letter#odd2 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 196deg);
+}
+#name-wheel.stage-0 .letter#even3, #name-wheel.stage-1 .letter#even3 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 208deg);
+}
+#name-wheel.stage-0 .letter#odd3, #name-wheel.stage-1 .letter#odd3 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 204deg);
+}
+#name-wheel.stage-0 .letter#even4, #name-wheel.stage-1 .letter#even4 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 216deg);
+}
+#name-wheel.stage-0 .letter#odd4, #name-wheel.stage-1 .letter#odd4 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 212deg);
+}
+#name-wheel.stage-0 .letter#even5, #name-wheel.stage-1 .letter#even5 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 224deg);
+}
+#name-wheel.stage-0 .letter#odd5, #name-wheel.stage-1 .letter#odd5 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 220deg);
+}
+#name-wheel.stage-0 .letter#even6, #name-wheel.stage-1 .letter#even6 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 232deg);
+}
+#name-wheel.stage-0 .letter#odd6, #name-wheel.stage-1 .letter#odd6 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 228deg);
+}
+#name-wheel.stage-0 .letter#even7, #name-wheel.stage-1 .letter#even7 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 240deg);
+}
+#name-wheel.stage-0 .letter#odd7, #name-wheel.stage-1 .letter#odd7 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 236deg);
+}
+#name-wheel.stage-0 .letter#even8, #name-wheel.stage-1 .letter#even8 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 248deg);
+}
+#name-wheel.stage-0 .letter#odd8, #name-wheel.stage-1 .letter#odd8 {
+  transform: scale(0) translateX(-50%) rotate3d(0, 0, 1, 244deg);
+}
+
 #name-obscurer {
   position: absolute;
   height: 660px;
@@ -495,6 +650,15 @@ h1 {
   display: block;
   overflow: hidden;
   position: relative;
+  float: left;
+  margin-right: 10px;
+  -webkit-transition: opacity 300ms;
+  -moz-transition: opacity 300ms;
+  -o-transition: opacity 300ms;
+  transition: opacity 300ms;
+}
+.header-button.pulse {
+  animation: pulse-border 300ms ease-out;
 }
 .header-button .icon {
   position: absolute;
@@ -514,6 +678,18 @@ h1 {
   -moz-transition: -moz-transform 300ms;
   -o-transition: -o-transform 300ms;
   transition: transform 300ms;
+  position: relative;
+}
+.header-button .icon i.fa.slash::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  height: 100%;
+  width: 6px;
+  border-radius: 3px;
+  background-color: #fff;
 }
 .header-button .corner {
   height: 100%;
@@ -566,6 +742,10 @@ h1 {
 }
 .header-button.close .corner.l {
   right: 80%;
+}
+.header-button.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 label {
@@ -791,6 +971,24 @@ label:not(.heading) {
   display: none;
 }
 
+.members-count {
+  background-color: #fff;
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 5px;
+  color: #335fa3;
+  position: absolute;
+  right: 20px;
+  bottom: 0;
+  transform: translateY(50%);
+  transition: all 300ms;
+  font-weight: bold;
+}
+.members-count.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .edit-button {
   background-color: transparent;
   display: inline-block;
@@ -802,10 +1000,10 @@ label:not(.heading) {
   cursor: pointer;
 }
 
-#mute-input {
+#mute-input, #ping-input {
   display: none;
 }
-#mute-input:checked + .icon {
+#mute-input:checked + .icon, #ping-input:checked + .icon {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);
   -ms-transform: translate(-50%, -75%);
@@ -905,7 +1103,7 @@ input[type=text] {
 }
 .meeting-code .copy-code {
   font-size: 30px;
-  color: #888;
+  color: #335fa3;
   -webkit-transition: all 300ms;
   -moz-transition: all 300ms;
   -o-transition: all 300ms;
@@ -919,8 +1117,12 @@ input[type=text] {
   color: #d9643e;
 }
 .meeting-code#qr-meeting-code {
-  top: 15px;
+  top: 5px;
   left: 15px;
+  color: #335fa3;
+  font-size: 30px;
+  height: auto;
+  transform: none;
 }
 .meeting-code .qr-code-button {
   height: 150px;
@@ -1002,6 +1204,10 @@ input[type=text] {
 #register-display.connected.open ~ .meeting-code .qr-code-button {
   opacity: 1;
   transition-delay: 500ms;
+}
+#register-display.connected.open ~ .members-count {
+  background-color: #335fa3;
+  color: #d9643e;
 }
 #register-display.connected::before {
   content: "Connected";
@@ -1248,7 +1454,7 @@ input[type=text] {
   line-height: 35px;
   color: #fff;
   cursor: pointer;
-  transition: color 300ms, background-color 300ms, text-decoration 300ms, opacity 300ms;
+  transition: color 300ms, background-color 300ms, text-decoration 300ms, opacity 300ms, box-shadow 300ms;
   position: relative;
   z-index: 10;
   white-space: nowrap;
@@ -1323,6 +1529,32 @@ input[type=text] {
 .word-button.done.highlight::before,
 .team-button.done.highlight::before {
   opacity: 0;
+}
+.word-button::after,
+.team-button::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: #0F6B05;
+  border-radius: 50%;
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  opacity: 0;
+  transition: background-color 300ms, opacity 300ms;
+  border: 2px solid black;
+}
+.word-button.low-ping::after,
+.team-button.low-ping::after {
+  background-color: #650D1B;
+}
+.word-button.no-ping::after,
+.team-button.no-ping::after {
+  background-color: #888;
+}
+.word-button.show-ping::after,
+.team-button.show-ping::after {
+  opacity: 100;
 }
 
 .team-button-holder {
@@ -1773,6 +2005,32 @@ input[type=text] {
   background-color: #0F6B05;
 }
 
+#ping-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  transition: color 300ms, opacity 300ms;
+  opacity: 1;
+}
+#ping-container i.fa {
+  color: #0F6B05;
+  font-size: 20px;
+}
+#ping-container.low-ping i.fa {
+  color: #650D1B;
+}
+#ping-container.no-ping i.fa {
+  color: #888;
+}
+#ping-container.hidden {
+  opacity: 0;
+}
+#ping-container.pulse i.fa {
+  animation: pulse-once 300ms ease-out;
+}
+
 @keyframes fade-in {
   from {
     color: rgba(15, 107, 5, 0);
@@ -1803,6 +2061,28 @@ input[type=text] {
   }
   to {
     max-width: 300px;
+  }
+}
+@keyframes pulse-border {
+  0% {
+    border-width: 1px;
+  }
+  50% {
+    border-width: 5px;
+  }
+  100% {
+    border-width: 1px;
+  }
+}
+@keyframes pulse-once {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 #emotes-container {

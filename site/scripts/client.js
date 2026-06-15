@@ -1,4 +1,4 @@
-let version = '1.1',
+let version = '1.2',
   meetingCodeInput,
   clientNameInput,
   joinModal,
@@ -17,11 +17,13 @@ let version = '1.1',
   wordChoiceElement,
   emotesButtonContainer,
   noticeContainer,
-  noticeContent
+  noticeContent,
+  pingContainer,
   memberList = {},
   searchTimeout = 10000
   lastEmote = 0,
-  emoteThrottle = 5000;
+  emoteThrottle = 5000,
+  lastPing = 0;
 
   let emotesHolder;
 
@@ -98,6 +100,26 @@ function setUpDisplay() {
   teamDisplay = document.getElementById('team-display');
   noticeContainer = document.getElementById('notice-container');
   noticeContent = document.getElementById('notice');
+  pingContainer = document.getElementById('ping-container');
+
+  setInterval(function() {
+    pingContainer.classList.remove('low-ping', 'no-ping');
+    if (!Comms.params.registered) {
+      return;
+    }
+    if ((new Date().getTime() - lastPing) > 20000) {
+      pingContainer.classList.add('no-ping');
+    } else if ((new Date().getTime() - lastPing) > 10000) {
+      pingContainer.classList.add('low-ping');
+    }
+  }, 10000);
+
+  pingContainer.addEventListener('click', function() {
+    if (!pingContainer.classList.contains('no-ping')) {
+      return;
+    }
+    attemptReconnect();
+  });
 }
 
 function setUpButtons() {
@@ -134,7 +156,11 @@ function handleReciept(input) {
       return;
     }
     
+    
     switch (type[1]) {
+      case 'Ping':
+        handlePing(message.body);
+        break;
       case 'Message':
         if (!Comms.params.registered) {
           return;
@@ -199,6 +225,9 @@ function handleReciept(input) {
         break;
       case 'RegisterResponse':
         handleRegisterResponse(message.body);
+        break;
+      case 'RegisterResponseLate':
+        handleRegisterResponseLate(message.body);
         break;
       case 'Notify':
         notice(`${message.body}s remaining`, 'red');
@@ -282,10 +311,8 @@ function clearEmoteButtons() {
 }
 
 function setMainDisplay(content, state = null, newLabel = null) {
-
-
-
   let html = `<span>${content}</span>`;
+
   if (mainDisplay.innerHTML == html && mainDisplay.getAttribute('label') == newLabel) {
     return;
   }
@@ -352,15 +379,25 @@ function handleRegisterResponse(response) {
   if (response.target != Comms.params.clientName) {
     return;
   }
-  console.log("reg response", response)
   if (response.status == 'success') {
-    setMainDisplay("Waiting for others", 1);
+    setMainDisplay("Registered", 1);
     Page.flashMessage(`Registered in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
     Comms.params.registered = true;
+    pingContainer.classList.remove('hidden');
+    lastPing = new Date().getTime();
   } else if (response.status == 'failure') {
     setMainDisplay("Unable to register", 0);
     Page.flashMessage(`Could not register in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}": ${response.error}`, 'error');
   }
+}
+
+function handleRegisterResponseLate(response) {
+  if (response.target != Comms.params.clientName) {
+    return;
+  }
+  setMainDisplay("Meeting in Progress", 1);
+    Page.flashMessage(`Registered as a late comer in meeting "${Comms.params.meetingCode}" as "${Comms.params.clientName}"`, 'success');
+    Comms.params.registered = true;
 }
 
 function handleUpdateSpeaker(speaker) {
@@ -384,7 +421,16 @@ function handleUpdateSpeaker(speaker) {
     emotesHolder.classList.remove('active');
   }
 
-  setMainDisplay(currentSpeaker, state, 'Current Speaker');
+  setMainDisplay(currentSpeaker, state, 'Current Speaker', true);
+}
+
+function handlePing(pingCode) {
+  lastPing = pingCode;
+  pingContainer.classList.remove('pulse');
+  void pingContainer.offsetWidth;
+  pingContainer.classList.add('pulse');
+  Comms.sendEvent(pingCode, 'Master.Pong');
+
 }
 
 function handlePepTalk(pepTalker){
@@ -545,6 +591,13 @@ function getUniqueCode() {
   Comms.params.uniqueCode = Memory.get('standup_client_uniquecode');
 }
 
+function attemptReconnect() {
+  Comms.params = Memory.getObject('standup_client_settings');
+    Page.flashMessage(`Attempting to reconnect to meeting "${Comms.params.meetingCode}"`, 'notice');
+    
+    Comms.MQTTConnect(Comms.params.meetingCode);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   Utilities.setVersion();
   getUniqueCode();
@@ -556,3 +609,12 @@ document.addEventListener("DOMContentLoaded", function () {
   Page.setUpFlash();
 });
 
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') {
+    Page.flashMessage('Page inactive. Disconnecting...', 'notice');
+    Comms.disconnect(); // Don't know if this is the correct way to handle this
+  }
+  if (document.visibilityState === 'visible' && !Comms.params.connected) {
+    attemptReconnect();
+  }
+});

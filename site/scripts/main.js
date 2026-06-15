@@ -1,4 +1,4 @@
-let version = '1.1',
+let version = '1.25',
   timer,
   subtimer,
   collapser,
@@ -21,7 +21,9 @@ let version = '1.1',
   pep,
   pepDisplay,
   muteInput,
+  pingInput,
   updateSpeed = 100,
+  pingInterval = 10000,
   teamRemaining = 0,
   wheelRot = 0,
   sounds = [],
@@ -39,10 +41,12 @@ let version = '1.1',
   title,
   options = {
     mute: false,
+    pinging: true,
     pausable: false,
     collectTime: true,
     pp: false,
     emote: false,
+    lateComers: false,
   },
   optionInputs,
   timeSlider,
@@ -55,6 +59,8 @@ let version = '1.1',
   registerDisplay,
   openRegistrationButton,
   closeRegistrationButton,
+  membersCount,
+  membersCountNumber,
   tabs,
   finishSent = false,
   meetingCodeDisplay,
@@ -68,7 +74,9 @@ let version = '1.1',
   voteCount,
   pepExclusions = [],
   postFinishWait = 2000,
-  clientURL;
+  clientURL,
+  pingList = {},
+  pingRunner;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0];
@@ -271,17 +279,27 @@ function setRegisterOpen(_open = true) {
 
   if (!_open) {
     openRegistrationButton.classList.remove("hidden");
+    
     closeRegistrationButton.classList.add("hidden");
+    if (Object.keys(register).length === 0) {
+      membersCount.classList.add("hidden");
+    }
     registerDisplay.classList.remove("open");
     if (wasOpen) {
-      Page.flashMessage('Registration closed', 'notice');
+      if (options.lateComers) {
+        Page.flashMessage('Registration closed, but late comers can still join', 'notice');
+      } else {
+        Page.flashMessage('Registration closed', 'notice');
+      }
     }
   } else {
     openRegistrationButton.classList.add("hidden");
     closeRegistrationButton.classList.remove("hidden");
+    membersCount.classList.remove("hidden");
     registerDisplay.classList.add("open");
     if (Comms.isConnected()) {
       Page.flashMessage('Registration open', 'success');
+      startPings();
     }
   }
 }
@@ -289,6 +307,7 @@ function setRegisterOpen(_open = true) {
 function setUpForm() {
   form = document.getElementById("input-form");
   muteInput = document.getElementById("mute-input");
+  pingInput = document.getElementById("ping-input");
 
   teamInput = document.getElementById('meeting-name-input');
 
@@ -297,7 +316,8 @@ function setUpForm() {
 
   openRegistrationButton = document.getElementById('open-registration');
   closeRegistrationButton = document.getElementById('close-registration');
-
+  membersCount = document.getElementById('members-count');
+  membersCountNumber = document.getElementById('members-count-number');
   registerDisplay = document.getElementById('register-display');
   meetingCodeDisplay = document.getElementById('meeting-code');
   qrMeetingCodeDisplay = document.getElementById('qr-meeting-code');
@@ -554,8 +574,7 @@ function setUpTimers() {
       pause.classList.add('paused');
       nameWheelPause(true);
     }
-    sendSpeaker();
-    sendMemberList();
+    updateClients();
   });
 
   end.addEventListener("click", function (e) {
@@ -661,7 +680,7 @@ function newSpeaker() {
 
 
   for (i = 0; i < name.length; i += 1) {
-    nameElement += `<div class="letter" id="${type}${offset}">${name[i]}</div>`;
+    nameElement += `<div class="letter letter-${i}" id="${type}${offset}">${name[i]}</div>`;
     offset += 1;
   }
 
@@ -1268,6 +1287,74 @@ function update() {
   }
 }
 
+function applyPingStatusIndicators() {
+  const currentMembers = document.getElementsByClassName('team-button');
+  for (let i = 0; i < currentMembers.length; i += 1) {
+
+    currentMembers[i].classList.remove('no-ping');
+    currentMembers[i].classList.remove('low-ping');
+    currentMembers[i].classList.remove('show-ping');
+    if (options.pinging && options.useRegister) {
+      currentMembers[i].classList.add('show-ping');
+    
+      if (pingList.hasOwnProperty(currentMembers[i].innerHTML)) {
+        if (new Date().getTime() - pingList[currentMembers[i].innerHTML] > 10000) { // More that 10 seconds since last pong
+          currentMembers[i].classList.add('low-ping');
+        }
+
+        if (new Date().getTime() - pingList[currentMembers[i].innerHTML] > 20000) { // More that 10 seconds since last pong
+          currentMembers[i].classList.remove('low-ping');
+          currentMembers[i].classList.add('no-ping');
+        }
+      }
+    }
+  }
+}
+
+function startPings() {
+  if (pingRunner) {
+    clearInterval(pingRunner);
+  }
+
+  let currentMemberList = document.getElementsByClassName('team-button');
+
+  for (let i = 0; i < currentMemberList.length; i += 1) {
+    pingList[currentMemberList[i].innerHTML] = 0;
+  }
+
+  pingRunner = setInterval(function () { 
+    applyPingStatusIndicators();
+    if (!options.pinging) {
+      return;
+    }
+    const pingCode = `${new Date().getTime()}`;
+    console.log('Ping code: ', pingCode);
+    let currentMemberList = document.getElementsByClassName('team-button');
+    let memberList = [];
+
+    for (let i = 0; i < currentMemberList.length; i += 1) {
+      memberList.push(currentMemberList[i].innerHTML);
+    }
+
+    console.log('Member list: ', memberList);
+
+    // pingList[pingCode] = memberList;
+
+    
+    pingInput.parentElement.classList.remove('pulse');
+    void pingInput.offsetWidth;
+    pingInput.parentElement.classList.add('pulse');
+
+    sendEvent(pingCode, 'Client.Ping');
+    console.log('Ping sent');
+
+  }, pingInterval);
+
+  if (options.pinging) {
+    Page.flashMessage('Pinging started', 'success');
+  }
+}
+
 function startUpdates() {
   setInterval(function () {
     update();
@@ -1399,10 +1486,12 @@ function setRegister(value) {
   if (value) {
     tabs[0].classList.add("hidden");
     tabs[1].classList.remove("hidden");
+    pingInput.parentElement.classList.remove('hidden');
     return;
   }
   tabs[0].classList.remove("hidden");
   tabs[1].classList.add("hidden");
+  pingInput.parentElement.classList.add('hidden');
   setRegisterOpen(false);
 }
 
@@ -1443,6 +1532,12 @@ function handleReciept(input) {
           break;
         case 'Emote':
           handleEmote(sanitisedClient, message.body);
+          break;
+        case 'MeetingStatus':
+          handleMeetingStatus(sanitisedClient);
+          break;
+        case 'Pong':
+          handlePong(sanitisedClient, message.body);
           break;
         default:
           console.log(`Could not handle message type: "${message.type}"`);
@@ -1542,6 +1637,12 @@ function showVotes(votes) {
   voteCount.innerHTML = `<i class="fa fa-check-to-slot"></i><span>${votes}/${team.length - 1}</span><a id="close-vote-button" class="button hidden"><i class="fa fa-forward"></i></a>`;
 }
 
+function handleMeetingStatus(client) {
+  Page.flashMessage(`Meeting status request received from ${client}`, 'success');
+  sendSpeaker();
+  sendMemberList();
+}
+
 function getVoteResults() {
   let currentWord = ['ERROR', -1];
 
@@ -1584,7 +1685,9 @@ function handleRegistration(client, uniqueCode) {
     return;
   }
 
-  if (!registrationOpen) {
+  console.log("HIGGINS!", registrationOpen, options.lateComers);
+
+  if (!registrationOpen && !options.lateComers) {
     sendEvent({
       target: client,
       status: 'failure',
@@ -1610,18 +1713,36 @@ function handleRegistration(client, uniqueCode) {
 
   // If not, add to new team list
   register[client] = uniqueCode;
-
-  // Send registration success
-  sendEvent({
-    target: client,
-    status: 'success',
-    error: 'none'
+  if (!registrationOpen) {
+    sendEvent({
+      target: client,
+      status: 'success',
+      error: 'none'
+    },
+    'Client.RegisterResponseLate');
+    Emotes.spawnEmote(`door-open`, client, `red`)
+  } else {
+    sendEvent({
+      target: client,
+      status: 'success',
+      error: 'none'
+    },
+    'Client.RegisterResponse');
+    Emotes.spawnEmote(`door-open`, client, `green`)
   }
-    , 'Client.RegisterResponse');
+  // Send registration success
+  
 
-  Emotes.spawnEmote(`door-open`, client, `green`)
+  // Emotes.spawnEmote(`door-open`, client, `green`)
   updateRegister();
   updateClients();
+}
+
+function handlePong(client, pingCode) {
+  console.log('Pong received from ', client, ' with code ', pingCode);
+  pingList[client] = pingCode;
+  console.log('Ping list: ', pingList);
+  applyPingStatusIndicators();
 }
 
 function updateRegister() {
@@ -1636,12 +1757,12 @@ function updateRegister() {
   }
 
   registerDisplay.innerHTML = registerMembers.join('');
+  membersCountNumber.innerHTML = Object.keys(register).length;
   checkSetButton();
 }
 
 function updateClients() {
-  sendSpeaker();
-
+  sendSpeaker()
   sendMemberList();
 }
 
