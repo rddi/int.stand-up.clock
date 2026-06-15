@@ -650,6 +650,15 @@ h1 {
   display: block;
   overflow: hidden;
   position: relative;
+  float: left;
+  margin-right: 10px;
+  -webkit-transition: opacity 300ms;
+  -moz-transition: opacity 300ms;
+  -o-transition: opacity 300ms;
+  transition: opacity 300ms;
+}
+.header-button.pulse {
+  animation: pulse-border 300ms ease-out;
 }
 .header-button .icon {
   position: absolute;
@@ -669,6 +678,18 @@ h1 {
   -moz-transition: -moz-transform 300ms;
   -o-transition: -o-transform 300ms;
   transition: transform 300ms;
+  position: relative;
+}
+.header-button .icon i.fa.slash::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  height: 100%;
+  width: 6px;
+  border-radius: 3px;
+  background-color: #fff;
 }
 .header-button .corner {
   height: 100%;
@@ -721,6 +742,10 @@ h1 {
 }
 .header-button.close .corner.l {
   right: 80%;
+}
+.header-button.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 label {
@@ -1429,7 +1454,7 @@ input[type=text] {
   line-height: 35px;
   color: #fff;
   cursor: pointer;
-  transition: color 300ms, background-color 300ms, text-decoration 300ms, opacity 300ms;
+  transition: color 300ms, background-color 300ms, text-decoration 300ms, opacity 300ms, box-shadow 300ms;
   position: relative;
   z-index: 10;
   white-space: nowrap;
@@ -1505,14 +1530,31 @@ input[type=text] {
 .team-button.done.highlight::before {
   opacity: 0;
 }
-.word-button.done.no-ping::after,
-.team-button.done.no-ping::after {
-  content: "X";
+.word-button::after,
+.team-button::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: #0F6B05;
+  border-radius: 50%;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 20px;
+  right: -5px;
+  top: -5px;
+  opacity: 0;
+  transition: background-color 300ms, opacity 300ms;
+  border: 2px solid black;
+}
+.word-button.low-ping::after,
+.team-button.low-ping::after {
+  background-color: #650D1B;
+}
+.word-button.no-ping::after,
+.team-button.no-ping::after {
+  background-color: #888;
+}
+.word-button.show-ping::after,
+.team-button.show-ping::after {
+  opacity: 100;
 }
 
 .team-button-holder {
@@ -1963,6 +2005,32 @@ input[type=text] {
   background-color: #0F6B05;
 }
 
+#ping-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  transition: color 300ms, opacity 300ms;
+  opacity: 1;
+}
+#ping-container i.fa {
+  color: #0F6B05;
+  font-size: 20px;
+}
+#ping-container.low-ping i.fa {
+  color: #650D1B;
+}
+#ping-container.no-ping i.fa {
+  color: #888;
+}
+#ping-container.hidden {
+  opacity: 0;
+}
+#ping-container.pulse i.fa {
+  animation: pulse-once 300ms ease-out;
+}
+
 @keyframes fade-in {
   from {
     color: rgba(15, 107, 5, 0);
@@ -1993,6 +2061,28 @@ input[type=text] {
   }
   to {
     max-width: 300px;
+  }
+}
+@keyframes pulse-border {
+  0% {
+    border-width: 1px;
+  }
+  50% {
+    border-width: 5px;
+  }
+  100% {
+    border-width: 1px;
+  }
+}
+@keyframes pulse-once {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 #emotes-container {
