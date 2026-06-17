@@ -1,5 +1,18 @@
 @use "variables";
 
+.remote-admin-display {
+  display:none;
+  position: absolute;
+  left: 50%;
+  bottom: 15px;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 0 5px;
+  .fa {
+    color: variables.$yellow;
+  }
+}
+
 #main-display {
   color:variables.$orange;
   opacity:1;
@@ -68,8 +81,11 @@
       color:variables.$white;
     }
   }
-  
+  &.remote-admin + .remote-admin-display {
+    display:block;
+  }
 }
+
 
 #team-display {
   position: absolute;

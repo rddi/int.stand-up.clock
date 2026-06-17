@@ -1,4 +1,4 @@
-let version = '1.25',
+let version = '1.3',
   timer,
   subtimer,
   collapser,
@@ -76,7 +76,8 @@ let version = '1.25',
   postFinishWait = 2000,
   clientURL,
   pingList = {},
-  pingRunner;
+  pingRunner,
+  remoteAdmin = null;
 
 function setCollapser() {
   collapser = document.getElementsByClassName("collapser")[0];
@@ -336,6 +337,25 @@ function setUpForm() {
     const removee = e.target.id.split('deregister-')[1];
 
     sendDeregister(removee);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!e.target.classList.contains('remote-admin-select')) {
+      return;
+    }
+
+    const admin = e.target.id.split('remote-admin-')[1];
+
+    if(remoteAdmin === admin) {
+      remoteAdmin = null;
+      sendRemoteAdmin(null);
+      e.target.classList.remove('selected');
+      return;
+    }
+
+    sendRemoteAdmin(admin);
+    remoteAdmin = admin;
+    e.target.classList.add('selected');
   });
 
   document.addEventListener('click', function (e) {
@@ -1560,7 +1580,7 @@ function handleCheck(sender, body) {
 
 function handleNomination(sender, nomination) {
   const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
-  if (sender != currentSpeaker) {
+  if (sender != currentSpeaker && sender != remoteAdmin) {
     return;
   }
   let target = document.getElementById(`team-button-${nomination}`);
@@ -1571,7 +1591,7 @@ function handleNomination(sender, nomination) {
 
 function handleControlAction(sender, action) {
   const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
-  if (sender != currentSpeaker) {
+  if (sender != currentSpeaker && sender != remoteAdmin) {
     return;
   }
   let targetId;
@@ -1672,6 +1692,9 @@ function handleRegistration(client, uniqueCode) {
       if (timer.hasStarted() && !timer.isFinished()) {
         updateClients();
       }
+      if(client == remoteAdmin) {
+        sendRemoteAdmin(remoteAdmin);
+      }
       return;
     }
 
@@ -1684,8 +1707,6 @@ function handleRegistration(client, uniqueCode) {
       , 'Client.RegisterResponse');
     return;
   }
-
-  console.log("HIGGINS!", registrationOpen, options.lateComers);
 
   if (!registrationOpen && !options.lateComers) {
     sendEvent({
@@ -1752,7 +1773,11 @@ function updateRegister() {
   for (let member in register) {
     console.log(member);
     registerMembers.push(
-      `<div class="register-lozenge"><i class="fa fa-minus deregister remove" id="deregister-${member}"></i>${member}</div>`
+      `<div class="register-lozenge">
+        <i class="fa fa-minus deregister remove" id="deregister-${member}"></i>
+        ${member}
+        <i class="fa fa-crown remote-admin-select ${remoteAdmin === member ? 'selected' : ''}" id="remote-admin-${member}"></i>
+      </div>`
     );
   }
 
@@ -1821,6 +1846,15 @@ function sendDeregister(removee) {
 
   updateRegister();
   checkSetButton();
+}
+
+function sendRemoteAdmin(remoteAdmin) {
+  sendEvent({
+    remoteAdmin: remoteAdmin,
+  }, 'Client.RemoteAdmin');
+
+
+  Page.flashMessage(`${remoteAdmin} has been selected as a remote admin`, 'success');
 }
 
 function sendFinished() {

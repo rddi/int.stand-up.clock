@@ -23,7 +23,8 @@ let version = '1.2',
   searchTimeout = 10000
   lastEmote = 0,
   emoteThrottle = 5000,
-  lastPing = 0;
+  lastPing = 0,
+  remoteAdmin = false;
 
   let emotesHolder;
 
@@ -232,6 +233,12 @@ function handleReciept(input) {
       case 'Notify':
         notice(`${message.body}s remaining`, 'red');
         break;
+      case 'RemoteAdmin':
+        if (!Comms.params.registered) {
+          return;
+        }
+        handleRemoteAdmin(message.body);
+        break;
       default:
         console.log(`Could not handle message type: "${message.type}"`);
     }
@@ -244,6 +251,13 @@ function handleReciept(input) {
 
 function isSpeaker() {
   if (currentSpeaker == Comms.params.clientName) {
+    return true;
+  }
+  return false;
+}
+
+function isRemoteAdmin() {
+  if (remoteAdmin === Comms.params.clientName) {
     return true;
   }
   return false;
@@ -400,6 +414,22 @@ function handleRegisterResponseLate(response) {
     Comms.params.registered = true;
 }
 
+function handleRemoteAdmin(remoteAdmin) {
+  if (remoteAdmin.remoteAdmin != Comms.params.clientName) {
+    if(remoteAdmin) {
+      Page.flashMessage(`You are no longer a remote admin`, 'notice');
+    }
+    remoteAdmin = false;
+    mainDisplay.classList.remove('remote-admin');
+    return;
+  }
+
+  remoteAdmin = true;
+  mainDisplay.classList.add('remote-admin');
+
+  Page.flashMessage(`You are now a remote admin`, 'success');
+}
+
 function handleUpdateSpeaker(speaker) {
   currentSpeaker = speaker;
 
@@ -416,6 +446,9 @@ function handleUpdateSpeaker(speaker) {
 
   if (isSpeaker()) {
     state = 3;
+  }
+
+  if (isSpeaker() || isRemoteAdmin()) {
     teamDisplay.classList.add('active');
     buttonHolder.classList.add('active');
     emotesHolder.classList.remove('active');
@@ -558,7 +591,7 @@ function buildMemberElements(forceDone = false) {
 
 function setUpTeamInteractions() {
   document.addEventListener('click', function (e) {
-    if (!e.target.classList.contains('team-button') || currentSpeaker != Comms.params.clientName || e.target.classList.contains('done') || e.target.classList.contains('active')) {
+    if (!e.target.classList.contains('team-button') || (currentSpeaker != Comms.params.clientName || remoteAdmin) || e.target.classList.contains('done') || e.target.classList.contains('active')) {
       return;
     }
 

@@ -590,6 +590,19 @@ input[type="text"] {
   &.hidden {
     display:none;
   }
+  .remote-admin-select {
+    color:variables.$grey;
+    margin-left:10px;
+    cursor:pointer;
+    transition: transform variables.$transTime;
+    &:hover {
+      transform: scale(1.1);
+    }
+    &.selected {
+      color:variables.$yellow;
+
+    }
+  }
 }
 
 .register-holder {
