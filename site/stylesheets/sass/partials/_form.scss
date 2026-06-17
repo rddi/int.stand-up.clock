@@ -594,13 +594,19 @@ input[type="text"] {
     color:variables.$grey;
     margin-left:10px;
     cursor:pointer;
-    transition: transform variables.$transTime;
+    transition: transform variables.$transTime, color variables.$transTime, max-width variables.$transTime, margin-left variables.$transTime;
+    max-width:100px;
+    overflow:hidden;
     &:hover {
       transform: scale(1.1);
     }
+    &.hidden:not(.selected) {
+      margin-left:0;
+      max-width:0;
+
+    }
     &.selected {
       color:variables.$yellow;
-
     }
   }
 }

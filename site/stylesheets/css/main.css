@@ -1153,10 +1153,16 @@ input[type=text] {
   color: #888;
   margin-left: 10px;
   cursor: pointer;
-  transition: transform 300ms;
+  transition: transform 300ms, color 300ms, max-width 300ms, margin-left 300ms;
+  max-width: 100px;
+  overflow: hidden;
 }
 .register-lozenge .remote-admin-select:hover {
   transform: scale(1.1);
+}
+.register-lozenge .remote-admin-select.hidden:not(.selected) {
+  margin-left: 0;
+  max-width: 0;
 }
 .register-lozenge .remote-admin-select.selected {
   color: #e9a351;
@@ -1596,16 +1602,23 @@ input[type=text] {
 }
 
 .remote-admin-display {
-  display: none;
   position: absolute;
   left: 50%;
   bottom: 15px;
   transform: translateX(-50%);
   background-color: white;
   padding: 0 5px;
+  max-width: 0;
+  transition: max-width 300ms, padding 300ms;
+  overflow: hidden;
+  padding: 0;
+  transition-delay: 300ms;
 }
 .remote-admin-display .fa {
-  color: #e9a351;
+  color: #BF40BF;
+  opacity: 0;
+  transition: opacity 300ms;
+  transition-delay: 0;
 }
 
 #main-display {
@@ -1672,7 +1685,13 @@ input[type=text] {
   color: #fff;
 }
 #main-display.remote-admin + .remote-admin-display {
-  display: block;
+  max-width: 100px;
+  padding: 0 5px;
+  transition-delay: 0;
+}
+#main-display.remote-admin + .remote-admin-display .fa {
+  opacity: 1;
+  transition-delay: 300ms;
 }
 
 #team-display {
@@ -1750,6 +1769,9 @@ input[type=text] {
 }
 #button-holder:not(.active) .button-center .button {
   display: none;
+}
+#button-holder.remote-admin .button-center .button {
+  color: #BF40BF;
 }
 
 #emotes-button-holder {

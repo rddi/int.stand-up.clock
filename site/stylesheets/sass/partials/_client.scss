@@ -1,15 +1,23 @@
 @use "variables";
 
 .remote-admin-display {
-  display:none;
   position: absolute;
   left: 50%;
   bottom: 15px;
   transform: translateX(-50%);
   background-color: white;
   padding: 0 5px;
+  max-width:0;
+  transition: max-width variables.$transTime, padding variables.$transTime;
+  overflow:hidden;
+  padding:0;
+  transition-delay: variables.$transTime;
+
   .fa {
-    color: variables.$yellow;
+    color: variables.$remoteAdminColour;
+    opacity:0;
+    transition: opacity variables.$transTime;
+    transition-delay: 0;
   }
 }
 
@@ -82,7 +90,13 @@
     }
   }
   &.remote-admin + .remote-admin-display {
-    display:block;
+    max-width:100px;
+    padding: 0 5px;
+    transition-delay: 0;
+    .fa {
+      opacity:1;
+      transition-delay: variables.$transTime;
+    }
   }
 }
 
@@ -173,6 +187,13 @@
     .button-center {
       .button {
         display:none;
+      }
+    }
+  }
+  &.remote-admin {
+    .button-center {
+      .button {
+        color: variables.$remoteAdminColour;
       }
     }
   }

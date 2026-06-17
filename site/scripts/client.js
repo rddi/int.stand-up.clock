@@ -257,10 +257,8 @@ function isSpeaker() {
 }
 
 function isRemoteAdmin() {
-  if (remoteAdmin === Comms.params.clientName) {
-    return true;
-  }
-  return false;
+  // console.log(remoteAdmin, Comms.params.clientName);
+  return remoteAdmin;
 }
 
 function notice(message, colour) {
@@ -290,14 +288,12 @@ function setUpEmoteButtons(suppliedEmotes) {
   if (!suppliedEmotes) {
     return;
   }
+
   emotesHolder = document.getElementById('emotes-button-holder');
   emotesButtonContainer = document.getElementById('emotes-button-container');
   let buttons = '',
     i = 0,
     options = Object.keys(suppliedEmotes);
-
-    // console.log(suppliedEmotes);
-    // console.log(options);
 
   for (i = 0;i<options.length;i+=1) {
     buttons += `<div id="emote-${options[i]}" class="emote-button"><i class="fa fa-${suppliedEmotes[options[i]].tag}"></i></div>`;
@@ -414,8 +410,8 @@ function handleRegisterResponseLate(response) {
     Comms.params.registered = true;
 }
 
-function handleRemoteAdmin(remoteAdmin) {
-  if (remoteAdmin.remoteAdmin != Comms.params.clientName) {
+function handleRemoteAdmin(_remoteAdmin) {
+  if (_remoteAdmin.remoteAdmin != Comms.params.clientName) {
     if(remoteAdmin) {
       Page.flashMessage(`You are no longer a remote admin`, 'notice');
     }
@@ -423,6 +419,7 @@ function handleRemoteAdmin(remoteAdmin) {
     mainDisplay.classList.remove('remote-admin');
     return;
   }
+
 
   remoteAdmin = true;
   mainDisplay.classList.add('remote-admin');
@@ -436,25 +433,25 @@ function handleUpdateSpeaker(speaker) {
   teamDisplay.classList.remove('active');
   buttonHolder.classList.remove('active');
   emotesHolder.classList.add('active');
+  buttonHolder.classList.remove('remote-admin');
 
   if (currentSpeaker == 'READY') {
     setMainDisplay('Ready', 1);  
     return;
   }
 
-  let state = 2;
-
-  if (isSpeaker()) {
-    state = 3;
-  }
-
   if (isSpeaker() || isRemoteAdmin()) {
     teamDisplay.classList.add('active');
     buttonHolder.classList.add('active');
-    emotesHolder.classList.remove('active');
+    
+    if (isRemoteAdmin() && !isSpeaker()) {
+      buttonHolder.classList.add('remote-admin');
+    } else {
+      emotesHolder.classList.remove('active');
+    }
   }
 
-  setMainDisplay(currentSpeaker, state, 'Current Speaker', true);
+  setMainDisplay(currentSpeaker, isSpeaker() ? 3 : 2, 'Current Speaker', true);
 }
 
 function handlePing(pingCode) {
@@ -579,7 +576,7 @@ function buildMemberElements(forceDone = false) {
       classes.push('active');
     }
  
-    if (memberList[i].name == Comms.params.clientName) {
+    if (memberList[i].name == Comms.params.clientName && !remoteAdmin) {
       continue;
     }
 

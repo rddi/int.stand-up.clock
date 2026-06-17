@@ -344,17 +344,28 @@ function setUpForm() {
       return;
     }
 
+    const allAdminSelects = document.querySelectorAll('.remote-admin-select');
+
+    allAdminSelects.forEach(function (element) {
+      element.classList.remove('selected', 'hidden');
+    });
+
     const admin = e.target.id.split('remote-admin-')[1];
 
     if(remoteAdmin === admin) {
       remoteAdmin = null;
       sendRemoteAdmin(null);
-      e.target.classList.remove('selected');
       return;
     }
 
     sendRemoteAdmin(admin);
     remoteAdmin = admin;
+
+
+    allAdminSelects.forEach(function (element) {
+      element.classList.add('hidden');
+    });
+
     e.target.classList.add('selected');
   });
 
@@ -1853,8 +1864,11 @@ function sendRemoteAdmin(remoteAdmin) {
     remoteAdmin: remoteAdmin,
   }, 'Client.RemoteAdmin');
 
-
+if (remoteAdmin) {
   Page.flashMessage(`${remoteAdmin} has been selected as a remote admin`, 'success');
+} else {
+  Page.flashMessage(`Remote admin has been removed`, 'notice');
+}
 }
 
 function sendFinished() {
