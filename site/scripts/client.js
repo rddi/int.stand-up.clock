@@ -596,6 +596,31 @@ function setUpTeamInteractions() {
   });
 }
 
+function setUpWakeLock() {
+  if (!('wakeLock' in navigator)) {
+    console.log('Wake Lock not supported');
+    return;
+  }
+  console.log('Wake Lock supported');
+  let wakeLock = null;
+
+  async function requestWakeLock() {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log('Wake Lock is active!');
+    } catch (err) {
+      console.error(`${err.name}, ${err.message}`);
+    }
+  }
+
+  // Re-request wake lock if the page becomes visible again
+  document.addEventListener('visibilitychange', async () => {
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+      await requestWakeLock();
+    }
+  });
+}
+
 function connectHandler() {
   setMainDisplay("Looking for meeting", 1, `Meeting: ${Comms.params.meetingCode}`)
 
@@ -630,6 +655,7 @@ function attemptReconnect() {
 
 document.addEventListener("DOMContentLoaded", function () {
   Utilities.setVersion();
+  setUpWakeLock();
   getUniqueCode();
   setUpForm();
   setUpDisplay();

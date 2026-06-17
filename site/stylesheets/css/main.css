@@ -1615,7 +1615,7 @@ input[type=text] {
   transition-delay: 300ms;
 }
 .remote-admin-display .fa {
-  color: #BF40BF;
+  color: #e9a351;
   opacity: 0;
   transition: opacity 300ms;
   transition-delay: 0;
@@ -1771,7 +1771,7 @@ input[type=text] {
   display: none;
 }
 #button-holder.remote-admin .button-center .button {
-  color: #BF40BF;
+  color: #e9a351;
 }
 
 #emotes-button-holder {
