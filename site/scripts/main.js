@@ -1686,6 +1686,8 @@ function getVoteResults() {
   voteCount.innerHTML = `"${currentWord[0]}"`;
   voteCount.classList.add('green');
 
+  sendEvent(currentWord[0], 'Client.PepWord');
+
   playSound('found');
 }
 
@@ -1928,4 +1930,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
   startUpdates();
 });
-

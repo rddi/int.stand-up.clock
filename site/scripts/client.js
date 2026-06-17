@@ -37,7 +37,8 @@ function setUpForm() {
 
   wordChoiceElement = document.getElementById('word-choice');
   wordChoiceButtonHolder = document.getElementById('word-choice-button-holder');
-  
+  pepTalkerWordDisplay = document.getElementById('pep-talker-word-display');
+  pepTalkerWordDisplayContent = document.getElementById('pep-talker-word-display-content');
 
   let queryParams = Page.getQueryParams();
 
@@ -179,6 +180,12 @@ function handleReciept(input) {
           return;
         }
         handlePepTalk(message.body);
+        break;
+      case 'PepWord':
+        if (!Comms.params.registered) {
+          return;
+        }
+        handlePepWord(message.body);
         break;
       case 'MemberList':
         if (!Comms.params.registered) {
@@ -484,6 +491,11 @@ function handlePepTalk(pepTalker){
   }
 
   setWordChoice(pepTalker.words);
+}
+
+function handlePepWord(word) {
+  pepTalkerWordDisplayContent.innerHTML = `"${word}"`;
+  pepTalkerWordDisplay.classList.remove('hidden');
 }
 
 function handleMemberList(_memberList) {

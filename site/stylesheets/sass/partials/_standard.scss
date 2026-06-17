@@ -49,12 +49,13 @@ header {
   }
 
   &.collapser {
-    overflow:hidden;
+    overflow-y:scroll;
     transition: max-height variables.$transTime, padding variables.$transTime;
-    max-height:700px;
+    max-height:100vh;
     &.closed {
       max-height:0vh;
       padding:0 20px;
+      overflow:hidden;
     }
   }
 
