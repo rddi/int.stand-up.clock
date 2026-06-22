@@ -494,6 +494,9 @@ function handlePepTalk(pepTalker){
 }
 
 function handlePepWord(word) {
+  if(mainDisplay.innerHTML != 'Pep Talker') {
+    return;
+  }
   pepTalkerWordDisplayContent.innerHTML = `"${word}"`;
   pepTalkerWordDisplay.classList.remove('hidden');
 }
@@ -686,3 +689,6 @@ document.addEventListener('visibilitychange', function() {
     attemptReconnect();
   }
 });
+
+
+
