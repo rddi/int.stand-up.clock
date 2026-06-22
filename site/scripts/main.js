@@ -1591,6 +1591,7 @@ function handleCheck(sender, body) {
 
 function handleNomination(sender, nomination) {
   const currentSpeaker = document.querySelector('.team-button.active').innerHTML;
+  console.log(sender, currentSpeaker, remoteAdmin);
   if (sender != currentSpeaker && sender != remoteAdmin) {
     return;
   }

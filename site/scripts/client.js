@@ -600,7 +600,7 @@ function buildMemberElements(forceDone = false) {
 
 function setUpTeamInteractions() {
   document.addEventListener('click', function (e) {
-    if (!e.target.classList.contains('team-button') || (currentSpeaker != Comms.params.clientName || remoteAdmin) || e.target.classList.contains('done') || e.target.classList.contains('active')) {
+    if (!e.target.classList.contains('team-button') || (currentSpeaker != Comms.params.clientName && !remoteAdmin) || e.target.classList.contains('done') || e.target.classList.contains('active')) {
       return;
     }
 
